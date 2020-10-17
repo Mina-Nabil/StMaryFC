@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:StMaryFA/screens/HomeScreen.dart';
 
 class LoginForm extends StatelessWidget {
   @override
@@ -34,7 +35,6 @@ class LoginForm extends StatelessWidget {
                     ),
                     //Login Button
                     FlatButton(
-                      onPressed: () => print("TODO: Login"),
                       padding: EdgeInsets.zero,
                       child: Container(
                         width: double.infinity,
@@ -52,6 +52,12 @@ class LoginForm extends StatelessWidget {
                           ),
                         ),
                       ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      },
                     )
                   ],
                 ),

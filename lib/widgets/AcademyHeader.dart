@@ -14,11 +14,23 @@ class AcademyHeader extends StatelessWidget {
                   ),
                   Container(
                     padding: EdgeInsets.all(3),
+                    child: FittedBox(
+                      child: Text(
+                        'ST. MARY REHAB FOOTNALL ACADEMY',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 24
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(3),
                     child: Text(
-                      'St. Mary Rehab Football Academy',
+                      'PLAY | PRAY | OBEY',
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
-                        fontSize: 24
+                        fontSize: 22
                       ),
                     ),
                   )
