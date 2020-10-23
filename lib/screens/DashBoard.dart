@@ -16,9 +16,13 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-      ),
+      appBar: PreferredSize(
+                preferredSize: Size(0, 0),
+                child: AppBar(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent, // status bar color,
+                  brightness:  Brightness.light ,
+                )),
       body: WebView(
         key: _key,
         initialUrl: 'https://stmaryfa.msquare.app/home',
