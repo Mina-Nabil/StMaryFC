@@ -15,16 +15,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor:Theme.of(context).accentColor,
+      backgroundColor:Theme.of(context).backgroundColor,
 
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: ListView(
             children: <Widget>[
               AcademyHeader(),
-              LoginForm()
+              SizedBox(height: 10,),
+              LoginForm(),
             ],
           ),
         ),

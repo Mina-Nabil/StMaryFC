@@ -13,9 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'StMaryFA',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
-        accentColor: Colors.black,
-        
+        primaryColor: Colors.orange,
+        backgroundColor: Colors.white,
 
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
