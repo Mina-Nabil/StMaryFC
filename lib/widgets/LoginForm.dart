@@ -1,7 +1,19 @@
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:StMaryFA/providers/Auth.dart';
 import 'package:StMaryFA/screens/HomeScreen.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  String signInEmail = "";
+  String signInPassword = "";
+  bool isTryingToSignIn = false;
   @override
   Widget build(BuildContext context) {
     
@@ -22,6 +34,7 @@ class LoginForm extends StatelessWidget {
             child: TextFormField(
               decoration: textFieldDecoration.copyWith(hintText: "Email"),
               style: TextStyle(color: Colors.black, fontSize: 20),
+              onChanged: (email) {signInEmail = email;},
             ),
           ),
           //Password Field
@@ -31,6 +44,7 @@ class LoginForm extends StatelessWidget {
               obscureText: true, //password type
               decoration: textFieldDecoration.copyWith(hintText: "Password"),
               style: TextStyle(color: Colors.black, fontSize: 20),
+              onChanged: (password) {signInPassword = password;},
             ),
           ),
           //Login Button
@@ -53,10 +67,7 @@ class LoginForm extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
+              _signIn();
             },
           )
         ],
@@ -64,4 +75,24 @@ class LoginForm extends StatelessWidget {
     );
   }
 
+  void _signIn() async {
+    
+    setState(() {
+      isTryingToSignIn = true;
+    });
+
+    bool status = await Provider.of<Auth>(context, listen: false).logIn(signInEmail, signInPassword, "iphone11");
+
+    if (status) {
+      //go to user's Home
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    }
+    
+    setState(() {
+      isTryingToSignIn = false;
+    });
+  }
 }

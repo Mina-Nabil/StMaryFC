@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'package:StMaryFA/providers/Auth.dart';
 import 'package:StMaryFA/screens/DashBoard.dart';
+import 'package:StMaryFA/screens/SplashScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -18,6 +21,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final double tilesPadding = 25;
   final double tilesRightMarginRation = 0.1;
   File image;
+
+@override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero).then((_) async {
+      Provider.of<Auth>(context, listen: false).getCurrentUserName();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   leading: CircleAvatar(
                     child: Icon(Icons.person),
                   ),
-                  title: FittedBox(child: Text("Profile")),
+                  title: FittedBox(child: Text(Provider.of<Auth>(context).userName)),
                   subtitle: FittedBox(child: Text("View your profile ")),
                 ),
                 ListTile(
@@ -67,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   leading: Container(child: Icon(CupertinoIcons.arrowshape_turn_up_left, color: Theme.of(context).primaryColor)),
                   title: Text("Logout", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: tileTextFontSize),),
+                  onTap: _logout,
                 )
               ],
             ),
@@ -115,5 +127,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       image = File(imageCaptured.path);
     });
+  }
+
+  void _logout() {
+    Provider.of<Auth>(context, listen: false).logout();
+    Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SplashScreen()),
+        );
   }
 }

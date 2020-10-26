@@ -22,7 +22,14 @@ environment:
 
 dependencies:
   image_picker:
+  
   webview_flutter: ^1.0.3
+  
+  http: ^0.12.2
+  
+  # provider package
+  provider: ^4.0.0
+  
   flutter:
     sdk: flutter
 
