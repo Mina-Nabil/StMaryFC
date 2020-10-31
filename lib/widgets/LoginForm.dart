@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'package:StMaryFA/providers/Auth.dart';
@@ -75,7 +76,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
                 onPressed: () {
-                  _logIn();
+                  _logIn(context);
                 },
               )
             ],
@@ -88,7 +89,7 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void _logIn() async {
+  void _logIn(BuildContext context) async {
 
     if(!_formKey.currentState.validate())
       return;
@@ -97,18 +98,28 @@ class _LoginFormState extends State<LoginForm> {
       _isTryingToLogIn = true;
     });
 
-    bool status = await Provider.of<Auth>(context, listen: false).logIn(_signInEmail, _signInPassword, "iphone11");
+    String errorMsg = await Provider.of<Auth>(context, listen: false).logIn(_signInEmail, _signInPassword, "iphone11");
 
     setState(() {
       _isTryingToLogIn = false;
     });
 
-    if (status) {
+    if (errorMsg.isEmpty) {
       //go to user's Home
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
       );
+    } else {
+      showCupertinoDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) => new CupertinoAlertDialog(
+          title: Text("Login Failed"),
+          content:Text("$errorMsg"),
+        )
+      );
+      print(errorMsg);
     }
     
 

@@ -12,9 +12,10 @@ class Auth with ChangeNotifier {
     return _token.isNotEmpty;
   }
 
-  Future<bool> logIn (String email, String password, String deviceName) async {
+  Future<String> logIn (String email, String password, String deviceName) async {
 
     const String url = "https://stmaryfa.msquare.app/api/login";
+    String errorMsg = "";
 
     var bodyEncoded = {
                         "email": email,
@@ -23,26 +24,31 @@ class Auth with ChangeNotifier {
                       };
 print(bodyEncoded);
 
+try {
     final response = await http.post(url,
       body: bodyEncoded,
       headers: {"Accept": "application/json"},
     );
 
-    
-
-   dynamic body = jsonDecode(response.body);
-    print(json.decode(response.body));
-
+    dynamic body = jsonDecode(response.body);
 
     if(body["status"] != null && body["status"] == true) {
       _token  = body["message"]["token"];
       print("Sign in Done");
-      print(_token);
-      return true;
     } else {
+      if(body["message"]["errors"] != null)
+      {
+        errorMsg = "Invalid Email/Password";
+      }
       print("Sign in Failed");
-      return false;
     }
+} catch (error) {
+    errorMsg = "Check internet connection";
+    print("HTTP request failed $error");
+}
+
+
+    return errorMsg;
   }
 
   void logout () {
