@@ -31,55 +31,58 @@ class _LoginFormState extends State<LoginForm> {
 
     return Stack(
       children: [
-        Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              //Email Field
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 3),
-                child: TextFormField(
-                  decoration: textFieldDecoration.copyWith(hintText: "Email"),
-                  style: TextStyle(color: Colors.black, fontSize: 20),
-                  onChanged: (email) {_signInEmail = email;},
-                  validator: (email) {return email.isEmpty? "Please fill your Email" : null;},
-                ),
-              ),
-              //Password Field
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 3),
-                child: TextFormField(
-                  obscureText: true, //password type
-                  decoration: textFieldDecoration.copyWith(hintText: "Password"),
-                  style: TextStyle(color: Colors.black, fontSize: 20),
-                  onChanged: (password) {_signInPassword = password;},
-                  validator: (email) {return email.isEmpty? "Please fill your Password" : null;},
-                ),
-              ),
-              //Login Button
-              FlatButton(
-                padding: EdgeInsets.zero,
-                child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height/15,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(10)
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 40),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                //Email Field
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 3),
+                  child: TextFormField(
+                    decoration: textFieldDecoration.copyWith(hintText: "Email"),
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                    onChanged: (email) {_signInEmail = email;},
+                    validator: (email) {return email.isEmpty? "Please fill your Email" : null;},
                   ),
-                  child: Center(
-                    child: Text( "Login",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
+                ),
+                //Password Field
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 3),
+                  child: TextFormField(
+                    obscureText: true, //password type
+                    decoration: textFieldDecoration.copyWith(hintText: "Password"),
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                    onChanged: (password) {_signInPassword = password;},
+                    validator: (email) {return email.isEmpty? "Please fill your Password" : null;},
+                  ),
+                ),
+                //Login Button
+                FlatButton(
+                  padding: EdgeInsets.zero,
+                  child: Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height/15,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: Center(
+                      child: Text( "Login",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                onPressed: () {
-                  _logIn(context);
-                },
-              )
-            ],
+                  onPressed: () {
+                    _logIn(context);
+                  },
+                )
+              ],
+            ),
           ),
         ),
 
