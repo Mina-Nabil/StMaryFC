@@ -9,10 +9,13 @@ class AcademyHeader extends StatelessWidget {
       children: [
         Hero(
             tag: 'logo',
-            child: Image.asset(
-              'assets/icons/logo.jpeg',
-              width: MediaQuery.of(context).size.width / 1.2,
-              height: MediaQuery.of(context).size.width / 1.2,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+              child: Image.asset(
+                'assets/icons/logo.jpeg',
+                width: MediaQuery.of(context).size.width / 1.2,
+                height: MediaQuery.of(context).size.width / 1.2,
+              ),
             )),
       ],
     );
