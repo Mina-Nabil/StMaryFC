@@ -80,4 +80,5 @@ try {
   }
 
   String get userName { return _userName;}
+  String get token {return _token;}
 }

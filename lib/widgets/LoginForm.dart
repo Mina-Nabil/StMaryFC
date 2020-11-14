@@ -1,4 +1,5 @@
 
+import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -111,7 +112,14 @@ class _LoginFormState extends State<LoginForm> {
       //go to user's Home
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(
+          builder: (context) => MultiProvider(
+               providers: [
+                 ChangeNotifierProvider.value(value: UsersProvider(Provider.of<Auth>(context, listen: true).token)),
+               ],
+               child: HomeScreen(),
+             )
+        ),
       );
     } else {
       showCupertinoDialog(

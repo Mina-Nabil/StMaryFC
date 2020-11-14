@@ -1,3 +1,4 @@
+import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/widgets/AcademyHeader.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -18,7 +19,14 @@ class _SplashScreenState extends State<SplashScreen> {
       if (Provider.of<Auth>(context, listen: false).isLoggedIn()) {
         Navigator.pushReplacement(
           context,
-           MaterialPageRoute(builder: (context) => HomeScreen()),
+           MaterialPageRoute(
+             builder: (context) => MultiProvider(
+               providers: [
+                 ChangeNotifierProvider.value(value: UsersProvider(Provider.of<Auth>(context, listen: false).token)),
+               ],
+               child: HomeScreen(),
+             )
+          ),
         );
       } else {
         Navigator.pushReplacement(

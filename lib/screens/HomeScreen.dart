@@ -1,10 +1,12 @@
-import 'dart:io';
+import 'dart:async';
 import 'package:StMaryFA/providers/Auth.dart';
+import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/DashBoard.dart';
 import 'package:StMaryFA/screens/SplashScreen.dart';
+import 'package:StMaryFA/widgets/UserCard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,7 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final double tileTextFontSize = 17;
   final double tilesPadding = 25;
   final double tilesRightMarginRation = 0.1;
-  File image;
+  Timer searchTimer;
+
+  Set<int> selectedIds = {};
 
 @override
   void initState() {
@@ -32,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -85,33 +90,90 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              // Later will view the sugesstions returned from faceX
-              if (image != null)
-                Image.file(
-                  image,
-                  height: 500,
-                ),
 
-              FlatButton.icon(
-                icon: Icon(
-                  Icons.camera_alt,
-                  size: 50,
-                  color: Theme.of(context).primaryColor,
+                  Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height/15,
+                    child: TextField(
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Colors.black, fontSize: 24),
+
+                      onChanged: (searchString) {
+                        const duration = Duration(milliseconds: 1000);
+                        if (searchTimer != null) {
+                          setState(() => searchTimer.cancel()); // clear timer
+                        }
+                        setState(() {
+                          searchTimer = new Timer(duration, (){
+                            _search(searchString);
+                          });
+                        });
+                      },
+                      decoration:  InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+                        filled: true,
+                        fillColor: Colors.grey[350],
+                        hintText: "Search",
+                        hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
+                        ),
+                     ),
+                  ),
+
+
+              SizedBox(height: 20,),
+              
+              Expanded(
+                child: GridView.count(
+                  primary: false,
+                  padding: const EdgeInsets.all(0),
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                  crossAxisCount: 3,
+                  children: [
+                    ...Provider.of<UsersProvider>(context, listen: true).users.map((user) {
+                        return GestureDetector(
+                          child: UserCard(user: user ,selected: selectedIds.contains(user.id),),
+                          onTap: (){
+                            setState(() {
+                              if(selectedIds.contains(user.id))
+                                selectedIds.remove(user.id);
+                              else
+                                selectedIds.add(user.id);
+                            });
+                            },
+                        );
+                      }
+                    ).toList()
+                  ],
                 ),
-                label: Text(
-                  "Check-in",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+              ),
+
+              if(selectedIds.isNotEmpty)
+                Container(
+                  height: MediaQuery.of(context).size.width/8,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).primaryColor),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(" ${selectedIds.length} Selected"),
+                      Text(" Review "),
+                      Text(" Confirm "),
+                    ],
                   ),
                 ),
-                onPressed: _openCamera,
-              )
+
             ],
           ),
         ),
@@ -119,21 +181,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _openCamera() async {
-    var imageCaptured = await ImagePicker().getImage(source: ImageSource.camera);
-
-    //should send request to faceX to search by image
-
-    setState(() {
-      image = File(imageCaptured.path);
-    });
+  void _search(String searchString) {
+    print(searchString);
+    Provider.of<UsersProvider>(context, listen: false).search(searchString);
   }
+
 
   void _logout() {
     Provider.of<Auth>(context, listen: false).logout();
     Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => SplashScreen()),
-        );
+    );
   }
 }
