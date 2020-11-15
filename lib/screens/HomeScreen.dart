@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   //Screen dimentions
-  final double drawerWidthRatio = 0.7;
+  final double drawerWidthRatio = 0.8;
   final double drawerHorizontalMargin = 15;
   final double tileTextFontSize = 17;
   final double tilesPadding = 25;
@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero).then((_) async {
-      Provider.of<Auth>(context, listen: false).getCurrentUserName();
+      Provider.of<Auth>(context, listen: false).getCurrentUser();
     });
   }
 
@@ -45,17 +45,23 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: Container(
         width: MediaQuery.of(context).size.width * drawerWidthRatio,
         child: Drawer(
+          
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: drawerHorizontalMargin),
             child: ListView(
+              
               padding: EdgeInsets.symmetric(vertical: tilesPadding),
               children: [
-                ListTile(
-                  leading: CircleAvatar(
-                    child: Icon(Icons.person),
+                Container(
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(0),
+                    leading: CircleAvatar(
+                      radius:  MediaQuery.of(context).size.width/12,
+                      backgroundImage: Image.network(Provider.of<Auth>(context).userImageUrl).image,
+                    ),
+                    title: Text(Provider.of<Auth>(context).userName, style: TextStyle(fontSize: 24)),
+                    subtitle: Text("View your profile",style: TextStyle(fontSize: 16)),
                   ),
-                  title: FittedBox(child: Text(Provider.of<Auth>(context).userName)),
-                  subtitle: FittedBox(child: Text("View your profile ")),
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.only(
@@ -160,16 +166,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
               if(selectedIds.isNotEmpty)
                 Container(
-                  height: MediaQuery.of(context).size.width/8,
+                  height: MediaQuery.of(context).size.height/15,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Theme.of(context).primaryColor),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(" ${selectedIds.length} Selected"),
-                      Text(" Review "),
-                      Text(" Confirm "),
+                        FlatButton(
+                          padding: EdgeInsets.all(5),
+                          onPressed: null, 
+                          child:  Text("${selectedIds.length} Selected",style: TextStyle(color: Colors.black, fontSize: 20),),
+                        ),
+                      
+                      Row(
+                        children: [
+                        FlatButton(
+                        padding: EdgeInsets.all(5),
+                        onPressed: null, 
+                        child:  Text("Review",style: TextStyle(color: Colors.black, fontSize: 20),)
+                      ),
+                        FlatButton(
+                        padding: EdgeInsets.all(5),
+                        onPressed: null, 
+                        child:  Text("Confirm",style: TextStyle(color: Colors.black, fontSize: 20),)
+                      ),
+                        ],
+                      )
+
                     ],
                   ),
                 ),

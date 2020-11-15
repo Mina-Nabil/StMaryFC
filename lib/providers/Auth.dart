@@ -7,6 +7,7 @@ import "package:http/http.dart" as http;
 class Auth with ChangeNotifier {
   String _token = "";
   String _userName = "";
+  String _image_url = "";
 
   bool isLoggedIn() {
     return _token.isNotEmpty;
@@ -56,7 +57,7 @@ try {
     _userName = "";
   }
 
-  Future<void> getCurrentUserName () async {
+  Future<void> getCurrentUser () async {
   
     print(_token);
 
@@ -75,10 +76,11 @@ try {
     String userName = body["message"]["USER_NAME"];
     // Make first char cap
     _userName = '${userName[0].toUpperCase()}${userName.substring(1)}';
-
+    _image_url = body["message"]["full_image_url"];
     notifyListeners();
   }
 
   String get userName { return _userName;}
+  String get userImageUrl {return _image_url;}
   String get token {return _token;}
 }

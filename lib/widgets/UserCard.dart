@@ -28,16 +28,16 @@ class UserCard extends StatelessWidget {
                     child: CircleAvatar(
                       radius: MediaQuery.of(context).size.width/8,
                       backgroundImage: user.imageLink.isNotEmpty? Image.network(user.imageLink).image : null,
-                      child: user.imageLink.isEmpty? FittedBox(child: Text(_getInitials())) : null,
+                      child: user.imageLink.isEmpty? FittedBox(child: Text(_getInitials(), style: TextStyle(fontSize: 24),)) : null,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(1.0),
-                    child: Text(user.userName),
+                    child: Text(user.userName, style: TextStyle(color: selected? Theme.of(context).primaryColor:Colors.black),),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(1.0),
-                    child: Text("G: ${user.groupName}"),
+                    child: Text("G: ${user.groupName}", style: TextStyle(color: selected? Theme.of(context).primaryColor:Colors.black)),
                   ),
                 ],
               ),
