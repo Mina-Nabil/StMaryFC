@@ -27,7 +27,7 @@ dependencies:
   webview_flutter: ^1.0.3
   
   http: ^0.12.2
-  
+  intl: ^0.16.1
   # provider package
   provider: ^4.0.0
   

@@ -12,6 +12,7 @@ class UsersProvider with ChangeNotifier {
   
   String _token;
   String _searchApiUrl = Server.address + "api/search/name";
+  String _attendanceApiUrl = Server.address + "api/take/bulk/attendance";
 
   // search results
   List<User> _users= [];
@@ -51,6 +52,30 @@ class UsersProvider with ChangeNotifier {
     //print(_users);
     notifyListeners();
   }
+
+  Future<bool> takeAttendance (Set<int> ids, String date) async {
+
+    final response = await http.post(
+      _attendanceApiUrl,
+      headers: {
+        'Authorization': "Bearer $_token",
+        "Accept": "application/json"
+      },
+      body: {
+        'userIDs': ids.toString(),
+        'date': date,
+      },
+    );
+    dynamic body = jsonDecode(response.body);
+
+    if(body["status"] != null && body["status"] == true){
+      print("Attendance taken correct!");
+      return true;
+    }
+    else
+      return false;
+  }
+  
 
   List<User> get users {return _users;}
 }
