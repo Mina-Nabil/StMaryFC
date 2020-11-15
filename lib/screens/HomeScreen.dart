@@ -131,6 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () {
                               String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
                               Provider.of<UsersProvider>(context, listen: false).takeAttendance(selectedIds, date);
+                              setState(() {
+                                selectedIds.clear();
+                              });
                             }
                           ),
                         ],
