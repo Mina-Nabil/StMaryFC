@@ -58,8 +58,6 @@ try {
   }
 
   Future<void> getCurrentUser () async {
-  
-    print(_token);
 
     final response = await http.get(
       "https://stmaryfa.msquare.app/api/current/user",
