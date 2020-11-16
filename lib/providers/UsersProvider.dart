@@ -17,36 +17,44 @@ class UsersProvider with ChangeNotifier {
   List<User> _users = [];
 
   Future<void> search(String searchString) async {
-    final response = await http.post(
-      _searchApiUrl,
-      headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
-      body: {
-        'name': searchString,
-      },
-    );
-
-    dynamic body = jsonDecode(response.body);
 
     _users.clear();
-    if (body["message"] != null) {
-      for (var user in body["message"]) {
-        _users.add(User.fromJson(user));
-      }
-    } else {}
+
+    if(searchString.isNotEmpty) {
+      final response = await http.post(
+        _searchApiUrl,
+        headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
+        body: {
+          'name': searchString,
+        },
+      );
+
+      dynamic body = jsonDecode(response.body);
+
+      
+      if (body["message"] != null) {
+        for (var user in body["message"]) {
+          _users.add(User.fromJson(user));
+        }
+      } else {}
+    }
 
     //print(_users);
     notifyListeners();
   }
 
   Future<bool> takeAttendance(Set<int> ids, String date) async {
+
     final response = await http.post(
       _attendanceApiUrl,
       headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
-      body: {
-        'userIDs': ids.toString(),
+      body: 
+        {
+        'userIDs': ids.toList().toString(),
         'date': date,
-      },
+        },
     );
+
     dynamic body = jsonDecode(response.body);
 
     if (body["status"] != null && body["status"] == true) {
