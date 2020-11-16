@@ -115,7 +115,7 @@ class _LoginFormState extends State<LoginForm> {
         MaterialPageRoute(
           builder: (context) => MultiProvider(
                providers: [
-                 ChangeNotifierProvider.value(value: UsersProvider(Provider.of<Auth>(context, listen: true).token)),
+                 ChangeNotifierProvider.value(value: UsersProvider()),
                ],
                child: HomeScreen(),
              )

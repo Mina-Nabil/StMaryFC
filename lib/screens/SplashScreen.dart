@@ -15,14 +15,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   void initState() {
-    Future.delayed(Duration(milliseconds: 2000)).then((_) {
-      if (Provider.of<Auth>(context, listen: false).isLoggedIn()) {
+    Future.delayed(Duration(milliseconds: 2000)).then((_) async {
+      if (await Provider.of<Auth>(context, listen: false).isLoggedIn()) {
         Navigator.pushReplacement(
           context,
            MaterialPageRoute(
              builder: (context) => MultiProvider(
                providers: [
-                 ChangeNotifierProvider.value(value: UsersProvider(Provider.of<Auth>(context, listen: false).token)),
+                 ChangeNotifierProvider.value(value: UsersProvider())
                ],
                child: HomeScreen(),
              )

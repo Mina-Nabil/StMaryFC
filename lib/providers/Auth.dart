@@ -1,77 +1,80 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import "package:http/http.dart" as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   String _token = "";
   String _userName = "";
   String _imageUrl = "";
 
-  bool isLoggedIn() {
-    return _token.isNotEmpty;
+  Future<bool> isLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString("token");
+    _token=token;
+    return token != null;
   }
 
-  Future<String> logIn (String email, String password, String deviceName) async {
-
+  Future<String> logIn(String email, String password, String deviceName) async {
     const String url = "https://stmaryfa.msquare.app/api/login";
     String errorMsg = "";
 
     var bodyEncoded = {
-                        "email": email,
-                        "password":password,
-                        "deviceName": deviceName,
-                      };
-print(bodyEncoded);
+      "email": email,
+      "password": password,
+      "deviceName": deviceName,
+    };
+    print(bodyEncoded);
 
-try {
-    final response = await http.post(url,
-      body: bodyEncoded,
-      headers: {"Accept": "application/json"},
-    );
+    try {
+      final response = await http.post(
+        url,
+        body: bodyEncoded,
+        headers: {"Accept": "application/json"},
+      );
 
-    dynamic body = jsonDecode(response.body);
+      dynamic body = jsonDecode(response.body);
 
-    if(body["status"] != null && body["status"] == true) {
-      _token  = body["message"]["token"];
-      print("Sign in Done");
-    } else {
-      if(body["message"]["errors"] != null)
-      {
-        errorMsg = "Invalid Email/Password";
+      if (body["status"] != null && body["status"] == true) {
+        _token = body["message"]["token"];
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("token", _token);
+        print("Sign in Done");
+      } else {
+        if (body["message"]["errors"] != null) {
+          errorMsg = "Invalid Email/Password";
+        }
+        print("Sign in Failed");
       }
-      print("Sign in Failed");
+    } catch (error) {
+      errorMsg = "Check internet connection";
+      print("HTTP request failed $error");
     }
-} catch (error) {
-    errorMsg = "Check internet connection";
-    print("HTTP request failed $error");
-}
-
 
     return errorMsg;
   }
 
-  void logout () {
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
     _token = "";
     _userName = "";
   }
 
-  Future<void> getCurrentUser () async {
-  
-    print(_token);
+  Future<void> getCurrentUser() async {
+    assert(await isLoggedIn());
 
     final response = await http.get(
       "https://stmaryfa.msquare.app/api/current/user",
-      headers: {
-        'Authorization': "Bearer $_token",
-        "Accept": "application/json"},
+      headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
     );
 
     dynamic body = jsonDecode(response.body);
 
-    if(body["status"] == null || body["status"] == false)
-    {print("getCurrentUserName Failed.");}
+    if (body["status"] == null || body["status"] == false) {
+      print("getCurrentUserName Failed.");
+    }
 
     String userName = body["message"]["USER_NAME"];
     // Make first char cap
@@ -80,7 +83,16 @@ try {
     notifyListeners();
   }
 
-  String get userName { return _userName;}
-  String get userImageUrl {return _imageUrl;}
-  String get token {return _token;}
+  String get userName {
+    return _userName;
+  }
+
+  String get userImageUrl {
+    return _imageUrl;
+  }
+
+  Future<String> get token async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("token");
+  }
 }

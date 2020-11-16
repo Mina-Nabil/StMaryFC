@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.orange,
           backgroundColor: Colors.white,
+          fontFamily: "Oxygen",
 
           //This adds swipe back option on both android and iOS
           pageTransitionsTheme: PageTransitionsTheme(builders: {

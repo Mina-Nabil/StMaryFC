@@ -34,6 +34,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  shared_preferences: ^0.5.12+4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -65,6 +66,65 @@ flutter:
     - assets/icons/church.png
     - assets/icons/logo.jpeg
   #   - images/a_dot_ham.jpeg
+
+  fonts:
+
+  - family: Anton
+    fonts:
+      - asset: assets/fonts/Anton/Anton-Regular.ttf
+        style: normal
+        weight: 400
+        
+  - family: Oxygen
+    fonts:
+      - asset: assets/fonts/Oxygen/Oxygen-Thin.ttf
+        style: normal
+        weight: 100
+      - asset: assets/fonts/Oxygen/Oxygen-Regular.ttf
+        style: normal
+        weight: 400
+      - asset: assets/fonts/Oxygen/Oxygen-Bold.ttf
+        style: normal
+        weight: 700
+
+  - family: Roboto
+    fonts:
+      - asset: assets/fonts/Roboto/Roboto-Thin.ttf
+        style: normal
+        weight: 100
+      - asset: assets/fonts/Roboto/Roboto-ThinItalic.ttf
+        style: italic
+        weight: 100
+      - asset: assets/fonts/Roboto/Roboto-Light.ttf
+        style: normal
+        weight: 300
+      - asset: assets/fonts/Roboto/Roboto-LightItalic.ttf
+        style: italic
+        weight: 300
+      - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+        style: normal
+        weight: 400
+      - asset: assets/fonts/Roboto/Roboto-Italic.ttf
+        style: italic
+        weight: 400
+      - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+        style: normal
+        weight: 500
+      - asset: assets/fonts/Roboto/Roboto-MediumItalic.ttf
+        style: italic
+        weight: 500
+      - asset: assets/fonts/Roboto/Roboto-Bold.ttf
+        style: normal
+        weight: 700
+      - asset: assets/fonts/Roboto/Roboto-BoldItalic.ttf
+        style: italic
+        weight: 700
+      - asset: assets/fonts/Roboto/Roboto-Black.ttf
+        style: normal
+        weight: 900
+      - asset: assets/fonts/Roboto/Roboto-BlackItalic.ttf
+        style: italic
+        weight: 900
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

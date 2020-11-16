@@ -3,11 +3,17 @@ import 'dart:convert';
 import 'package:StMaryFA/models/User.dart';
 import 'package:flutter/material.dart';
 import "package:http/http.dart" as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../global.dart';
 
 class UsersProvider with ChangeNotifier {
-  UsersProvider(this._token);
+  UsersProvider(){
+    Future.delayed(Duration.zero).then((value) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      _token = prefs.getString("token");
+    });
+  }
 
   String _token;
   String _searchApiUrl = Server.address + "api/search/name";
@@ -28,7 +34,7 @@ class UsersProvider with ChangeNotifier {
     dynamic body = jsonDecode(response.body);
 
     _users.clear();
-    if (body["message"] != null) {
+    if (body["message"] != null && body["message"] is Iterable ) {
       for (var user in body["message"]) {
         _users.add(User.fromJson(user));
       }

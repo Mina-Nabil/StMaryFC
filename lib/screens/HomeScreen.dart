@@ -80,8 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: GridView.count(
                   primary: false,
                   padding: const EdgeInsets.all(0),
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
+                  childAspectRatio: 0.6,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 8,
                   crossAxisCount: 3,
                   children: [
                     ...Provider.of<UsersProvider>(context, listen: true).users.map((user) {
