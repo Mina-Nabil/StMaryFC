@@ -12,9 +12,8 @@ class SideMenu extends StatefulWidget {
 
 class _SideMenuState extends State<SideMenu> {
 
-  final double drawerHorizontalMargin = 15;
+  final double drawerMargin = 15;
   final double tileTextFontSize = 17;
-  final double tilesPadding = 25;
   final double tilesRightMarginRation = 0.1;
 
 @override
@@ -28,17 +27,15 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Container(
-            margin: EdgeInsets.symmetric(horizontal: drawerHorizontalMargin),
+            margin: EdgeInsets.all(drawerMargin),
             child: ListView(
-              
-              padding: EdgeInsets.symmetric(vertical: tilesPadding),
-              children: [
 
+              children: [
                 ListTile(
                   contentPadding: EdgeInsets.all(0),
                   leading: CircleAvatar(
                     radius:  MediaQuery.of(context).size.width/12,
-                    backgroundImage: Image.network(Provider.of<Auth>(context).userImageUrl).image,
+                    backgroundImage: Provider.of<Auth>(context).userImageUrl.isNotEmpty? Image.network(Provider.of<Auth>(context).userImageUrl).image : null,
                   ),
                   title: Text(Provider.of<Auth>(context).userName, style: TextStyle(fontSize: 24)),
                   subtitle: Text("View your profile",style: TextStyle(fontSize: 16)),

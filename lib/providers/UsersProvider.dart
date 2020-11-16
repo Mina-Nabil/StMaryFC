@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../global.dart';
 
 class UsersProvider with ChangeNotifier {
-  UsersProvider(){
+  UsersProvider() {
     Future.delayed(Duration.zero).then((value) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       _token = prefs.getString("token");
@@ -23,22 +23,26 @@ class UsersProvider with ChangeNotifier {
   List<User> _users = [];
 
   Future<void> search(String searchString) async {
-    final response = await http.post(
-      _searchApiUrl,
-      headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
-      body: {
-        'name': searchString,
-      },
-    );
-
-    dynamic body = jsonDecode(response.body);
-
+    
     _users.clear();
-    if (body["message"] != null && body["message"] is Iterable ) {
-      for (var user in body["message"]) {
-        _users.add(User.fromJson(user));
-      }
-    } else {}
+
+    if (searchString.isNotEmpty) {
+      final response = await http.post(
+        _searchApiUrl,
+        headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
+        body: {
+          'name': searchString,
+        },
+      );
+
+      dynamic body = jsonDecode(response.body);
+
+      if (body["message"] != null && body["message"] is Iterable) {
+        for (var user in body["message"]) {
+          _users.add(User.fromJson(user));
+        }
+      } else {}
+    }
 
     //print(_users);
     notifyListeners();
@@ -49,10 +53,11 @@ class UsersProvider with ChangeNotifier {
       _attendanceApiUrl,
       headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
       body: {
-        'userIDs': ids.toString(),
+        'userIDs': ids.toList().toString(),
         'date': date,
       },
     );
+
     dynamic body = jsonDecode(response.body);
 
     if (body["status"] != null && body["status"] == true) {

@@ -77,7 +77,7 @@ flutter:
         
   - family: Oxygen
     fonts:
-      - asset: assets/fonts/Oxygen/Oxygen-Thin.ttf
+      - asset: assets/fonts/Oxygen/Oxygen-Light.ttf
         style: normal
         weight: 100
       - asset: assets/fonts/Oxygen/Oxygen-Regular.ttf
