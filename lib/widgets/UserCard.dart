@@ -35,13 +35,15 @@ class UserCard extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Text(
-                user.userName,
-                style: TextStyle(color: Colors.black, fontSize: 18),
+              child: FittedBox(
+                child: Text(
+                  user.userName,
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                ),
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
                   padding: const EdgeInsets.all(1.0),
