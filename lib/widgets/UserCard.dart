@@ -11,8 +11,6 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
-      width: 30,
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
@@ -21,59 +19,53 @@ class UserCard extends StatelessWidget {
         ),
         color: user.isAttended || selected ? Color.fromRGBO(253, 241, 217, 1) : Colors.white,
       ),
-
+      child: SizedBox(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Flexible(
-              flex: 2,
-              child: Container(
-                child: CircleAvatar(
-                  radius: MediaQuery.of(context).size.width / 8,
-                  backgroundImage: user.imageLink.isNotEmpty ? Image.network(user.imageLink).image : null,
-                  child: user.imageLink.isEmpty
-                      ? FittedBox(child: Text(_getInitials(), style: TextStyle(fontSize: 36, fontFamily: "Anton", color: Colors.white)))
-                      : null,
-                ),
+            Container(
+              child: CircleAvatar(
+                radius: MediaQuery.of(context).size.width / 8,
+                backgroundImage: user.imageLink.isNotEmpty ? Image.network(user.imageLink).image : null,
+                child: user.imageLink.isEmpty
+                    ? FittedBox(child: Text(_getInitials(), style: TextStyle(fontSize: 36, fontFamily: "Anton", color: Colors.white)))
+                    : null,
               ),
             ),
-            Flexible(
-                flex: 1,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(
-                    user.userName,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                  ),
-                )),
-             Row(
-               mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(1.0),
-                    child: Text("${user.groupName}", style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w300)),
-                  ),
-                  Container(
-                      margin: EdgeInsets.only(right: 1),
-                      child: FaIcon(
-                        FontAwesomeIcons.dollarSign,
-                        size: 12,
-                        color: user.isDue ? Colors.red : Colors.transparent,
-                      )),
-                  Container(
-                      margin: EdgeInsets.only(right: 1),
-                      child: FaIcon(
-                        FontAwesomeIcons.checkCircle,
-                        size: 12,
-                        color: user.isAttended ? Colors.green : Colors.transparent,
-                      ))
-                ],
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Text(
+                user.userName,
+                style: TextStyle(color: Colors.black, fontSize: 18),
               ),
-     
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Text("${user.groupName}", style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w300)),
+                ),
+                Container(
+                    margin: EdgeInsets.only(right: 1),
+                    child: FaIcon(
+                      FontAwesomeIcons.dollarSign,
+                      size: 12,
+                      color: user.isDue ? Colors.red : Colors.transparent,
+                    )),
+                Container(
+                    margin: EdgeInsets.only(right: 1),
+                    child: FaIcon(
+                      FontAwesomeIcons.checkCircle,
+                      size: 12,
+                      color: user.isAttended ? Colors.green : Colors.transparent,
+                    ))
+              ],
+            ),
           ],
         ),
-  
+      ),
     );
   }
 
