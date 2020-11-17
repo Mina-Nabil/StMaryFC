@@ -23,7 +23,7 @@ class UsersProvider with ChangeNotifier {
   List<User> _users = [];
 
   Future<void> search(String searchString) async {
-    
+
     _users.clear();
 
     if (searchString.isNotEmpty) {

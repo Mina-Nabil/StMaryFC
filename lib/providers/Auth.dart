@@ -62,12 +62,8 @@ class Auth with ChangeNotifier {
     _userName = "";
   }
 
-<<<<<<< HEAD
   Future<void> getCurrentUser() async {
     assert(await isLoggedIn());
-=======
-  Future<void> getCurrentUser () async {
->>>>>>> d6ab0e37bf3fd618bf0ea12dd152c9144a134c38
 
     final response = await http.get(
       "https://stmaryfa.msquare.app/api/current/user",

@@ -19,11 +19,12 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'StMaryFA',
+
         theme: ThemeData(
           primaryColor: Colors.orange,
           backgroundColor: Colors.white,
           fontFamily: "Oxygen",
-
+          
           //This adds swipe back option on both android and iOS
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),

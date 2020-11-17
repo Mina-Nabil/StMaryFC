@@ -1,10 +1,11 @@
 import 'package:StMaryFA/models/User.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserCard extends StatelessWidget {
   UserCard({
     @required this.user,
-    @required this.selected,
+    @required this.selected
   });
 
   final User user;
@@ -15,8 +16,10 @@ class UserCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.orangeAccent.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: selected ? Color.fromRGBO(236,151,0,1) : Color.fromRGBO(79,50,0,0.2),),
+        color: user.isAttended ? Color.fromRGBO(253,241,217,1) : Colors.white,
+        
       ),
       child: FittedBox(
         child: Column(
@@ -36,16 +39,28 @@ class UserCard extends StatelessWidget {
                     : null,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(1.0),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
               child: Text(
                 user.userName,
-                style: TextStyle(color: selected ? Theme.of(context).primaryColor : Colors.black),
+                style: TextStyle(color: selected ? Theme.of(context).primaryColor : Colors.black, fontSize: 18),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Text("G: ${user.groupName}", style: TextStyle(color: selected ? Theme.of(context).primaryColor : Colors.black)),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Text("${user.groupName}", style: TextStyle(color: selected ? Theme.of(context).primaryColor : Colors.black, fontSize: 14, fontWeight: FontWeight.w300)),
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 1),
+                  child: FaIcon(FontAwesomeIcons.dollarSign, size: 12, color: user.isDue ? Colors.red : Colors.transparent,)
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 1),
+                  child: FaIcon(FontAwesomeIcons.checkCircle, size: 12, color: user.isAttended ? Colors.green : Colors.transparent,)
+                )
+              ],
             ),
           ],
         ),
