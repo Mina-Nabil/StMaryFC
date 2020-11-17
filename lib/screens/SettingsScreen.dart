@@ -41,7 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     bottomNavigationBar: BottomNavigationBar(
       currentIndex: selectedIndex,
-      onTap: (i) => changeIndex(i),
+      onTap: (i) => _controller.animateToPage(i, duration: Duration(milliseconds: 200), curve: Curves.linear ),
       items: [
       BottomNavigationBarItem(
         icon: Icon(FontAwesomeIcons.futbol),
