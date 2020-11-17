@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:StMaryFA/providers/UsersProvider.dart';
+import 'package:StMaryFA/widgets/DefAppBar.dart';
+import 'package:StMaryFA/widgets/DefDrawer.dart';
 import 'package:StMaryFA/widgets/SideMenu.dart';
 import 'package:StMaryFA/widgets/UserCard.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
@@ -16,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //Screen dimentions
-  final double drawerWidthRatio = 0.8;
+
   Timer searchTimer;
 
   Set<int> selectedIds = {};
@@ -25,34 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        brightness: Brightness.dark,
-        title: Text("Check-in",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        iconTheme: IconThemeData(color: Colors.white),
-
-      ),
-      floatingActionButton: FabCircularMenu(
-          fabColor: Colors.orangeAccent,
-          ringColor: Colors.orangeAccent.withOpacity(0.6),
-          fabOpenIcon: Icon(Icons.add, color: Colors.white),
-          fabCloseIcon: Icon(Icons.close, color: Colors.white),
-          children: <Widget>[
-            IconButton(
-                tooltip: "Home",
-                icon: Icon(Icons.person_add, color: Colors.white),
-                onPressed: () {
-                  print('Home');
-                }),
-            IconButton(
-                icon: Icon(Icons.group_add, color: Colors.white),
-                onPressed: () {
-                  print('Favorite');
-                })
-          ]),
-      drawer: Container(
-        width: MediaQuery.of(context).size.width * drawerWidthRatio,
-        child: Drawer(child: SafeArea(child: SideMenu())),
-      ),
+      appBar: DefAppBar.getBar(context, "Check-in"),
+      drawer: DefDrawer(),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         child: Container(

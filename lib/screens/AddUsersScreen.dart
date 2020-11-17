@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class GroupsScreen extends StatelessWidget {
+class AddUsersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
