@@ -1,5 +1,7 @@
 import 'package:StMaryFA/providers/Auth.dart';
 import 'package:StMaryFA/screens/DashBoard.dart';
+import 'package:StMaryFA/screens/HomeScreen.dart';
+import 'package:StMaryFA/screens/SettingsScreen.dart';
 import 'package:StMaryFA/screens/SplashScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,8 +47,27 @@ class _SideMenuState extends State<SideMenu> {
                   contentPadding: EdgeInsets.only(
                     right: MediaQuery.of(context).size.width * tilesRightMarginRation,
                   ),
+                  leading: Container(child: Icon(CupertinoIcons.home, color: Theme.of(context).primaryColor)),
+                  title: Text("Check-in", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: tileTextFontSize),),
+                   onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.only(
+                    right: MediaQuery.of(context).size.width * tilesRightMarginRation,
+                  ),
                   leading: Container(child: Icon(CupertinoIcons.settings, color: Theme.of(context).primaryColor)),
                   title: Text("Settings", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: tileTextFontSize),),
+                   onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsScreen()),
+                    );
+                  },
                 ),
 
                 ListTile(

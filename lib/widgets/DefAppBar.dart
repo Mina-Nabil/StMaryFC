@@ -1,4 +1,5 @@
 import 'package:StMaryFA/screens/SettingsScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -8,7 +9,7 @@ class DefAppBar {
 
     if (isAdd)
       actionsList.add(IconButton(
-        icon: FaIcon(Icons.add),
+        icon: FaIcon(CupertinoIcons.settings),
         onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsScreen())),
       ));
 
