@@ -26,7 +26,12 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.orange,
           backgroundColor: Colors.white,
           fontFamily: "Oxygen",
-          
+          inputDecorationTheme: InputDecorationTheme(
+            contentPadding: EdgeInsets.symmetric(horizontal: 5),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 0.2, color: Color.fromRGBO(79,50,0,1), style: BorderStyle.solid), ),
+            filled: true,
+            fillColor: Color.fromRGBO(254,250,241,1),
+          ),
           //This adds swipe back option on both android and iOS
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),

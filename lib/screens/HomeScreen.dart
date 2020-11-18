@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/widgets/DefAppBar.dart';
 import 'package:StMaryFA/widgets/DefDrawer.dart';
-import 'package:StMaryFA/widgets/SideMenu.dart';
 import 'package:StMaryFA/widgets/UserCard.dart';
-import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -17,10 +15,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //Screen dimentions
 
   Timer searchTimer;
-
   Set<int> selectedIds = {};
 
   @override
@@ -55,11 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     });
                   },
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 5),
                     prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 0.2, color: Color.fromRGBO(79,50,0,1), style: BorderStyle.solid), ),
-                    filled: true,
-                    fillColor: Color.fromRGBO(254,250,241,1),
                     hintText: "Search",
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
                   ),
