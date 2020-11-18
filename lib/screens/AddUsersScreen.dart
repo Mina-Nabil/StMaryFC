@@ -42,65 +42,47 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double photoDiameterRatio = 0.4;
 
-    var imagePlaceholder = Container(
-   
-        width: MediaQuery.of(context).size.width * photoDiameterRatio,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-   
-        ),
-        child: Container(
-          child: FractionallySizedBox(
-            heightFactor: 0.65,
-            widthFactor: 0.65,
-            child: Icon(Icons.person_add),
-          ),
-        ));
-    return Stack(
-      children: [
-        Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                  flex: 3,
-                  child: (_selectedImage == null)
-                      ? imagePlaceholder
-                      : ClipOval(
-                          child: Image.file(_selectedImage),
-                        )),
-              Flexible(
-                flex: 2,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      FlatButton( 
-                        child: Icon(Icons.person_add),
-                        color: Colors.black,
-                        onPressed: () => getImage(ImageSource.camera), //() => getImage(ImageSource.gallery),
-                       )
-                      
-                    ],
-                  ),
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Column(
+
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        
+        children: [
+
+          //Photo
+          Container(
+            height: MediaQuery.of(context).size.height/4,
+            width: MediaQuery.of(context).size.height/4,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Color.fromRGBO(79, 50, 0, 0.2),
                 ),
               ),
-          
-            ],
+            child: Stack(
+              children: [
+                  Center(
+                      child: ClipOval(
+                        child: _selectedImage == null ? 
+                              Icon(Icons.person, color: Theme.of(context).primaryColor,size: 100,) : Image.file(_selectedImage),
+                      ),
+                  ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: IconButton(
+                    icon: Icon(Icons.camera_alt, color: Colors.black,), 
+                    onPressed: () => getImage(ImageSource.camera)
+                  )
+                )
+              ],
+            ),
           ),
-        (inProcess)
-            ? Container(
-                color: Colors.white,
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ))
-            : Container()
-      ],
+        ],
+      ),
     );
   }
 }
