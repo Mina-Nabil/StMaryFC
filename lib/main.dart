@@ -1,3 +1,4 @@
+import 'package:StMaryFA/providers/GroupsProvider.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: Auth()),
         ChangeNotifierProvider.value(value: UsersProvider()),
+        ChangeNotifierProvider.value(value: GroupsProvider()),
       ],
       child: MaterialApp(
         title: 'StMaryFA',

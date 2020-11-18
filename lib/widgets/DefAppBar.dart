@@ -9,7 +9,7 @@ class DefAppBar {
 
     if (isAdd)
       actionsList.add(IconButton(
-        icon: FaIcon(CupertinoIcons.settings),
+        icon: FaIcon(FontAwesomeIcons.cog),
         onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsScreen())),
       ));
 
