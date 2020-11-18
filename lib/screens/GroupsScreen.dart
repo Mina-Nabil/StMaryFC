@@ -44,15 +44,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
             textAlign: TextAlign.left,
             style: TextStyle(color: Colors.black, fontSize: 24),
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(0),
               prefixIcon: Icon(Icons.add),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(radius),
-                borderSide: BorderSide(width: 0.2, color: Color.fromRGBO(79, 50, 0, 1), style: BorderStyle.solid),
-              ),
-              filled: true,
-              fillColor: Color.fromRGBO(254, 250, 241, 1),
-              hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
             ),
           ),
         ),
@@ -64,7 +56,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
           padding: EdgeInsets.all(0),
           onPressed: submitForm,
           child: Container(
-              decoration: BoxDecoration(color: Colors.orangeAccent[200], borderRadius: BorderRadius.circular(radius)),
+              decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(radius)),
               alignment: Alignment.center,
               child: FittedBox(child: Text("Add", style: TextStyle(fontFamily: "Anton", color: Colors.white, fontSize: 24)))),
         ),
@@ -78,7 +70,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
         Container(
           height: MediaQuery.of(context).size.height,
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          color: Colors.orange,
+          color: Colors.orangeAccent[200],
         ),
         ListView(
           children: [

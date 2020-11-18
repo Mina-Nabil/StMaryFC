@@ -54,12 +54,34 @@ class GroupsProvider with ChangeNotifier {
     final request = await http.post(_addGroupURL, headers: _headers, body: {"name": grpName});
     if (request.statusCode == 200) {
       try {
-        print("HENA: " + request.body);
         final body = jsonDecode(request.body);
         final status = body["status"];
         print(status);
         if (status){
           _groups.add(new Group(body["message"]["id"], grpName));
+          notifyListeners();
+          return true;
+        }
+        else
+          return false;
+      } catch (e) {
+        print(e);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> delGroup(int grpID) async {
+    final request = await http.post(_addGroupURL, headers: _headers, body: {"id": grpID});
+    if (request.statusCode == 200) {
+      try {
+        final body = jsonDecode(request.body);
+        final status = body["status"];
+        print(status);
+        if (status){
+          _groups.removeWhere((element) => element.id==grpID);
           notifyListeners();
           return true;
         }
