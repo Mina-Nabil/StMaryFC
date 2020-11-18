@@ -51,7 +51,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
       ),
       Container(
         height: 50,
-        margin: EdgeInsets.symmetric(vertical: 5),
+        // margin: EdgeInsets.symmetric(vertical: 5),
         child: FlatButton(
           padding: EdgeInsets.all(0),
           onPressed: submitForm,
@@ -62,45 +62,30 @@ class _GroupsScreenState extends State<GroupsScreen> {
         ),
       ),
     ];
-    return SafeArea(
-        child: Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Stack(children: [
-        Container(
-          height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          color: Colors.orangeAccent[200],
+    return Column(
+      children: [
+        Expanded(
+          child: Container(
+            // margin: EdgeInsets.symmetric(horizontal: 20, vertical:20),
+            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
+            child: ListView(
+                children: []
+                  ..addAll(formWidgets)
+                  ..addAll([
+                    GroupLabel("Groups"),
+                    ...Provider.of<GroupsProvider>(context, listen: true).groups.map((e) => Container(
+                          child: Text(e.name),
+                        ))
+                  ])),
+          ),
         ),
-        ListView(
-          children: [
-            Container(
-                height: 80,
-                alignment: Alignment.center,
-                child: FittedBox(child: Text("Groups", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500)))),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(5), topRight: Radius.circular(5)),
-              ),
-              child: ListView(
-                  children: []
-                    ..addAll(formWidgets)
-                    ..addAll([
-                      GroupLabel("Groups"),
-                      ...Provider.of<GroupsProvider>(context, listen: true).groups.map((e) => Container(
-                            child: Text(e.name),
-                          ))
-                    ])),
-            )
-          ],
-        )
-      ]),
-    ));
+      ],
+    );
   }
 
   @override
