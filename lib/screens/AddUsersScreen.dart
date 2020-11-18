@@ -10,14 +10,10 @@ class AddUsersScreen extends StatefulWidget {
 }
 
 class _AddUsersScreenState extends State<AddUsersScreen> {
-  bool inProcess = false;
 
   File _selectedImage;
 
   getImage(ImageSource source) async {
-    setState(() {
-      inProcess = true;
-    });
     final _picker = ImagePicker();
     PickedFile image = await _picker.getImage(source: source);
     if (image != null) {
@@ -30,14 +26,15 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
           androidUiSettings: AndroidUiSettings(),
           iosUiSettings: IOSUiSettings(
             showCancelConfirmationDialog: true,
-          ));
+          )
+      );
+
       if (croppedImage != null) {
-        _selectedImage = croppedImage;
+        setState(() {
+          _selectedImage = croppedImage;
+        });
       }
     }
-    setState(() {
-      inProcess = false;
-    });
   }
 
   @override
