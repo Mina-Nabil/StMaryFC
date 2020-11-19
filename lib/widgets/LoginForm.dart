@@ -19,12 +19,6 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    InputDecoration textFieldDecoration = InputDecoration(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-        filled: true,
-        fillColor: Colors.grey[350],
-        hintStyle: TextStyle(color: Colors.grey));
-
     return Stack(children: [
       Container(
         padding: EdgeInsets.symmetric(horizontal: 40),
@@ -36,7 +30,7 @@ class _LoginFormState extends State<LoginForm> {
               Container(
                 padding: EdgeInsets.symmetric(vertical: 3),
                 child: TextFormField(
-                  decoration: textFieldDecoration.copyWith(hintText: "Email"),
+                  decoration: InputDecoration(hintText: "Email"),
                   style: TextStyle(color: Colors.black, fontSize: 20),
                   onChanged: (email) {
                     _signInEmail = email;
@@ -51,7 +45,7 @@ class _LoginFormState extends State<LoginForm> {
                 padding: EdgeInsets.symmetric(vertical: 3),
                 child: TextFormField(
                   obscureText: true, //password type
-                  decoration: textFieldDecoration.copyWith(hintText: "Password"),
+                  decoration: InputDecoration(hintText: "Password"),
                   style: TextStyle(color: Colors.black, fontSize: 20),
                   onChanged: (password) {
                     _signInPassword = password;
@@ -72,7 +66,8 @@ class _LoginFormState extends State<LoginForm> {
                     child: Text(
                       "Login",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                         fontSize: 24,
                       ),
                     ),

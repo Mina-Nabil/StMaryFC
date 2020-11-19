@@ -17,32 +17,35 @@ class UsersProvider with ChangeNotifier {
 
   String _token;
   String _searchApiUrl = Server.address + "api/search/name";
+  String _getAllApiUrl = Server.address + "api/get/users";
   String _attendanceApiUrl = Server.address + "api/take/bulk/attendance";
 
   // search results
   List<User> _users = [];
 
   Future<void> search(String searchString) async {
-
     _users.clear();
-
+    var response;
     if (searchString.isNotEmpty) {
-      final response = await http.post(
+      response = await http.post(
         _searchApiUrl,
         headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
         body: {
           'name': searchString,
         },
       );
-
-      dynamic body = jsonDecode(response.body);
-
-      if (body["message"] != null && body["message"] is Iterable) {
-        for (var user in body["message"]) {
-          _users.add(User.fromJson(user));
-        }
-      } else {}
+    } else {
+      print("GEET HNA");
+      response = await http.get(_getAllApiUrl, headers: {'Authorization': "Bearer $_token", "Accept": "application/json"});
     }
+
+    dynamic body = jsonDecode(response.body);
+
+    if (body["message"] != null && body["message"] is Iterable) {
+      for (var user in body["message"]) {
+        _users.add(User.fromJson(user));
+      }
+    } else {}
 
     //print(_users);
     notifyListeners();

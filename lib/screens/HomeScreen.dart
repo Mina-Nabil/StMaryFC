@@ -15,9 +15,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   Timer searchTimer;
   Set<int> selectedIds = {};
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    Future.delayed(Duration.zero).then((_) => Provider.of<UsersProvider>(context, listen: false).search(""));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,13 +114,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           selected: selectedIds.contains(user.id),
                         ),
                         onTap: () {
-                          if(!user.isAttended)
-                          setState(() {
-                            if (selectedIds.contains(user.id))
-                              selectedIds.remove(user.id);
-                            else
-                              selectedIds.add(user.id);
-                          });
+                          if (!user.isAttended)
+                            setState(() {
+                              if (selectedIds.contains(user.id))
+                                selectedIds.remove(user.id);
+                              else
+                                selectedIds.add(user.id);
+                            });
                         },
                       );
                     }).toList()
@@ -134,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: null,
                         child: Text(
                           "${selectedIds.length} Selected",
-                          style: TextStyle(color: Colors.black, fontSize: 20),
+                          style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
                       Row(
@@ -144,13 +151,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: null,
                               child: Text(
                                 "Review",
-                                style: TextStyle(color: Colors.black, fontSize: 20),
+                                style: TextStyle(color: Colors.white, fontSize: 20),
                               )),
                           FlatButton(
                               padding: EdgeInsets.all(5),
                               child: Text(
                                 "Confirm",
-                                style: TextStyle(color: Colors.black, fontSize: 20),
+                                style: TextStyle(color: Colors.white, fontSize: 20),
                               ),
                               onPressed: () {
                                 String date = DateFormat('yyyy-MM-dd').format(DateTime.now());

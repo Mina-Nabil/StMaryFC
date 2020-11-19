@@ -25,7 +25,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController grpName = new TextEditingController();
   void submitForm() async {
-    print("EDAS 3ala weshy");
     if (_formKey.currentState.validate()) {
       bool res = await Provider.of<GroupsProvider>(context, listen: false).addGroup(grpName.value.text);
       if (!res) {
