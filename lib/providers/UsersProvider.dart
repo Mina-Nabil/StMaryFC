@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:StMaryFA/models/User.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class UsersProvider with ChangeNotifier {
   String _searchApiUrl = Server.address + "api/search/name";
   String _getAllApiUrl = Server.address + "api/get/users";
   String _attendanceApiUrl = Server.address + "api/take/bulk/attendance";
-
+  String _addUserUrl = Server.address + "api/add/user";
   //Requests Vars
   FlutterSecureStorage storage = new FlutterSecureStorage();
   
@@ -47,6 +48,32 @@ class UsersProvider with ChangeNotifier {
 
     //print(_users);
     notifyListeners();
+  }
+
+  Future<bool> addUser(File image, String name, int groupId, String birthDate, String mobileNum, String code, String notes) async {
+    final response = await http.post(
+      _addUserUrl,
+      headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
+      body: {
+        //'photo': await image.exists() ? base64Encode(image.readAsBytesSync()) : null,
+        'name': name,
+        'type': "2",
+        'group': groupId.toString(),
+        'birthDate': birthDate, 
+        'mobn': mobileNum,
+        'code': code,
+        'note': notes
+      },
+    );
+
+    dynamic body = jsonDecode(response.body);
+    
+    print(jsonDecode(response.body));
+
+    if(body['status'] != null && body['status'] == true)
+      return true;
+    else 
+    return false;
   }
 
   Future<bool> takeAttendance(List<int> ids, String date) async {

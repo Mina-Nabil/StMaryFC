@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:StMaryFA/models/Group.dart';
 import 'package:StMaryFA/providers/GroupsProvider.dart';
+import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -17,10 +18,14 @@ class AddUsersScreen extends StatefulWidget {
 class _AddUsersScreenState extends State<AddUsersScreen> {
 
   File _selectedImage;
+  String _name ;
+  int _groupId;
+  String _birthday;
+  String _mobileNum;
+  String _code;
+  String _notes;
 
-  String _birthday = "";
-  String dropdownValue = "Select";
-
+  final _formKey = GlobalKey<FormState>();
   final _groupController = TextEditingController();
   final _birthdateController = TextEditingController();
 
@@ -97,7 +102,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
             SizedBox(height: 10,),
 
             Form(
-              //key: _formKey,
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -111,6 +116,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       validator: (nameString) {
                         return nameString.isEmpty ? "*Required" : null;
                       },
+                      onSaved: (nameString) {_name = nameString;},
                     ),
                   ),
 
@@ -145,10 +151,10 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                                 
                                 itemExtent:  MediaQuery.of(context).size.height/16, 
                                 onSelectedItemChanged: (value){
-                                  print("micky");
                                     setState(() {
                                       // (+1) as we removed fist element "Admins" group
                                       _groupController.value = TextEditingValue(text: groups[value+1].name);
+                                      _groupId = groups[value+1].id;
                                     });
                                 }, 
                                 children: (groups.map((group) {
@@ -204,8 +210,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                                 onDateTimeChanged: (DateTime date) {
                                   print(date.toString());
                                   setState(() {
-                                    _birthday = DateFormat('yyyy-MM-dd').format(date);
-                                    _birthdateController.value = TextEditingValue(text: _birthday);
+                                    _birthdateController.value = TextEditingValue(text: DateFormat('yyyy-MM-dd').format(date));
                                   });
                                 },
                                 
@@ -214,9 +219,10 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                           }
                         );
                       },
-                      validator: (groupString) {
-                        return groupString.isEmpty ? "Please fill the birthdate" : null;
+                      validator: (date) {
+                        return date.isEmpty ? "*Required" : null;
                       },
+                      onSaved: (date) {_birthday = date;},
                     ),
                   ),
 
@@ -226,9 +232,11 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       decoration: InputDecoration(hintText: "Mobile"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
-                      validator: (nameString) {
-                        return nameString.isEmpty ? "*Required" : null;
+                      keyboardType: TextInputType.number,
+                      validator: (mobileNum) {
+                        return mobileNum.isEmpty ? "*Required" : null;
                       },
+                      onSaved: (mobileNum) {_mobileNum = mobileNum;},
                     ),
                   ),
 
@@ -241,6 +249,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       validator: (nameString) {
                         return nameString.isEmpty ? "*Required" : null;
                       },
+                      onSaved: (code) {_code = code;},
                     ),
                   ),
 
@@ -251,9 +260,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       decoration: InputDecoration(hintText: "\nNotes"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
-                      validator: (nameString) {
-                        return nameString.isEmpty ? "*Required" : null;
-                      },
+                      onSaved: (notes) {_notes = notes;},
                     ),
                   ),
 
@@ -269,7 +276,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                           fontSize: 24,
                         )
                       ),
-                      onPressed: () {},
+                      onPressed: () => _onConfirm(),
                     ),
                   ),
 
@@ -281,5 +288,31 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
         ),
       ))
     ]);
+  }
+
+  void _onConfirm() async {
+
+    FormState form = _formKey.currentState;
+
+    if (!form.validate())
+      return;
+
+    form.save();
+    print(_groupId);
+    bool status = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, _name, _groupId, _birthday, _mobileNum, _code, _notes);
+
+print(status);
+    if(status == true) {
+      showCupertinoDialog(
+          context: context,
+          builder: (BuildContext context) => new CupertinoAlertDialog(
+                title: Text("User Added"),
+                content: Text("Add another user?"),
+                actions: [
+                  CupertinoDialogAction(child: Text("Yes"), onPressed: () { Navigator.of(context).pop();},),
+                  CupertinoDialogAction(child: Text("No"), onPressed: () {},)
+                ],
+              ));
+    }
   }
 }
