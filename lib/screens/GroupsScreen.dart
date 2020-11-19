@@ -109,23 +109,31 @@ class _GroupsScreenState extends State<GroupsScreen> {
                     GroupLabel("Groups"),
                     ...Provider.of<GroupsProvider>(context, listen: true).groups.map((e) => Container(
                           child: Card(
-                            child: Dismissible(
-                                background: Container(
-                                    color: Colors.red,
-                                    padding: EdgeInsets.only(right: 20.0),
-                                    alignment: Alignment.centerRight,
-                                    child: FaIcon(FontAwesomeIcons.trashAlt, color: Colors.white)),
-                                dismissThresholds: {DismissDirection.endToStart: 0.6},
-                                key: UniqueKey(),
-                                onDismissed: (direction) => delGroup(e.id),
-                                direction: (e.count == 0) ? DismissDirection.endToStart : null,
-                                child: ListTile(
+                            child: (e.count > 0)
+                                ? ListTile(
                                     tileColor: Color.fromRGBO(254, 250, 241, 1),
                                     trailing: Text("Kids: ${e.count}"),
                                     leading: IconButton(
                                         onPressed: () => toggle(e.id),
                                         icon: FaIcon(FontAwesomeIcons.solidFutbol, color: (e.isActive) ? Colors.green : Colors.red)),
-                                    title: Text(e.name, style: TextStyle(fontSize: 18)))),
+                                    title: Text(e.name, style: TextStyle(fontSize: 18)))
+                                : Dismissible(
+                                    background: Container(
+                                        color: Colors.red,
+                                        padding: EdgeInsets.only(right: 20.0),
+                                        alignment: Alignment.centerRight,
+                                        child: FaIcon(FontAwesomeIcons.trashAlt, color: Colors.white)),
+                                    dismissThresholds: {DismissDirection.endToStart: 0.6},
+                                    key: UniqueKey(),
+                                    onDismissed: (direction) => delGroup(e.id),
+                                    direction: DismissDirection.endToStart,
+                                    child: ListTile(
+                                        tileColor: Color.fromRGBO(254, 250, 241, 1),
+                                        trailing: Text("Kids: ${e.count}"),
+                                        leading: IconButton(
+                                            onPressed: () => toggle(e.id),
+                                            icon: FaIcon(FontAwesomeIcons.solidFutbol, color: (e.isActive) ? Colors.green : Colors.red)),
+                                        title: Text(e.name, style: TextStyle(fontSize: 18)))),
                           ),
                         ))
                   ])),
