@@ -115,7 +115,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
                       validator: (nameString) {
-                        return nameString.isEmpty ? "Please fill your Email" : null;
+                        return nameString.isEmpty ? "*Required" : null;
                       },
                     ),
                   ),
@@ -131,21 +131,45 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                   //Group Text Field
 
                   Container(
-                    child: DropdownButtonFormField<String>(
-                      value: myItems[0].value,
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Theme.of(context).primaryColor,
-                        size: 30,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.arrow_drop_down,size: 30, color: Theme.of(context).primaryColor,)
                       ),
-                      iconSize: 24,
                       style: TextStyle(color: Colors.black, fontSize: 20),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          dropdownValue = newValue;
-                        });
+                      onChanged: null,
+                      readOnly: true,
+                      onTap: () {
+                        showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          context: context, 
+                          builder: (_) {
+                            return Container(
+                              decoration: new BoxDecoration(
+                                color: Colors.orangeAccent[100],
+                                borderRadius: new BorderRadius.only(
+                                topLeft: const Radius.circular(25.0),
+                                topRight: const Radius.circular(25.0))
+                              ),
+
+                              height: MediaQuery.of(context).size.height/4,
+                              child: CupertinoPicker(
+                                itemExtent:  MediaQuery.of(context).size.height/16, 
+                                onSelectedItemChanged: null, 
+                                children: [
+                                  Text("B1"),
+                                  Text("B2"),
+                                  Text("B3"),
+                                  Text("B4"),
+                                  Text("B5"),                            
+                                ]
+                              ),
+                            );
+                          }
+                        );
                       },
-                      items: myItems,
+                      validator: (nameString) {
+                        return nameString.isEmpty ? "*Required" : null;
+                      },
                     ),
                   ),
 
