@@ -46,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           currentIndex: selectedIndex,
           onTap: (i) => _controller.animateToPage(i, duration: Duration(milliseconds: 200), curve: Curves.linear),
           items: [
-            BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.futbol), label: "Groups"),
+            BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.solidFutbol), label: "Groups"),
             BottomNavigationBarItem(icon: Icon(Icons.person_add_alt_1), label: "User"),
           ],
         ),

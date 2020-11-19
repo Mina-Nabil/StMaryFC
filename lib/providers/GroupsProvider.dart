@@ -12,6 +12,7 @@ class GroupsProvider with ChangeNotifier {
   final String _getGroupsURL = Server.address + "api/groups";
   final String _addGroupURL = Server.address + "api/add/group";
   final String _toggleActivationURL = Server.address + "api/toggle/group";
+  final String _delGroupURL = Server.address + "api/del/group";
 
   GroupsProvider() {
     Future.delayed(Duration.zero).then((value) async {
@@ -74,7 +75,7 @@ class GroupsProvider with ChangeNotifier {
   }
 
   Future<bool> delGroup(int grpID) async {
-    final request = await http.post(_addGroupURL, headers: _headers, body: {"id": grpID});
+    final request = await http.post(_delGroupURL, headers: _headers, body: {"id": grpID.toString()});
     if (request.statusCode == 200) {
       try {
         final body = jsonDecode(request.body);
@@ -82,6 +83,30 @@ class GroupsProvider with ChangeNotifier {
         print(status);
         if (status){
           _groups.removeWhere((element) => element.id==grpID);
+          notifyListeners();
+          return true;
+        }
+        else
+          return false;
+      } catch (e) {
+        print(e);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> toggleGroup(int grpID) async {
+    final request = await http.post(_toggleActivationURL, headers: _headers, body: {"id": grpID.toString()});
+    if (request.statusCode == 200) {
+      try {
+        final body = jsonDecode(request.body);
+        final status = body["status"];
+        print(status);
+        if (status){
+          Group group = _groups.singleWhere((element) => element.id==grpID);
+          group.isActive = (group.isActive) ? false : true;
           notifyListeners();
           return true;
         }

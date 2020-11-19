@@ -8,7 +8,7 @@ class Group {
   Group.fromJson(group){
     this.id = group["id"];
     this.name = group["GRUP_NAME"];
-    // this.isActive = group["GRUP_ACTV"];
-    // this.count = group["usersCount"];
+    this.isActive = (group["GRUP_ACTV"]==1);
+    this.count = group["usersCount"];
   }
 }
