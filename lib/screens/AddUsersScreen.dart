@@ -26,8 +26,12 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
   String _notes;
 
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _groupController = TextEditingController();
   final _birthdateController = TextEditingController();
+  final _mobileNumController = TextEditingController();
+  final _codeController = TextEditingController();
+  final _notesController = TextEditingController();
 
   getImage(ImageSource source) async {
     final _picker = ImagePicker();
@@ -113,6 +117,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       decoration: InputDecoration(hintText: "Name"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
+                      controller: _nameController,
                       validator: (nameString) {
                         return nameString.isEmpty ? "*Required" : null;
                       },
@@ -134,6 +139,8 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       onTap: () {
                         List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
                         _groupController.value = TextEditingValue(text:  groups[1].name);
+                        _groupId = groups[1].id;
+
                         showModalBottomSheet(
                           backgroundColor: Colors.transparent,
                           context: context, 
@@ -233,6 +240,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
                       keyboardType: TextInputType.number,
+                      controller: _mobileNumController,
                       validator: (mobileNum) {
                         return mobileNum.isEmpty ? "*Required" : null;
                       },
@@ -246,8 +254,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       decoration: InputDecoration(hintText: "Code"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
-                      validator: (nameString) {
-                        return nameString.isEmpty ? "*Required" : null;
+                      controller: _codeController,
+                      validator: (code) {
+                        return code.isEmpty ? "*Required" : null;
                       },
                       onSaved: (code) {_code = code;},
                     ),
@@ -261,6 +270,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
                       onSaved: (notes) {_notes = notes;},
+                      controller: _notesController,
                     ),
                   ),
 
@@ -309,10 +319,30 @@ print(status);
                 title: Text("User Added"),
                 content: Text("Add another user?"),
                 actions: [
-                  CupertinoDialogAction(child: Text("Yes"), onPressed: () { Navigator.of(context).pop();},),
+                  CupertinoDialogAction(child: Text("Yes"), onPressed: () {
+                    setState(() {
+                      clearForm();
+                      Navigator.of(context).pop();
+                    });
+                  }
+                  ),
                   CupertinoDialogAction(child: Text("No"), onPressed: () {},)
                 ],
               ));
     }
+  }
+
+  void clearForm() {
+    //_selectedImage, 
+    _name = _birthday = _mobileNum =  _code = _notes = "";
+    _groupId = 0;
+    
+    _nameController.clear();
+    _groupController.clear();
+    _birthdateController.clear();
+    _mobileNumController.clear();
+    _codeController.clear();
+    _notesController.clear();
+    
   }
 }
