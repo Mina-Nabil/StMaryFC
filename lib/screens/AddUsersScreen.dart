@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:StMaryFA/models/Group.dart';
+import 'package:StMaryFA/providers/GroupsProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AddUsersScreen extends StatefulWidget {
   @override
@@ -17,18 +20,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
 
   String _birthday = "";
   String dropdownValue = "Select";
-  final _birthdateController = TextEditingController();
 
-  final List<DropdownMenuItem<String>> myItems = [
-    DropdownMenuItem<String>(
-      value: "B1",
-      child: Text("B1"),
-    ),
-    DropdownMenuItem<String>(
-      value: "B2",
-      child: Text("B2"),
-    )
-  ];
+  final _groupController = TextEditingController(text: "Select Group");
+  final _birthdateController = TextEditingController();
 
   getImage(ImageSource source) async {
     final _picker = ImagePicker();
@@ -138,7 +132,10 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
                       readOnly: true,
+                      controller: _groupController,
                       onTap: () {
+                        List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
+                        _groupController.value = TextEditingValue(text:  groups[1].name);
                         showModalBottomSheet(
                           backgroundColor: Colors.transparent,
                           context: context, 
@@ -153,15 +150,18 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
 
                               height: MediaQuery.of(context).size.height/4,
                               child: CupertinoPicker(
+                                
                                 itemExtent:  MediaQuery.of(context).size.height/16, 
-                                onSelectedItemChanged: null, 
-                                children: [
-                                  Text("B1"),
-                                  Text("B2"),
-                                  Text("B3"),
-                                  Text("B4"),
-                                  Text("B5"),                            
-                                ]
+                                onSelectedItemChanged: (value){
+                                  print("micky");
+                                    setState(() {
+                                      // (+1) as we removed fist element "Admins" group
+                                      _groupController.value = TextEditingValue(text: groups[value+1].name);
+                                    });
+                                }, 
+                                children: (groups.map((group) {
+                                  return Text(group.name);
+                                }).toList()).sublist(1),
                               ),
                             );
                           }
