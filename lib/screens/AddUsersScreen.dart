@@ -21,7 +21,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
   String _birthday = "";
   String dropdownValue = "Select";
 
-  final _groupController = TextEditingController(text: "Select Group");
+  final _groupController = TextEditingController();
   final _birthdateController = TextEditingController();
 
   getImage(ImageSource source) async {
@@ -60,8 +60,8 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
             //Photo
             Center(
               child: Container(
-                height: MediaQuery.of(context).size.height / 4,
-                width: MediaQuery.of(context).size.height / 4,
+                height: MediaQuery.of(context).size.height / 5,
+                width: MediaQuery.of(context).size.height / 5,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -94,18 +94,18 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
               ),
             ),
 
+            SizedBox(height: 10,),
+
             Form(
               //key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 2, bottom: 2),
-                    child: Text("Name", style: TextStyle(color: Colors.black, fontSize: 20)),
-                  ),
                   //Name Text Field
                   Container(
+                    padding: EdgeInsets.symmetric(vertical: 5),
                     child: TextFormField(
+                      decoration: InputDecoration(hintText: "Name"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
                       validator: (nameString) {
@@ -114,20 +114,12 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                     ),
                   ),
 
-                  SizedBox(
-                    height: 10,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 2, bottom: 2),
-                    child: Text("Group", style: TextStyle(color: Colors.black, fontSize: 20)),
-                  ),
-                  //Group Text Field
-
                   Container(
+                    padding: EdgeInsets.symmetric(vertical: 5),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.arrow_drop_down,size: 30, color: Theme.of(context).primaryColor,)
+                        suffixIcon: Icon(Icons.arrow_drop_down,size: 30, color: Theme.of(context).primaryColor,),
+                        hintText: "Group"
                       ),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
@@ -173,17 +165,11 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                     ),
                   ),
 
-                  SizedBox(
-                    height: 10,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 2, bottom: 2),
-                    child: Text("Birth date", style: TextStyle(color: Colors.black, fontSize: 20)),
-                  ),
                   Container(
+                    padding: EdgeInsets.symmetric(vertical: 5),
                     child: TextFormField(
                       decoration: InputDecoration(
+                        hintText: "Birth date",
                           suffixIcon: Icon(
                         Icons.date_range,
                         size: 24,
