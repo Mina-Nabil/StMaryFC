@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +12,7 @@ class AddUsersScreen extends StatefulWidget {
 }
 
 class _AddUsersScreenState extends State<AddUsersScreen> {
+
   File _selectedImage;
 
   String _birthday = "";
@@ -170,12 +172,37 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       readOnly: true,
                       controller: _birthdateController,
                       onTap: () {
-                        showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(1980), lastDate: DateTime.now()).then((date) {
-                          setState(() {
-                            _birthday = DateFormat('yyyy-MM-dd').format(date);
-                            _birthdateController.value = TextEditingValue(text: _birthday);
-                          });
-                        });
+                        showModalBottomSheet(
+                          backgroundColor: Colors.transparent,
+                          context: context, 
+                          builder: (_) {
+                            return Container(
+                              decoration: new BoxDecoration(
+                                color: Colors.orangeAccent[100],
+                                borderRadius: new BorderRadius.only(
+                                topLeft: const Radius.circular(25.0),
+                                topRight: const Radius.circular(25.0))
+                              ),
+
+                              height: MediaQuery.of(context).size.height/4,
+                              child: CupertinoDatePicker(
+
+                                backgroundColor: Colors.transparent,
+                                mode: CupertinoDatePickerMode.date,
+                                initialDateTime: DateTime.now(),
+                                minimumYear: 1980,
+                                onDateTimeChanged: (DateTime date) {
+                                  print(date.toString());
+                                  setState(() {
+                                    _birthday = DateFormat('yyyy-MM-dd').format(date);
+                                    _birthdateController.value = TextEditingValue(text: _birthday);
+                                  });
+                                },
+                                
+                              ),
+                            );
+                          }
+                        );
                       },
                       validator: (groupString) {
                         return groupString.isEmpty ? "Please fill the birthdate" : null;
