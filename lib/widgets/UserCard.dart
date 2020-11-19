@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:StMaryFA/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -75,10 +77,8 @@ class UserCard extends StatelessWidget {
     var buffer = StringBuffer();
     var split = user.userName.split(' ');
     //limit to 2 char only
-    for (var i = 0; i < (2 ?? split.length); i++) {
-      if(split[i] != null) {
-        buffer.write(split[i][0] ?? '');
-      }
+    for (var i = 0; i < min(2, split.length); i++) {
+      buffer.write(split[i][0]);
     }
     return buffer.toString().toUpperCase();
   }
