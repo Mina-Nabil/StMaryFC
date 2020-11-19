@@ -56,14 +56,14 @@ class UserCard extends StatelessWidget {
                     child: FaIcon(
                       FontAwesomeIcons.dollarSign,
                       size: 12,
-                      color: user.isDue ? Colors.red : Colors.transparent,
+                      color: user.isDue ? Colors.red : Colors.grey[300],
                     )),
                 Container(
                     margin: EdgeInsets.only(right: 1),
                     child: FaIcon(
                       FontAwesomeIcons.checkCircle,
                       size: 12,
-                      color: user.isAttended ? Colors.green : Colors.transparent,
+                      color: user.isAttended ? Colors.green : Colors.grey[300],
                     ))
               ],
             ),
@@ -75,7 +75,7 @@ class UserCard extends StatelessWidget {
 
   String _getInitials() {
     var buffer = StringBuffer();
-    var split = user.userName.split(' ');
+    var split = user.userName.split(new RegExp(r" |-|_"));
     //limit to 2 char only
     for (var i = 0; i < min(2, split.length); i++) {
       buffer.write(split[i][0]);
