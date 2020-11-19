@@ -64,11 +64,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> formWidgets = [
-      GroupLabel("Add New"),
+
       Form(
         key: _formKey,
         child: Container(
-          height: 80,
+          padding: EdgeInsets.symmetric(vertical: 25),
           child: TextFormField(
             controller: grpName,
             validator: (v) {
@@ -77,6 +77,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
             textAlign: TextAlign.left,
             style: TextStyle(color: Colors.black, fontSize: 24),
             decoration: InputDecoration(
+              hintText: "Add New Group",
+              hintStyle: TextStyle(fontSize: 20),
               prefixIcon: Icon(Icons.add),
             ),
           ),
