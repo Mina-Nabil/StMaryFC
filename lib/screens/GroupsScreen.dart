@@ -113,9 +113,16 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                 ? ListTile(
                                     tileColor: Color.fromRGBO(254, 250, 241, 1),
                                     trailing: Text("Kids: ${e.count}"),
-                                    leading: IconButton(
-                                        onPressed: () => toggle(e.id),
-                                        icon: FaIcon(FontAwesomeIcons.solidFutbol, color: (e.isActive) ? Colors.green : Colors.red)),
+                                    leading: ButtonTheme(
+                                      minWidth: 0,
+                                      height: 0,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                      padding: EdgeInsets.all(0),
+                                      child: RaisedButton(
+                                          color: Color.fromRGBO(254, 250, 241, 1),
+                                          onPressed: () => toggle(e.id),
+                                          child: FittedBox(child: Icon(FontAwesomeIcons.solidFutbol, color: (e.isActive) ? Colors.green : Colors.red))),
+                                    ),
                                     title: Text(e.name, style: TextStyle(fontSize: 18)))
                                 : Dismissible(
                                     background: Container(
@@ -130,9 +137,16 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                     child: ListTile(
                                         tileColor: Color.fromRGBO(254, 250, 241, 1),
                                         trailing: Text("Kids: ${e.count}"),
-                                        leading: IconButton(
-                                            onPressed: () => toggle(e.id),
-                                            icon: FaIcon(FontAwesomeIcons.solidFutbol, color: (e.isActive) ? Colors.green : Colors.red)),
+                                        leading: ButtonTheme(
+                                          minWidth: 0,
+                                          height: 0,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                          padding: EdgeInsets.all(0),
+                                          child: RaisedButton(
+                                              color: Color.fromRGBO(254, 250, 241, 1),
+                                              onPressed: () => toggle(e.id),
+                                              child: FittedBox(child: Icon(FontAwesomeIcons.solidFutbol, color: (e.isActive) ? Colors.green : Colors.red))),
+                                        ),
                                         title: Text(e.name, style: TextStyle(fontSize: 18)))),
                           ),
                         ))
