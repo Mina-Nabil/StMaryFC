@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:StMaryFA/models/Group.dart';
 import 'package:StMaryFA/providers/GroupsProvider.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
+import 'package:StMaryFA/screens/HomeScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -326,7 +327,13 @@ print(status);
                     });
                   }
                   ),
-                  CupertinoDialogAction(child: Text("No"), onPressed: () {},)
+                  CupertinoDialogAction(child: Text("No"), onPressed: () {
+                    //TODO popUntil is better
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    );
+                  },)
                 ],
               ));
     }
