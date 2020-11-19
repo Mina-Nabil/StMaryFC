@@ -1,4 +1,5 @@
 import 'package:StMaryFA/providers/GroupsProvider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -12,12 +13,20 @@ class _GroupsScreenState extends State<GroupsScreen> {
   //UI vars
   final double radius = 10;
 
-  void _showAlert(BuildContext context) {
+  void showGroupsDialog(context, String title, String msg) {
     showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-              title: Text("Wifi"),
-              content: Text("Wifi not detected. Please activate it."),
+        builder: (_) => new AlertDialog(
+              title: new Text(title),
+              content: new Text(msg),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
             ));
   }
 
@@ -28,20 +37,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
     if (_formKey.currentState.validate()) {
       bool res = await Provider.of<GroupsProvider>(context, listen: false).addGroup(grpName.value.text);
       if (!res) {
-        showDialog(
-            context: context,
-            builder: (_) => new AlertDialog(
-                  title: new Text("Warning"),
-                  content: new Text("Failed to Add Group - Check duplicate Name or internet connection"),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('Ok'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )
-                  ],
-                ));
+        showGroupsDialog(context, "Warning", "Failed to Add Group - Check duplicate Name or internet connection");
+      } else {
+        showGroupsDialog(context, "Done", "New Group Added");
+        grpName.clear();
+        FocusScope.of(context).unfocus();
       }
     }
   }

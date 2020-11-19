@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:StMaryFA/models/Group.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import "package:http/http.dart" as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../global.dart';
 
@@ -13,19 +13,10 @@ class GroupsProvider with ChangeNotifier {
   final String _addGroupURL = Server.address + "api/add/group";
   final String _toggleActivationURL = Server.address + "api/toggle/group";
   final String _delGroupURL = Server.address + "api/del/group";
-
-  GroupsProvider() {
-    Future.delayed(Duration.zero).then((value) async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      _token = prefs.getString("token");
-      _headers = {'Authorization': "Bearer $_token", "Accept": "application/json"};
-    });
-  }
+  final FlutterSecureStorage storage = new FlutterSecureStorage();
 
   //Provider vars
-  String _token;
   List<Group> _groups = [];
-  Map<String, String> _headers;
 
   List<Group> get groups {
     return _groups;
@@ -33,7 +24,7 @@ class GroupsProvider with ChangeNotifier {
 
   Future<void> loadGroups() async {
     _groups.clear();
-    final request = await http.get(_getGroupsURL, headers: _headers);
+    final request = await http.get(_getGroupsURL, headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
 
     if (request.statusCode == 200) {
       try {
@@ -52,7 +43,7 @@ class GroupsProvider with ChangeNotifier {
   }
 
   Future<bool> addGroup(String grpName) async {
-    final request = await http.post(_addGroupURL, headers: _headers, body: {"name": grpName});
+    final request = await http.post(_addGroupURL, headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"}, body: {"name": grpName});
     if (request.statusCode == 200) {
       try {
         final body = jsonDecode(request.body);
@@ -75,7 +66,7 @@ class GroupsProvider with ChangeNotifier {
   }
 
   Future<bool> delGroup(int grpID) async {
-    final request = await http.post(_delGroupURL, headers: _headers, body: {"id": grpID.toString()});
+    final request = await http.post(_delGroupURL, headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"}, body: {"id": grpID.toString()});
     if (request.statusCode == 200) {
       try {
         final body = jsonDecode(request.body);
@@ -98,7 +89,7 @@ class GroupsProvider with ChangeNotifier {
   }
 
   Future<bool> toggleGroup(int grpID) async {
-    final request = await http.post(_toggleActivationURL, headers: _headers, body: {"id": grpID.toString()});
+    final request = await http.post(_toggleActivationURL, headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"}, body: {"id": grpID.toString()});
     if (request.statusCode == 200) {
       try {
         final body = jsonDecode(request.body);

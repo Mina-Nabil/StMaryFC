@@ -76,7 +76,9 @@ class UserCard extends StatelessWidget {
     var split = user.userName.split(' ');
     //limit to 2 char only
     for (var i = 0; i < (2 ?? split.length); i++) {
-      buffer.write(split[i][0]);
+      if(split[i] != null) {
+        buffer.write(split[i][0] ?? '');
+      }
     }
     return buffer.toString().toUpperCase();
   }

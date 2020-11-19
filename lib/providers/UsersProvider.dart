@@ -2,23 +2,21 @@ import 'dart:convert';
 
 import 'package:StMaryFA/models/User.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import "package:http/http.dart" as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../global.dart';
 
 class UsersProvider with ChangeNotifier {
-  UsersProvider() {
-    Future.delayed(Duration.zero).then((value) async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      _token = prefs.getString("token");
-    });
-  }
 
-  String _token;
+
   String _searchApiUrl = Server.address + "api/search/name";
   String _getAllApiUrl = Server.address + "api/get/users";
   String _attendanceApiUrl = Server.address + "api/take/bulk/attendance";
+
+  //Requests Vars
+  FlutterSecureStorage storage = new FlutterSecureStorage();
+  
 
   // search results
   List<User> _users = [];
@@ -29,14 +27,14 @@ class UsersProvider with ChangeNotifier {
     if (searchString.isNotEmpty) {
       response = await http.post(
         _searchApiUrl,
-        headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
+        headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
         body: {
           'name': searchString,
         },
       );
     } else {
       print("GEET HNA");
-      response = await http.get(_getAllApiUrl, headers: {'Authorization': "Bearer $_token", "Accept": "application/json"});
+      response = await http.get(_getAllApiUrl, headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
     }
 
     dynamic body = jsonDecode(response.body);
@@ -54,7 +52,7 @@ class UsersProvider with ChangeNotifier {
   Future<bool> takeAttendance(List<int> ids, String date) async {
     final response = await http.post(
       _attendanceApiUrl,
-      headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
+      headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
       body: {
         'userIDs': ids.toList().toString(),
         'date': date,

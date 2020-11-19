@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Timer searchTimer;
   List<int> selectedIds = [];
+  final Duration searchDelay = Duration(milliseconds: 500);
 
   @override
   void initState() {
@@ -47,12 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   textAlign: TextAlign.left,
                   style: TextStyle(color: Colors.black, fontSize: 24),
                   onChanged: (searchString) {
-                    const duration = Duration(milliseconds: 1000);
                     if (searchTimer != null) {
                       setState(() => searchTimer.cancel()); // clear timer
                     }
                     setState(() {
-                      searchTimer = new Timer(duration, () {
+                      searchTimer = new Timer(searchDelay, () {
                         _search(searchString);
                       });
                     });

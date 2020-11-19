@@ -1,18 +1,18 @@
 import 'dart:convert';
 
+import 'package:StMaryFA/global.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import "package:http/http.dart" as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
-  String _token = "";
   String _userName = "";
   String _imageUrl = "";
+  FlutterSecureStorage storage;
 
   Future<bool> isLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("token");
-    _token=token;
+    storage = FlutterSecureStorage();
+    String token = await Server.token;
     return token != null;
   }
 
@@ -37,9 +37,9 @@ class Auth with ChangeNotifier {
       dynamic body = jsonDecode(response.body);
 
       if (body["status"] != null && body["status"] == true) {
-        _token = body["message"]["token"];
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString("token", _token);
+
+        await Server.setToken(body["message"]["token"]);
+
         print("Sign in Done");
       } else {
         if (body["message"]["errors"] != null) {
@@ -56,18 +56,15 @@ class Auth with ChangeNotifier {
   }
 
   void logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    _token = "";
+    Server.logOut();
     _userName = "";
   }
 
   Future<void> getCurrentUser() async {
     assert(await isLoggedIn());
-
     final response = await http.get(
       "https://stmaryfa.msquare.app/api/current/user",
-      headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
+      headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
     );
 
     dynamic body = jsonDecode(response.body);
@@ -91,8 +88,4 @@ class Auth with ChangeNotifier {
     return _imageUrl;
   }
 
-  Future<String> get token async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString("token");
-  }
 }
