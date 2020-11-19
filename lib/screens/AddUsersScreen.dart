@@ -52,7 +52,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
     return Column(children: [
       Expanded(
           child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+        padding: EdgeInsets.only(top: 20, left: 20, right: 20),
         decoration:
             BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(25)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
         child: ListView(
@@ -103,7 +103,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                 children: [
                   //Name Text Field
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 5),
+                    margin: EdgeInsets.symmetric(vertical: 5),
                     child: TextFormField(
                       decoration: InputDecoration(hintText: "Name"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
@@ -115,7 +115,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                   ),
 
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 5),
+                    margin: EdgeInsets.symmetric(vertical: 5),
                     child: TextFormField(
                       decoration: InputDecoration(
                         suffixIcon: Icon(Icons.arrow_drop_down,size: 30, color: Theme.of(context).primaryColor,),
@@ -166,7 +166,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                   ),
 
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 5),
+                    margin: EdgeInsets.symmetric(vertical: 5),
                     child: TextFormField(
                       decoration: InputDecoration(
                         hintText: "Birth date",
@@ -219,6 +219,61 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       },
                     ),
                   ),
+
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    child: TextFormField(
+                      decoration: InputDecoration(hintText: "Mobile"),
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      onChanged: null,
+                      validator: (nameString) {
+                        return nameString.isEmpty ? "*Required" : null;
+                      },
+                    ),
+                  ),
+
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    child: TextFormField(
+                      decoration: InputDecoration(hintText: "Code"),
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      onChanged: null,
+                      validator: (nameString) {
+                        return nameString.isEmpty ? "*Required" : null;
+                      },
+                    ),
+                  ),
+
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    child: TextFormField(
+                      maxLines: 3,
+                      decoration: InputDecoration(hintText: "\nNotes"),
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      onChanged: null,
+                      validator: (nameString) {
+                        return nameString.isEmpty ? "*Required" : null;
+                      },
+                    ),
+                  ),
+
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    width: double.infinity,
+                    decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
+                    child: FlatButton(
+                      child: Text("Confirm",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                        )
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+
+                  SizedBox(height: 20,)
                 ],
               ),
             ),
