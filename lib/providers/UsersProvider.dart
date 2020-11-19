@@ -51,7 +51,7 @@ class UsersProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> takeAttendance(Set<int> ids, String date) async {
+  Future<bool> takeAttendance(List<int> ids, String date) async {
     final response = await http.post(
       _attendanceApiUrl,
       headers: {'Authorization': "Bearer $_token", "Accept": "application/json"},
@@ -65,6 +65,10 @@ class UsersProvider with ChangeNotifier {
 
     if (body["status"] != null && body["status"] == true) {
       print("Attendance taken correct!");
+      _users.where((element) => ids.contains(element.id)).forEach((element) { 
+        element.isAttended = true;
+      });
+      notifyListeners();
       return true;
     } else
       return false;

@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Timer searchTimer;
-  Set<int> selectedIds = {};
+  List<int> selectedIds = [];
 
   @override
   void initState() {
@@ -159,9 +159,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 "Confirm",
                                 style: TextStyle(color: Colors.white, fontSize: 20),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                                Provider.of<UsersProvider>(context, listen: false).takeAttendance(selectedIds, date);
+                                await Provider.of<UsersProvider>(context, listen: false).takeAttendance(selectedIds, date);
                                 setState(() {
                                   selectedIds.clear();
                                 });
