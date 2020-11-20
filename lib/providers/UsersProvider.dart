@@ -34,7 +34,6 @@ class UsersProvider with ChangeNotifier {
         },
       );
     } else {
-      print("GEET HNA");
       response = await http.get(_getAllApiUrl, headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
     }
 
@@ -46,11 +45,10 @@ class UsersProvider with ChangeNotifier {
       }
     } else {}
 
-    //print(_users);
     notifyListeners();
   }
 
-  Future<bool> addUser(File image, String name, int groupId, String birthDate, String mobileNum, String code, String notes) async {
+  Future<String> addUser(File image, String name, int groupId, String birthDate, String mobileNum, String code, String notes) async {
     
     var request = http.MultipartRequest("POST", Uri.parse(_addUserUrl));
     request.fields['name'] = name;
@@ -61,10 +59,12 @@ class UsersProvider with ChangeNotifier {
     request.fields['code'] = code;
     request.fields['note'] = notes;
 
-    var pic = await http.MultipartFile.fromPath('photo', image.path,);
-    request.files.add(pic);
+    if(image != null) {
+      var pic = await http.MultipartFile.fromPath('photo', image.path,);
+      request.files.add(pic);
+    }
 
-  request.headers.addAll({'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+    request.headers.addAll({'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
  
     var response = await request.send();
 
@@ -72,12 +72,13 @@ class UsersProvider with ChangeNotifier {
     var responseString = String.fromCharCodes(responseData);
     dynamic body = jsonDecode(responseString);
     
-    print(responseString);
+    print(body);
 
+    // Now name error message in only supported.
     if(body['status'] != null && body['status'] == true)
-      return true;
+      return "";
     else 
-    return false;
+      return "The name has already been taken.";
   }
 
   Future<bool> takeAttendance(List<int> ids, String date) async {

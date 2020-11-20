@@ -243,7 +243,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       keyboardType: TextInputType.number,
                       controller: _mobileNumController,
                       validator: (mobileNum) {
-                        return mobileNum.isEmpty ? "*Required" : null;
+                        if(mobileNum.isNotEmpty && mobileNum.length != 11)
+                          return "*Non valid mobile number";
+                        return null;
                       },
                       onSaved: (mobileNum) {_mobileNum = mobileNum;},
                     ),
@@ -256,9 +258,6 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
                       controller: _codeController,
-                      validator: (code) {
-                        return code.isEmpty ? "*Required" : null;
-                      },
                       onSaved: (code) {_code = code;},
                     ),
                   ),
@@ -310,16 +309,15 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
 
     form.save();
     print(_groupId);
-    bool status = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, _name, _groupId, _birthday, _mobileNum, _code, _notes);
+    String errorMsg = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, _name, _groupId, _birthday, _mobileNum, _code, _notes);
 
-print(status);
-    if(status == true) {
+print(errorMsg);
       showCupertinoDialog(
           context: context,
           builder: (BuildContext context) => new CupertinoAlertDialog(
-                title: Text("User Added"),
-                content: Text("Add another user?"),
-                actions: [
+                title: errorMsg.isEmpty? Text("User Added") : Text("Failed"),
+                content: errorMsg.isEmpty? Text("Add another user?") : Text(errorMsg),
+                actions: errorMsg.isEmpty? [
                   CupertinoDialogAction(child: Text("Yes"), onPressed: () {
                     setState(() {
                       clearForm();
@@ -334,9 +332,13 @@ print(status);
                       MaterialPageRoute(builder: (context) => HomeScreen()),
                     );
                   },)
+                ] : 
+                [
+                  CupertinoDialogAction(child: Text("OK"), onPressed: () {
+                    Navigator.of(context).pop();
+                  },)
                 ],
               ));
-    }
   }
 
   void clearForm() {
@@ -366,7 +368,6 @@ print(status);
             topRight: const Radius.circular(25.0))
           ),
 
-          //height: MediaQuery.of(context).size.height/8,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.min,
