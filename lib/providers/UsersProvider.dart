@@ -51,24 +51,28 @@ class UsersProvider with ChangeNotifier {
   }
 
   Future<bool> addUser(File image, String name, int groupId, String birthDate, String mobileNum, String code, String notes) async {
-    final response = await http.post(
-      _addUserUrl,
-      headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
-      body: {
-        //'photo': await image.exists() ? base64Encode(image.readAsBytesSync()) : null,
-        'name': name,
-        'type': "2",
-        'group': groupId.toString(),
-        'birthDate': birthDate, 
-        'mobn': mobileNum,
-        'code': code,
-        'note': notes
-      },
-    );
-
-    dynamic body = jsonDecode(response.body);
     
-    print(jsonDecode(response.body));
+    var request = http.MultipartRequest("POST", Uri.parse(_addUserUrl));
+    request.fields['name'] = name;
+    request.fields['type'] = "2";
+    request.fields['group'] = groupId.toString();
+    request.fields['birthDate'] = birthDate;
+    request.fields['mobn'] = mobileNum;
+    request.fields['code'] = code;
+    request.fields['note'] = notes;
+
+    var pic = await http.MultipartFile.fromPath('photo', image.path,);
+    request.files.add(pic);
+
+  request.headers.addAll({'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+ 
+    var response = await request.send();
+
+    var responseData = await response.stream.toBytes();
+    var responseString = String.fromCharCodes(responseData);
+    dynamic body = jsonDecode(responseString);
+    
+    print(responseString);
 
     if(body['status'] != null && body['status'] == true)
       return true;
@@ -89,7 +93,6 @@ class UsersProvider with ChangeNotifier {
     dynamic body = jsonDecode(response.body);
 
     if (body["status"] != null && body["status"] == true) {
-      print("Attendance taken correct!");
       _users.where((element) => ids.contains(element.id)).forEach((element) { 
         element.isAttended = true;
       });

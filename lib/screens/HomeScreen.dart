@@ -78,35 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSpacing: 8,
                   crossAxisCount: 3,
                   children: [
-                    //Add New
-                    // FittedBox(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.center,
-                    //     children: [
-                    //       CircleAvatar(
-                    //         radius: MediaQuery.of(context).size.width / 8,
-                    //         backgroundColor: Colors.orange,
-                    //         child: Icon(
-                    //           Icons.person_add,
-                    //           size: MediaQuery.of(context).size.width / 10,
-                    //           color: Colors.black,
-                    //         ),
-                    //       ),
-                    //       Padding(
-                    //         padding: const EdgeInsets.all(1.0),
-                    //         child: Text(
-                    //           "Add New",
-                    //         ),
-                    //       ),
-                    //       //just to algined with other cards
-                    //       Padding(
-                    //         padding: const EdgeInsets.all(1.0),
-                    //         child: Text(" "),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-
                     ...Provider.of<UsersProvider>(context, listen: true).users.map((user) {
                       return GestureDetector(
                         child: UserCard(

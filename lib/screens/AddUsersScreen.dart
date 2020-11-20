@@ -166,7 +166,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                                     });
                                 }, 
                                 children: (groups.map((group) {
-                                  return Text(group.name);
+                                  return Center(child: Text(group.name));
                                 }).toList()).sublist(1),
                               ),
                             );
