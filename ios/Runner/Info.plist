@@ -29,7 +29,7 @@
 	<key>NSCameraUsageDescription</key>
     <string>camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photos<string>
+	<string>Photos</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
