@@ -56,7 +56,7 @@ class UserCard extends StatelessWidget {
                     child: FaIcon(
                       FontAwesomeIcons.dollarSign,
                       size: 12,
-                      color: user.isDue ? Colors.red : Colors.grey[300],
+                      color: user.monthlyPayments > 0 ? Colors.green : user.isAttended ? Colors.red : Colors.grey[300],
                     )),
                 Container(
                     margin: EdgeInsets.only(right: 1),
