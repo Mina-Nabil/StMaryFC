@@ -98,7 +98,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                               Icons.camera_alt,
                               color: Theme.of(context).primaryColor,
                             ),
-                            onPressed: () => getImage(ImageSource.camera)))
+                            onPressed: () => _addProfilePicture()))
                   ],
                 ),
               ),
@@ -351,5 +351,64 @@ print(status);
     _codeController.clear();
     _notesController.clear();
     
+  }
+
+  void _addProfilePicture() {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context, 
+      builder: (_) {
+        return Container(
+          decoration: new BoxDecoration(
+            color: Colors.orangeAccent[100],
+            borderRadius: new BorderRadius.only(
+            topLeft: const Radius.circular(25.0),
+            topRight: const Radius.circular(25.0))
+          ),
+
+          //height: MediaQuery.of(context).size.height/8,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                child: InkWell(
+                  child: Row(
+                    children: [
+                    Icon(Icons.file_upload, size: 30,),
+                    SizedBox(width: 10,),
+                    Text("Upload Photo", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                  onTap: () {
+                    getImage(ImageSource.gallery);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20, top: 10, bottom: 20),
+                
+                child: InkWell(
+                  child: Row(
+                    children: [
+                    Icon(Icons.camera_alt,size: 30,),
+                    SizedBox(width: 10,),
+                    Text("Take Photo",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                  onTap: () {
+                    getImage(ImageSource.camera);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          )   
+        );
+      }
+    );
   }
 }
