@@ -27,6 +27,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
   String _notes;
 
   final _formKey = GlobalKey<FormState>();
+  bool  confirmButtonEnable = true;
   final _nameController = TextEditingController();
   final _groupController = TextEditingController();
   final _birthdateController = TextEditingController();
@@ -286,7 +287,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                           fontSize: 24,
                         )
                       ),
-                      onPressed: () => _onConfirm(),
+                      onPressed: confirmButtonEnable ? () => _onConfirm() : null,
                     ),
                   ),
 
@@ -308,37 +309,44 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
       return;
 
     form.save();
-    print(_groupId);
+
+    setState(() {
+      confirmButtonEnable = false;
+    });
+
     String errorMsg = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, _name, _groupId, _birthday, _mobileNum, _code, _notes);
 
-print(errorMsg);
-      showCupertinoDialog(
-          context: context,
-          builder: (BuildContext context) => new CupertinoAlertDialog(
-                title: errorMsg.isEmpty? Text("User Added") : Text("Failed"),
-                content: errorMsg.isEmpty? Text("Add another user?") : Text(errorMsg),
-                actions: errorMsg.isEmpty? [
-                  CupertinoDialogAction(child: Text("Yes"), onPressed: () {
-                    setState(() {
-                      clearForm();
-                      Navigator.of(context).pop();
-                    });
-                  }
-                  ),
-                  CupertinoDialogAction(child: Text("No"), onPressed: () {
-                    //TODO popUntil is better
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                    );
-                  },)
-                ] : 
-                [
-                  CupertinoDialogAction(child: Text("OK"), onPressed: () {
+    setState(() {
+      confirmButtonEnable = true;
+    });
+
+    showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) => new CupertinoAlertDialog(
+              title: errorMsg.isEmpty? Text("User Added") : Text("Failed"),
+              content: errorMsg.isEmpty? Text("Add another user?") : Text(errorMsg),
+              actions: errorMsg.isEmpty? [
+                CupertinoDialogAction(child: Text("Yes"), onPressed: () {
+                  setState(() {
+                    clearForm();
                     Navigator.of(context).pop();
-                  },)
-                ],
-              ));
+                  });
+                }
+                ),
+                CupertinoDialogAction(child: Text("No"), onPressed: () {
+                  //TODO popUntil is better
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                },)
+              ] : 
+              [
+                CupertinoDialogAction(child: Text("OK"), onPressed: () {
+                  Navigator.of(context).pop();
+                },)
+              ],
+            ));
   }
 
   void clearForm() {
