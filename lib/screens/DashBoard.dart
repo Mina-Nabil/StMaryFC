@@ -1,3 +1,6 @@
+import 'package:StMaryFA/screens/HomeScreen.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -6,9 +9,37 @@ class DashBoard extends StatefulWidget {
   _DashBoardState createState() => _DashBoardState();
 }
 
+
+
 class _DashBoardState extends State<DashBoard> {
-  
-  //final Completer<WebViewController> _controller = Completer<WebViewController>();
+
+bool isConnected = true;
+@override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero).then((value) async {
+      var connectivityResult = await  (Connectivity().checkConnectivity());
+        isConnected = !(connectivityResult == ConnectivityResult.none);
+        if(connectivityResult == ConnectivityResult.none) {
+          showCupertinoDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (BuildContext context) => new CupertinoAlertDialog(
+                title: Text("Unable to connect"),
+                content: Text("Please check internet connection"),
+                actions: [
+                  CupertinoDialogAction(child: Text("Ok"), onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    );
+                  },)
+                ],
+              ));
+        }
+    });
+  }
+
   final _key = UniqueKey();
 
 

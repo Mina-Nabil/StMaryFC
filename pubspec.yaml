@@ -24,7 +24,8 @@ dependencies:
   page_transition: ^1.1.6
 
   webview_flutter: ^1.0.3
-  
+  connectivity: ^2.0.2
+
   http: ^0.12.2
   intl: ^0.16.1
   # provider package
