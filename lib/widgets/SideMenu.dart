@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:StMaryFA/providers/Auth.dart';
 import 'package:StMaryFA/screens/DashBoard.dart';
 import 'package:StMaryFA/screens/HomeScreen.dart';
@@ -6,6 +7,7 @@ import 'package:StMaryFA/screens/SplashScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SideMenu extends StatefulWidget {
   @override
@@ -77,10 +79,7 @@ class _SideMenuState extends State<SideMenu> {
                   leading: Container(child: Icon(CupertinoIcons.info, color: Theme.of(context).primaryColor)),
                   title: Text("Dashboard", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: tileTextFontSize),),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DashBoard()),
-                    );
+                    _openDashBoard();
                   },
                 ),
                 ListTile(
@@ -95,6 +94,21 @@ class _SideMenuState extends State<SideMenu> {
             ),
           );
   }
+
+    void _openDashBoard() {
+      if (Platform.isAndroid) {
+        launch(
+          'https://stmaryfa.msquare.app/home',
+          enableJavaScript: true,
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DashBoard()),
+        );
+      }
+    }
+
     void _logout() {
     Provider.of<Auth>(context, listen: false).logout();
     Navigator.pushReplacement(
