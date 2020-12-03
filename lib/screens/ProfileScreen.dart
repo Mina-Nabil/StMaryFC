@@ -1,4 +1,5 @@
 import 'package:StMaryFA/providers/Auth.dart';
+import 'package:StMaryFA/screens/AddUsersScreen.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
 import 'package:StMaryFA/widgets/DefAppBar.dart';
 import 'package:StMaryFA/widgets/DefDrawer.dart';
@@ -13,6 +14,7 @@ class ProfileScreen extends StatelessWidget {
     return FAScreen(
       appBar: DefAppBar.getBar(context, Utils.capitalize(Provider.of<Auth>(context).userName), isAdd: false),
       drawer: DefDrawer(),
+      body: AddUsersScreen.view(Provider.of<Auth>(context).currentUser),
     );
   }
 }

@@ -12,15 +12,26 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+enum UserScreenMode  {add, view, edit}
+
 class AddUsersScreen extends StatefulWidget {
   @override
   _AddUsersScreenState createState() => _AddUsersScreenState();
+
+  AddUsersScreen() { 
+    user = User.empty();
+    mode = UserScreenMode.add;
+  }
+
+  AddUsersScreen.view(this.user) {mode = UserScreenMode.view;}
+
+  User user;
+  UserScreenMode mode;
 }
 
 class _AddUsersScreenState extends State<AddUsersScreen> {
 
   File _selectedImage;
-  User user = User.empty();
 
   final _formKey = GlobalKey<FormState>();
   bool  confirmButtonEnable = true;
@@ -52,6 +63,18 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
         });
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedImage = widget.user.imageLink != "" ? File(widget.user.imageLink) : null;
+    _nameController.value = TextEditingValue(text: widget.user.userName);
+    _groupController.value = TextEditingValue(text: widget.user.groupName);
+    _birthdateController.value = TextEditingValue(text: widget.user.birthDate?? "");
+    _mobileNumController.value = TextEditingValue(text: widget.user.mobileNum?? "");
+    _codeController.value = TextEditingValue(text: widget.user.code?? "");
+    _notesController.value = TextEditingValue(text: widget.user.notes?? "");
   }
 
   @override
@@ -88,14 +111,16 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                             : Image.file(_selectedImage),
                       ),
                     ),
-                    Align(
-                        alignment: Alignment.bottomRight,
-                        child: IconButton(
-                            icon: Icon(
-                              Icons.camera_alt,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            onPressed: () => _addProfilePicture()))
+                    if(!_viewMode())
+                      Align(
+                          alignment: Alignment.bottomRight,
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.camera_alt,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: () => _addProfilePicture())
+                      )
                   ],
                 ),
               ),
@@ -115,11 +140,12 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       decoration: InputDecoration(hintText: "Name"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
+                      readOnly: _viewMode(),
                       controller: _nameController,
                       validator: (nameString) {
                         return nameString.isEmpty ? "*Required" : null;
                       },
-                      onSaved: (nameString) {user.userName = nameString;},
+                      onSaved: (nameString) {widget.user.userName = nameString;},
                     ),
                   ),
 
@@ -134,12 +160,12 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       onChanged: null,
                       readOnly: true,
                       controller: _groupController,
-                      onTap: () {
+                      onTap: _viewMode()? null : () {
                         List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
                         _groupController.value = TextEditingValue(text:  groups[1].name);
                         
-                        user.groupId = groups[1].id;
-                        user.groupName = groups[1].name;
+                        widget.user.groupId = groups[1].id;
+                        widget.user.groupName = groups[1].name;
 
                         showModalBottomSheet(
                           backgroundColor: Colors.transparent,
@@ -162,8 +188,8 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                                       // (+1) as we removed fist element "Admins" group
                                       _groupController.value = TextEditingValue(text: groups[value+1].name);
 
-                                      user.groupId = groups[value+1].id;
-                                      user.groupName = groups[value+1].name;
+                                      widget.user.groupId = groups[value+1].id;
+                                      widget.user.groupName = groups[value+1].name;
                                     });
                                 }, 
                                 children: (groups.map((group) {
@@ -196,7 +222,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       ),
                       readOnly: true,
                       controller: _birthdateController,
-                      onTap: () {
+                      onTap: _viewMode() ? null : () {
                         showModalBottomSheet(
                           backgroundColor: Colors.transparent,
                           context: context, 
@@ -231,7 +257,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       validator: (date) {
                         return date.isEmpty ? "*Required" : null;
                       },
-                      onSaved: (date) {user.birthDate = date;},
+                      onSaved: (date) {widget.user.birthDate = date;},
                     ),
                   ),
 
@@ -241,6 +267,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       decoration: InputDecoration(hintText: "Mobile"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
+                      readOnly:  _viewMode(),
                       keyboardType: TextInputType.number,
                       controller: _mobileNumController,
                       validator: (mobileNum) {
@@ -248,7 +275,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                           return "*Non valid mobile number";
                         return null;
                       },
-                      onSaved: (mobileNum) {user.mobileNum = mobileNum;},
+                      onSaved: (mobileNum) {widget.user.mobileNum = mobileNum;},
                     ),
                   ),
 
@@ -258,8 +285,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       decoration: InputDecoration(hintText: "Code"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
+                      readOnly: _viewMode(),
                       controller: _codeController,
-                      onSaved: (code) {user.code = code;},
+                      onSaved: (code) {widget.user.code = code;},
                     ),
                   ),
 
@@ -270,26 +298,28 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       decoration: InputDecoration(hintText: "\nNotes"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
-                      onSaved: (notes) {user.notes = notes;},
+                      readOnly: _viewMode(),
+                      onSaved: (notes) {widget.user.notes = notes;},
                       controller: _notesController,
                     ),
                   ),
 
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    width: double.infinity,
-                    decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
-                    child: FlatButton(
-                      child: Text("Confirm",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                        )
+                  if(! _viewMode())
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
+                      child: FlatButton(
+                        child: Text("Confirm",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          )
+                        ),
+                        onPressed: confirmButtonEnable ? () => _onConfirm() : null,
                       ),
-                      onPressed: confirmButtonEnable ? () => _onConfirm() : null,
                     ),
-                  ),
 
                   SizedBox(height: 20,)
                 ],
@@ -314,7 +344,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
       confirmButtonEnable = false;
     });
 
-    String errorMsg = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, user);
+    String errorMsg = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, widget.user);
 
     setState(() {
       confirmButtonEnable = true;
@@ -351,7 +381,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
 
   void clearForm() {
 
-    user.clear();
+    widget.user.clear();
     
     _nameController.clear();
     _groupController.clear();
@@ -418,5 +448,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
         );
       }
     );
+  }
+
+  bool _viewMode() {
+    return widget.mode == UserScreenMode.view;
   }
 }
