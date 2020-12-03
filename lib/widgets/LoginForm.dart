@@ -28,10 +28,10 @@ class _LoginFormState extends State<LoginForm> {
             children: [
               //Email Field
               Container(
-                padding: EdgeInsets.symmetric(vertical: 3),
+                margin: EdgeInsets.symmetric(vertical: 5),
                 child: TextFormField(
                   decoration: InputDecoration(hintText: "Email"),
-                  style: TextStyle(color: Colors.black, fontSize: 20),
+                  style: Theme.of(context).textTheme.bodyText1,
                   onChanged: (email) {
                     _signInEmail = email;
                   },
@@ -42,11 +42,11 @@ class _LoginFormState extends State<LoginForm> {
               ),
               //Password Field
               Container(
-                padding: EdgeInsets.symmetric(vertical: 3),
+                margin: EdgeInsets.symmetric(vertical: 5),
                 child: TextFormField(
                   obscureText: true, //password type
                   decoration: InputDecoration(hintText: "Password"),
-                  style: TextStyle(color: Colors.black, fontSize: 20),
+                  style: Theme.of(context).textTheme.bodyText1,
                   onChanged: (password) {
                     _signInPassword = password;
                   },
@@ -56,27 +56,18 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
               //Login Button
-              FlatButton(
-                padding: EdgeInsets.zero,
-                child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height / 15,
-                  decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
-                    ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 5),
+                width: double.infinity,
+                decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
+                child: FlatButton(
+                  onPressed: () => _logIn(context), 
+                  child: Text(
+                    "Login",
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 24,),
                   ),
                 ),
-                onPressed: () {
-                  _logIn(context);
-                },
-              )
+              ),
             ],
           ),
         ),

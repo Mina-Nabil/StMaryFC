@@ -21,9 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     Future.delayed(Duration.zero).then((_) => Provider.of<UsersProvider>(context, listen: false).search(""));
   }
 
@@ -43,10 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
               // Search Bar
               Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height / 15,
                 child: TextField(
                   textAlign: TextAlign.left,
-                  style: TextStyle(color: Colors.black, fontSize: 24),
+                  style: TextStyle(color: Colors.black, fontSize: 20),
                   onChanged: (searchString) {
                     if (searchTimer != null) {
                       setState(() => searchTimer.cancel()); // clear timer
@@ -60,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.search),
                     hintText: "Search",
-                    hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
                   ),
                 ),
               ),
@@ -102,7 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
               // Selection info Bar
               if (selectedIds.isNotEmpty)
                 Container(
-                  height: MediaQuery.of(context).size.height / 15,
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -47,7 +47,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.delayed(Duration.zero).then((value) => Provider.of<GroupsProvider>(context, listen: false).loadGroups());
   }
@@ -67,32 +66,27 @@ class _GroupsScreenState extends State<GroupsScreen> {
       Form(
         key: _formKey,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 25),
+          padding: EdgeInsets.symmetric(vertical: 20),
           child: TextFormField(
             controller: grpName,
             validator: (v) {
               return (v.length < 2) ? "Very Short Name" : null;
             },
             textAlign: TextAlign.left,
-            style: TextStyle(color: Colors.black, fontSize: 24),
+            style: Theme.of(context).textTheme.bodyText1,
             decoration: InputDecoration(
               hintText: "Add New Group",
-              hintStyle: TextStyle(fontSize: 20),
               prefixIcon: Icon(Icons.add),
             ),
           ),
         ),
       ),
       Container(
-        height: 50,
-        // margin: EdgeInsets.symmetric(vertical: 5),
+        width: double.infinity,
+        decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(radius)),
         child: FlatButton(
-          padding: EdgeInsets.all(0),
           onPressed: submitForm,
-          child: Container(
-              decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(radius)),
-              alignment: Alignment.center,
-              child: FittedBox(child: Text("Add", style: TextStyle(fontFamily: "Anton", color: Colors.white, fontSize: 24)))),
+          child: Text("Add", style: TextStyle(fontFamily: "Anton", color: Colors.white, fontSize: 24))
         ),
       ),
     ];
@@ -100,7 +94,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 25),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(25)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
             child: ListView(
