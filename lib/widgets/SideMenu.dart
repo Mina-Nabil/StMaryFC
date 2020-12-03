@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:StMaryFA/providers/Auth.dart';
 import 'package:StMaryFA/screens/DashBoard.dart';
 import 'package:StMaryFA/screens/HomeScreen.dart';
+import 'package:StMaryFA/screens/ProfileScreen.dart';
 import 'package:StMaryFA/screens/SettingsScreen.dart';
 import 'package:StMaryFA/screens/SplashScreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,6 +46,12 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   title: Text(Utils.capitalize(Provider.of<Auth>(context).userName), style: TextStyle(fontSize: 24)),
                   subtitle: Text("View your profile",style: TextStyle(fontSize: 16)),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfileScreen()),
+                    );
+                  },
                 ),
 
                 ListTile(
@@ -53,7 +60,7 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                   leading: Container(child: Icon(CupertinoIcons.home, color: Theme.of(context).primaryColor)),
                   title: Text("Check-in", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: tileTextFontSize),),
-                   onTap: () {
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => HomeScreen()),
