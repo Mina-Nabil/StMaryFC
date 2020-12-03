@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class UserCard extends StatelessWidget {
   UserCard({@required this.user, @required this.selected});
 
-  final User user;
+  final AttendanceUser user;
   final bool selected;
 
   @override

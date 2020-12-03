@@ -20,7 +20,7 @@ class UsersProvider with ChangeNotifier {
   
 
   // search results
-  List<User> _users = [];
+  List<AttendanceUser> _users = [];
 
   Future<void> search(String searchString) async {
     _users.clear();
@@ -41,23 +41,23 @@ class UsersProvider with ChangeNotifier {
 
     if (body["message"] != null && body["message"] is Iterable) {
       for (var user in body["message"]) {
-        _users.add(User.fromJson(user));
+        _users.add(AttendanceUser.fromJson(user));
       }
     } else {}
 
     notifyListeners();
   }
 
-  Future<String> addUser(File image, String name, int groupId, String birthDate, String mobileNum, String code, String notes) async {
+  Future<String> addUser(File image, User user) async {
     
     var request = http.MultipartRequest("POST", Uri.parse(_addUserUrl));
-    request.fields['name'] = name;
+    request.fields['name'] = user.userName;
     request.fields['type'] = "2";
-    request.fields['group'] = groupId.toString();
-    request.fields['birthDate'] = birthDate;
-    request.fields['mobn'] = mobileNum;
-    request.fields['code'] = code;
-    request.fields['note'] = notes;
+    request.fields['group'] = user.groupId.toString();
+    request.fields['birthDate'] = user.birthDate;
+    request.fields['mobn'] = user.mobileNum;
+    request.fields['code'] = user.code;
+    request.fields['note'] = user.notes;
 
     if(image != null) {
       var pic = await http.MultipartFile.fromPath('photo', image.path,);
@@ -103,7 +103,7 @@ class UsersProvider with ChangeNotifier {
       return false;
   }
 
-  List<User> get users {
+  List<AttendanceUser> get users {
     return _users;
   }
 }

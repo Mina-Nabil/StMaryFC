@@ -22,3 +22,10 @@ class Server {
     _apiToken=null;
   }
 }
+
+
+class Utils {
+  static String capitalize (String value) {
+    return value == "" ? "" : '${value[0].toUpperCase()}${value.substring(1)}';
+  }
+}

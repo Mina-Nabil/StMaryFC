@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:StMaryFA/models/Group.dart';
+import 'package:StMaryFA/models/User.dart';
 import 'package:StMaryFA/providers/GroupsProvider.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/HomeScreen.dart';
@@ -19,12 +20,7 @@ class AddUsersScreen extends StatefulWidget {
 class _AddUsersScreenState extends State<AddUsersScreen> {
 
   File _selectedImage;
-  String _name ;
-  int _groupId;
-  String _birthday;
-  String _mobileNum;
-  String _code;
-  String _notes;
+  User user = User.empty();
 
   final _formKey = GlobalKey<FormState>();
   bool  confirmButtonEnable = true;
@@ -123,7 +119,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       validator: (nameString) {
                         return nameString.isEmpty ? "*Required" : null;
                       },
-                      onSaved: (nameString) {_name = nameString;},
+                      onSaved: (nameString) {user.userName = nameString;},
                     ),
                   ),
 
@@ -141,7 +137,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       onTap: () {
                         List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
                         _groupController.value = TextEditingValue(text:  groups[1].name);
-                        _groupId = groups[1].id;
+                        
+                        user.groupId = groups[1].id;
+                        user.groupName = groups[1].name;
 
                         showModalBottomSheet(
                           backgroundColor: Colors.transparent,
@@ -163,7 +161,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                                     setState(() {
                                       // (+1) as we removed fist element "Admins" group
                                       _groupController.value = TextEditingValue(text: groups[value+1].name);
-                                      _groupId = groups[value+1].id;
+
+                                      user.groupId = groups[value+1].id;
+                                      user.groupName = groups[value+1].name;
                                     });
                                 }, 
                                 children: (groups.map((group) {
@@ -231,7 +231,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       validator: (date) {
                         return date.isEmpty ? "*Required" : null;
                       },
-                      onSaved: (date) {_birthday = date;},
+                      onSaved: (date) {user.birthDate = date;},
                     ),
                   ),
 
@@ -248,7 +248,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                           return "*Non valid mobile number";
                         return null;
                       },
-                      onSaved: (mobileNum) {_mobileNum = mobileNum;},
+                      onSaved: (mobileNum) {user.mobileNum = mobileNum;},
                     ),
                   ),
 
@@ -259,7 +259,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
                       controller: _codeController,
-                      onSaved: (code) {_code = code;},
+                      onSaved: (code) {user.code = code;},
                     ),
                   ),
 
@@ -270,7 +270,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                       decoration: InputDecoration(hintText: "\nNotes"),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                       onChanged: null,
-                      onSaved: (notes) {_notes = notes;},
+                      onSaved: (notes) {user.notes = notes;},
                       controller: _notesController,
                     ),
                   ),
@@ -314,7 +314,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
       confirmButtonEnable = false;
     });
 
-    String errorMsg = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, _name, _groupId, _birthday, _mobileNum, _code, _notes);
+    String errorMsg = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, user);
 
     setState(() {
       confirmButtonEnable = true;
@@ -350,9 +350,8 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
   }
 
   void clearForm() {
-    //_selectedImage, 
-    _name = _birthday = _mobileNum =  _code = _notes = "";
-    _groupId = 0;
+
+    user.clear();
     
     _nameController.clear();
     _groupController.clear();

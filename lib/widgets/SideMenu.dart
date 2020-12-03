@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../global.dart';
+
 class SideMenu extends StatefulWidget {
   @override
   _SideMenuState createState() => _SideMenuState();
@@ -41,7 +43,7 @@ class _SideMenuState extends State<SideMenu> {
                     radius:  MediaQuery.of(context).size.width/12,
                     backgroundImage: Provider.of<Auth>(context).userImageUrl.isNotEmpty? Image.network(Provider.of<Auth>(context).userImageUrl).image : null,
                   ),
-                  title: Text(Provider.of<Auth>(context).userName, style: TextStyle(fontSize: 24)),
+                  title: Text(Utils.capitalize(Provider.of<Auth>(context).userName), style: TextStyle(fontSize: 24)),
                   subtitle: Text("View your profile",style: TextStyle(fontSize: 16)),
                 ),
 

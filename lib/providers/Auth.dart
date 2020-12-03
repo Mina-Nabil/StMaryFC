@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:StMaryFA/global.dart';
+import 'package:StMaryFA/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import "package:http/http.dart" as http;
 
 class Auth with ChangeNotifier {
-  String _userName = "";
-  String _imageUrl = "";
+
+  User currentUser = User.empty();
   FlutterSecureStorage storage;
 
   Future<bool> isLoggedIn() async {
@@ -57,7 +58,7 @@ class Auth with ChangeNotifier {
 
   void logout() async {
     Server.logOut();
-    _userName = "";
+    currentUser.clear();
   }
 
   Future<void> getCurrentUser() async {
@@ -73,19 +74,17 @@ class Auth with ChangeNotifier {
       print("getCurrentUserName Failed.");
     }
 
-    String userName = body["message"]["USER_NAME"];
-    // Make first char cap
-    _userName = '${userName[0].toUpperCase()}${userName.substring(1)}';
-    _imageUrl = body["message"]["full_image_url"];
+    currentUser = User.fromJson(body["message"]);
+
     notifyListeners();
   }
 
   String get userName {
-    return _userName;
+    return currentUser.userName;
   }
 
   String get userImageUrl {
-    return _imageUrl;
+    return currentUser.imageLink;
   }
 
 }
