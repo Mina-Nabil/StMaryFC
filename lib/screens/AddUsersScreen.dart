@@ -68,7 +68,6 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedImage = widget.user.imageLink != "" ? File(widget.user.imageLink) : null;
     _nameController.value = TextEditingValue(text: widget.user.userName);
     _groupController.value = TextEditingValue(text: widget.user.groupName);
     _birthdateController.value = TextEditingValue(text: widget.user.birthDate?? "");
@@ -102,13 +101,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                   children: [
                     Center(
                       child: ClipOval(
-                        child: _selectedImage == null
-                            ? Icon(
-                                Icons.person,
-                                color: Theme.of(context).primaryColor,
-                                size: 100,
-                              )
-                            : Image.file(_selectedImage),
+                        child: _getProfilePictureWidget(),
                       ),
                     ),
                     if(!_viewMode())
@@ -387,6 +380,16 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
     _codeController.clear();
     _notesController.clear();
     
+  }
+
+  Widget _getProfilePictureWidget() {
+
+    if(_viewMode())
+    {
+      return widget.user.imageLink != "" ? Image.network(widget.user.imageLink) : Icon(Icons.person,color: Theme.of(context).primaryColor, size: 100,);
+    }
+    
+    return _selectedImage != null ? Image.file(_selectedImage) : Icon(Icons.person, color: Theme.of(context).primaryColor, size: 100,);
   }
 
   void _addProfilePicture() {
