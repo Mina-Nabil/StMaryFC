@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.orange,
           backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.orange),
           fontFamily: "Oxygen",
           inputDecorationTheme: InputDecorationTheme(
             contentPadding: EdgeInsets.symmetric(horizontal: 5),

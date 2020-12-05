@@ -7,6 +7,7 @@ import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/HomeScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -78,244 +79,245 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(children: [
       Expanded(
-          child: Container(
-        padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-        decoration:
-            BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(25)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
-        child: ListView(
+        child: Container(
+          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(25)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
+          child: Stack(
           children: [
-            //Photo
-            Center(
-              child: Container(
-                height: MediaQuery.of(context).size.height / 5,
-                width: MediaQuery.of(context).size.height / 5,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Color.fromRGBO(79, 50, 0, 0.2),
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: ClipOval(
-                        child: _getProfilePictureWidget(),
+            ListView(
+              children: [
+                //Photo
+                Center(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 5,
+                    width: MediaQuery.of(context).size.height / 5,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Color.fromRGBO(79, 50, 0, 0.2),
                       ),
                     ),
-                    if(!_viewMode())
-                      Align(
-                          alignment: Alignment.bottomRight,
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.camera_alt,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              onPressed: () => _addProfilePicture())
-                      )
-                  ],
-                ),
-              ),
-            ),
-
-            SizedBox(height: 10,),
-
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //Name Text Field
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: TextFormField(
-                      decoration: InputDecoration(hintText: "Name"),
-                      style: Theme.of(context).textTheme.bodyText1,
-                      onChanged: null,
-                      readOnly: _viewMode(),
-                      controller: _nameController,
-                      validator: (nameString) {
-                        return nameString.isEmpty ? "*Required" : null;
-                      },
-                      onSaved: (nameString) {widget.user.userName = nameString;},
-                    ),
-                  ),
-
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.arrow_drop_down,size: 30, color: Theme.of(context).primaryColor,),
-                        hintText: "Group"
-                      ),
-                      style: Theme.of(context).textTheme.bodyText1,
-                      onChanged: null,
-                      readOnly: true,
-                      controller: _groupController,
-                      onTap: _viewMode()? null : () {
-                        List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
-                        _groupController.value = TextEditingValue(text:  groups[1].name);
-                        
-                        widget.user.groupId = groups[1].id;
-                        widget.user.groupName = groups[1].name;
-
-                        showModalBottomSheet(
-                          backgroundColor: Colors.transparent,
-                          context: context, 
-                          builder: (_) {
-                            return Container(
-                              decoration: new BoxDecoration(
-                                color: Colors.orangeAccent[100],
-                                borderRadius: new BorderRadius.only(
-                                topLeft: const Radius.circular(25.0),
-                                topRight: const Radius.circular(25.0))
-                              ),
-
-                              height: MediaQuery.of(context).size.height/4,
-                              child: CupertinoPicker(
-                                
-                                itemExtent:  MediaQuery.of(context).size.height/16, 
-                                onSelectedItemChanged: (value){
-                                    setState(() {
-                                      // (+1) as we removed fist element "Admins" group
-                                      _groupController.value = TextEditingValue(text: groups[value+1].name);
-
-                                      widget.user.groupId = groups[value+1].id;
-                                      widget.user.groupName = groups[value+1].name;
-                                    });
-                                }, 
-                                children: (groups.map((group) {
-                                  return Center(child: Text(group.name));
-                                }).toList()).sublist(1),
-                              ),
-                            );
-                          }
-                        );
-                      },
-                      validator: (nameString) {
-                        return nameString.isEmpty ? "*Required" : null;
-                      },
-                    ),
-                  ),
-
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Birth date",
-                        suffixIcon: Icon(
-                          Icons.date_range,
-                          size: 24,
-                          color: Theme.of(context).primaryColor,
-                        )),
-                      style: Theme.of(context).textTheme.bodyText1,
-                      readOnly: true,
-                      controller: _birthdateController,
-                      onTap: _viewMode() ? null : () {
-                        showModalBottomSheet(
-                          backgroundColor: Colors.transparent,
-                          context: context, 
-                          builder: (_) {
-                            return Container(
-                              decoration: new BoxDecoration(
-                                color: Colors.orangeAccent[100],
-                                borderRadius: new BorderRadius.only(
-                                topLeft: const Radius.circular(25.0),
-                                topRight: const Radius.circular(25.0))
-                              ),
-
-                              height: MediaQuery.of(context).size.height/4,
-                              child: CupertinoDatePicker(
-
-                                backgroundColor: Colors.transparent,
-                                mode: CupertinoDatePickerMode.date,
-                                initialDateTime: DateTime.now(),
-                                minimumYear: 1980,
-                                onDateTimeChanged: (DateTime date) {
-                                  print(date.toString());
-                                  setState(() {
-                                    _birthdateController.value = TextEditingValue(text: DateFormat('yyyy-MM-dd').format(date));
-                                  });
-                                },
-                                
-                              ),
-                            );
-                          }
-                        );
-                      },
-                      validator: (date) {
-                        return date.isEmpty ? "*Required" : null;
-                      },
-                      onSaved: (date) {widget.user.birthDate = date;},
-                    ),
-                  ),
-
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: TextFormField(
-                      decoration: InputDecoration(hintText: "Mobile"),
-                      style: Theme.of(context).textTheme.bodyText1,
-                      onChanged: null,
-                      readOnly:  _viewMode(),
-                      keyboardType: TextInputType.number,
-                      controller: _mobileNumController,
-                      validator: (mobileNum) {
-                        if(mobileNum.isNotEmpty && mobileNum.length != 11)
-                          return "*Non valid mobile number";
-                        return null;
-                      },
-                      onSaved: (mobileNum) {widget.user.mobileNum = mobileNum;},
-                    ),
-                  ),
-
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: TextFormField(
-                      decoration: InputDecoration(hintText: "Code"),
-                      style: Theme.of(context).textTheme.bodyText1,
-                      onChanged: null,
-                      readOnly: _viewMode(),
-                      controller: _codeController,
-                      onSaved: (code) {widget.user.code = code;},
-                    ),
-                  ),
-
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    child: TextFormField(
-                      maxLines: 3,
-                      decoration: InputDecoration(hintText: "\nNotes",),
-                      style: Theme.of(context).textTheme.bodyText1,
-                      onChanged: null,
-                      readOnly: _viewMode(),
-                      onSaved: (notes) {widget.user.notes = notes;},
-                      controller: _notesController,
-                    ),
-                  ),
-
-                  if(! _viewMode())
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      width: double.infinity,
-                      decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
-                      child: FlatButton(
-                        child: Text("Confirm",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                          )
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: ClipOval(
+                            child: _getProfilePictureWidget(),
+                          ),
                         ),
-                        onPressed: confirmButtonEnable ? () => _onConfirm() : null,
-                      ),
+                        if(!_viewMode())
+                          Align(
+                              alignment: Alignment.bottomRight,
+                              child: IconButton(
+                                  icon: Icon(Icons.camera_alt,),
+                                  onPressed: () => _addProfilePicture()
+                              )
+                          )
+                      ],
                     ),
+                  ),
+                ),
 
-                  SizedBox(height: 20,)
-                ],
+                SizedBox(height: 10,),
+
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //Name Text Field
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        child: TextFormField(
+                          decoration: InputDecoration(hintText: "Name"),
+                          style: Theme.of(context).textTheme.bodyText1,
+                          onChanged: null,
+                          readOnly: _viewMode(),
+                          controller: _nameController,
+                          validator: (nameString) {
+                            return nameString.isEmpty ? "*Required" : null;
+                          },
+                          onSaved: (nameString) {widget.user.userName = nameString;},
+                        ),
+                      ),
+
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.arrow_drop_down,size: 30, color: Theme.of(context).primaryColor,),
+                            hintText: "Group"
+                          ),
+                          style: Theme.of(context).textTheme.bodyText1,
+                          onChanged: null,
+                          readOnly: true,
+                          controller: _groupController,
+                          onTap: _viewMode()? null : () {
+                            List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
+                            _groupController.value = TextEditingValue(text:  groups[1].name);
+                            
+                            widget.user.groupId = groups[1].id;
+                            widget.user.groupName = groups[1].name;
+
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context, 
+                              builder: (_) {
+                                return Container(
+                                  decoration: new BoxDecoration(
+                                    color: Colors.orangeAccent[100],
+                                    borderRadius: new BorderRadius.only(
+                                    topLeft: const Radius.circular(25.0),
+                                    topRight: const Radius.circular(25.0))
+                                  ),
+
+                                  height: MediaQuery.of(context).size.height/4,
+                                  child: CupertinoPicker(
+                                    
+                                    itemExtent:  MediaQuery.of(context).size.height/16, 
+                                    onSelectedItemChanged: (value){
+                                        setState(() {
+                                          // (+1) as we removed fist element "Admins" group
+                                          _groupController.value = TextEditingValue(text: groups[value+1].name);
+
+                                          widget.user.groupId = groups[value+1].id;
+                                          widget.user.groupName = groups[value+1].name;
+                                        });
+                                    }, 
+                                    children: (groups.map((group) {
+                                      return Center(child: Text(group.name));
+                                    }).toList()).sublist(1),
+                                  ),
+                                );
+                              }
+                            );
+                          },
+                          validator: (nameString) {
+                            return nameString.isEmpty ? "*Required" : null;
+                          },
+                        ),
+                      ),
+
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Birth date",
+                            suffixIcon: Icon(Icons.date_range,size: 24, color: Theme.of(context).primaryColor,)
+                          ),
+                          style: Theme.of(context).textTheme.bodyText1,
+                          readOnly: true,
+                          controller: _birthdateController,
+                          onTap: _viewMode() ? null : () {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context, 
+                              builder: (_) {
+                                return Container(
+                                  decoration: new BoxDecoration(
+                                    color: Colors.orangeAccent[100],
+                                    borderRadius: new BorderRadius.only(
+                                    topLeft: const Radius.circular(25.0),
+                                    topRight: const Radius.circular(25.0))
+                                  ),
+
+                                  height: MediaQuery.of(context).size.height/4,
+                                  child: CupertinoDatePicker(
+
+                                    backgroundColor: Colors.transparent,
+                                    mode: CupertinoDatePickerMode.date,
+                                    initialDateTime: DateTime.now(),
+                                    minimumYear: 1980,
+                                    onDateTimeChanged: (DateTime date) {
+                                      print(date.toString());
+                                      setState(() {
+                                        _birthdateController.value = TextEditingValue(text: DateFormat('yyyy-MM-dd').format(date));
+                                      });
+                                    },
+                                    
+                                  ),
+                                );
+                              }
+                            );
+                          },
+                          validator: (date) {
+                            return date.isEmpty ? "*Required" : null;
+                          },
+                          onSaved: (date) {widget.user.birthDate = date;},
+                        ),
+                      ),
+
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        child: TextFormField(
+                          decoration: InputDecoration(hintText: "Mobile"),
+                          style: Theme.of(context).textTheme.bodyText1,
+                          onChanged: null,
+                          readOnly:  _viewMode(),
+                          keyboardType: TextInputType.number,
+                          controller: _mobileNumController,
+                          validator: (mobileNum) {
+                            if(mobileNum.isNotEmpty && mobileNum.length != 11)
+                              return "*Non valid mobile number";
+                            return null;
+                          },
+                          onSaved: (mobileNum) {widget.user.mobileNum = mobileNum;},
+                        ),
+                      ),
+
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        child: TextFormField(
+                          decoration: InputDecoration(hintText: "Code"),
+                          style: Theme.of(context).textTheme.bodyText1,
+                          onChanged: null,
+                          readOnly: _viewMode(),
+                          controller: _codeController,
+                          onSaved: (code) {widget.user.code = code;},
+                        ),
+                      ),
+
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        child: TextFormField(
+                          maxLines: 3,
+                          decoration: InputDecoration(hintText: "\nNotes",),
+                          style: Theme.of(context).textTheme.bodyText1,
+                          onChanged: null,
+                          readOnly: _viewMode(),
+                          onSaved: (notes) {widget.user.notes = notes;},
+                          controller: _notesController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            Align(
+              alignment: Alignment.topRight,
+              child: _getControlIconButton(),
+            ),
+            
+            if(widget.mode == UserScreenMode.edit) /*Cancel Button*/
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                alignment: Alignment.topLeft,
+                icon: FaIcon(FontAwesomeIcons.times,),
+                onPressed:() {
+                  setState(() {
+                    widget.mode = UserScreenMode.view;
+                  });
+                },
               ),
             ),
-          ],
+
+            ]
         ),
       ))
     ]);
@@ -386,10 +388,39 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
 
     if(_viewMode())
     {
-      return widget.user.imageLink != "" ? Image.network(widget.user.imageLink) : Icon(Icons.person,color: Theme.of(context).primaryColor, size: 100,);
+      return widget.user.imageLink != "" ? Image.network(widget.user.imageLink) : Icon(Icons.person, size: 100,);
+    } else if (_editMode()) {
+      return _selectedImage != null ? Image.file(_selectedImage) : widget.user.imageLink != "" ? Image.network(widget.user.imageLink) : Icon(Icons.person, size: 100,);
+    } else { // addMode
+      return _selectedImage != null ? Image.file(_selectedImage) : Icon(Icons.person, size: 80,);
     }
-    
-    return _selectedImage != null ? Image.file(_selectedImage) : Icon(Icons.person, color: Theme.of(context).primaryColor, size: 100,);
+  }
+
+  Widget _getControlIconButton() {
+    if(_viewMode()) {
+      //View Edit icon and convert to Edit mode onPress
+      return IconButton(
+        padding: EdgeInsets.zero,
+        alignment: Alignment.topRight,
+        icon: Icon(Icons.edit),
+        onPressed:() => setState(() => widget.mode = UserScreenMode.edit),
+      );
+    } else if (_editMode()) {
+      return IconButton(
+        padding: EdgeInsets.zero,
+        alignment: Alignment.topRight,
+        icon: FaIcon(FontAwesomeIcons.check),
+        onPressed: () {},
+      );
+    } else {
+      //Add mode
+      return IconButton(
+        padding: EdgeInsets.zero,
+        alignment: Alignment.topRight,
+        icon: FaIcon(FontAwesomeIcons.check),
+        onPressed: _onConfirm,
+      );
+    }
   }
 
   void _addProfilePicture() {
@@ -399,7 +430,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
       builder: (_) {
         return Container(
           decoration: new BoxDecoration(
-            color: Colors.orangeAccent[100],
+            color: Theme.of(context).primaryColor,
             borderRadius: new BorderRadius.only(
             topLeft: const Radius.circular(25.0),
             topRight: const Radius.circular(25.0))
@@ -415,9 +446,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                 child: InkWell(
                   child: Row(
                     children: [
-                    Icon(Icons.file_upload, size: 30,),
+                    Icon(Icons.file_upload, size: 30, color: Colors.white,),
                     SizedBox(width: 10,),
-                    Text("Upload Photo", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                    Text("Upload Photo", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
                     ],
                   ),
                   onTap: () {
@@ -432,9 +463,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                 child: InkWell(
                   child: Row(
                     children: [
-                    Icon(Icons.camera_alt,size: 30,),
+                    Icon(Icons.camera_alt,size: 30, color: Colors.white,),
                     SizedBox(width: 10,),
-                    Text("Take Photo",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                    Text("Take Photo",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white,),),
                     ],
                   ),
                   onTap: () {
@@ -452,5 +483,9 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
 
   bool _viewMode() {
     return widget.mode == UserScreenMode.view;
+  }
+
+  bool _editMode() {
+    return widget.mode == UserScreenMode.edit;
   }
 }
