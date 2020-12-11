@@ -16,9 +16,11 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 20),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
+    return Container(padding: EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(254,250,241,1), 
+        borderRadius: BorderRadius.all(Radius.circular(10)), border: Border.all(color: Color.fromRGBO(79,50,0,1), width: 0.5, style: BorderStyle.solid)
+      ),
       child: Column(children: [
         ListTile(
           leading: Icon(Icons.security, color: Theme.of(context).iconTheme.color,),
@@ -35,7 +37,7 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
         if(_open)
           ListTile(
             leading: Icon(Icons.email, color: Theme.of(context).iconTheme.color,),
-            title: Text("Email", style: TextStyle(color: Colors.black),),
+            title: Text("Email", style: Theme.of(context).textTheme.bodyText1),
             trailing: Icon( FontAwesomeIcons.chevronRight,  color: Theme.of(context).iconTheme.color,),
             contentPadding: EdgeInsets.zero,
             dense: true,
@@ -49,7 +51,7 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
         if(_open)  
           ListTile(
             leading: Icon(Icons.lock ,color: Theme.of(context).iconTheme.color,),
-            title: Text("Password", style: TextStyle(color: Colors.black),),
+            title: Text("Password", style: Theme.of(context).textTheme.bodyText1,),
             trailing: Icon( FontAwesomeIcons.chevronRight,  color: Theme.of(context).iconTheme.color,),
             contentPadding: EdgeInsets.zero,
             dense: true,

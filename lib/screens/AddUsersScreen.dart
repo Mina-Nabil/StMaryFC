@@ -5,6 +5,7 @@ import 'package:StMaryFA/models/User.dart';
 import 'package:StMaryFA/providers/GroupsProvider.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/HomeScreen.dart';
+import 'package:StMaryFA/widgets/EditLoginInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,10 +25,11 @@ class AddUsersScreen extends StatefulWidget {
     mode = UserScreenMode.add;
   }
 
-  AddUsersScreen.view(this.user) {mode = UserScreenMode.view;}
+  AddUsersScreen.view(this.user, {this.extra}) {mode = UserScreenMode.view;}
 
   User user;
   UserScreenMode mode;
+  Widget extra;
 }
 
 class _AddUsersScreenState extends State<AddUsersScreen> {
@@ -294,6 +296,12 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                     ],
                   ),
                 ),
+
+                if(widget.extra != null)
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    child: widget.extra
+                  )
               ],
             ),
 

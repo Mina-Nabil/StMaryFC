@@ -17,9 +17,9 @@ class ProfileScreen extends StatelessWidget {
       drawer: DefDrawer(),
       body: Column(
         children: [
-          Expanded(child: AddUsersScreen.view(Provider.of<Auth>(context).currentUser)),
-          SizedBox(height: 5,),
-          EditLoginInfo(),
+          Expanded(child: AddUsersScreen.view(Provider.of<Auth>(context).currentUser, extra: EditLoginInfo(),)),
+          //SizedBox(height: 5,),
+          //EditLoginInfo(),
         ],
       ) ,
     );
