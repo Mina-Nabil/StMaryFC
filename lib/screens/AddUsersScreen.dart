@@ -84,7 +84,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
       Expanded(
         child: Container(
           padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(25)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
           child: Stack(
           children: [
             ListView(
