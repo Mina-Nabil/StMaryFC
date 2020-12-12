@@ -19,28 +19,51 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
     return Container(padding: EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
         color: Color.fromRGBO(254,250,241,1), 
-        borderRadius: BorderRadius.all(Radius.circular(10)), border: Border.all(color: Color.fromRGBO(79,50,0,1), width: 0.5, style: BorderStyle.solid)
+        borderRadius: BorderRadius.all(Radius.circular(10)), border: Border.all(color: Color.fromRGBO(79,50,0,1), width: 0.6, style: BorderStyle.solid)
       ),
-      child: Column(children: [
-        ListTile(
-          leading: Icon(Icons.security, color: Theme.of(context).iconTheme.color,),
-          title: Text("Email/Password", style: Theme.of(context).textTheme.bodyText1.copyWith(color: _open ? Colors.black: Colors.grey)),
-          trailing: Icon(_open ? FontAwesomeIcons.chevronDown : Icons.edit,  color: Theme.of(context).iconTheme.color,),
-          contentPadding: EdgeInsets.zero,
-          onTap: () =>
+      child: Column(
+        children: [
+          GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10,),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.security, color: Theme.of(context).iconTheme.color,),
+                      SizedBox(width: 10,),
+                      Text("Email/Password", style: Theme.of(context).textTheme.bodyText1.copyWith(color: _open ? Colors.black: Colors.black54)),
+                    ],
+                  ),
+                  Icon(_open ? FontAwesomeIcons.chevronDown : Icons.edit,  color: Theme.of(context).iconTheme.color,),
+                ],
+              ),
+            ),
+            onTap: () =>
             setState(() {
               _open = !_open;
-            })
-          ,
-        ),
+            }),
+          ),
         
         if(_open)
-          ListTile(
-            leading: Icon(Icons.email, color: Theme.of(context).iconTheme.color,),
-            title: Text("Email", style: Theme.of(context).textTheme.bodyText1),
-            trailing: Icon( FontAwesomeIcons.chevronRight,  color: Theme.of(context).iconTheme.color,),
-            contentPadding: EdgeInsets.zero,
-            dense: true,
+          GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.email, color: Theme.of(context).iconTheme.color,),
+                      SizedBox(width: 10,),
+                      Text("Email", style: Theme.of(context).textTheme.bodyText1.copyWith(color: _open ? Colors.black: Colors.black54)),
+                    ],
+                  ),
+                  Icon( FontAwesomeIcons.chevronRight,  color: Theme.of(context).iconTheme.color,),
+                ],
+              ),
+            ),
             onTap: () {
               Navigator.push(
                 context,
@@ -48,13 +71,25 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
               );
             }
           ),
-        if(_open)  
-          ListTile(
-            leading: Icon(Icons.lock ,color: Theme.of(context).iconTheme.color,),
-            title: Text("Password", style: Theme.of(context).textTheme.bodyText1,),
-            trailing: Icon( FontAwesomeIcons.chevronRight,  color: Theme.of(context).iconTheme.color,),
-            contentPadding: EdgeInsets.zero,
-            dense: true,
+
+        if(_open)
+          GestureDetector(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.lock, color: Theme.of(context).iconTheme.color,),
+                      SizedBox(width: 10,),
+                      Text("Password", style: Theme.of(context).textTheme.bodyText1.copyWith(color: _open ? Colors.black: Colors.black54)),
+                    ],
+                  ),
+                  Icon( FontAwesomeIcons.chevronRight,  color: Theme.of(context).iconTheme.color,),
+                ],
+              ),
+            ),
             onTap: () {
               Navigator.push(
                 context,

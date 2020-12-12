@@ -81,7 +81,7 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
 
-    TextStyle fieldTextStyle = _viewMode() ? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.grey): Theme.of(context).textTheme.bodyText1;
+    TextStyle fieldTextStyle = _viewMode() ? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54): Theme.of(context).textTheme.bodyText1;
     return Column(children: [
       Expanded(
         child: Container(
