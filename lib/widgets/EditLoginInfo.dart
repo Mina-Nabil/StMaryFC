@@ -24,8 +24,8 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
       child: Column(children: [
         ListTile(
           leading: Icon(Icons.security, color: Theme.of(context).iconTheme.color,),
-          title: Text("Login", style: Theme.of(context).textTheme.bodyText1),
-          trailing: Icon(_open ? FontAwesomeIcons.chevronDown : FontAwesomeIcons.chevronRight,  color: Theme.of(context).iconTheme.color,),
+          title: Text("Email/Password", style: Theme.of(context).textTheme.bodyText1.copyWith(color: _open ? Colors.black: Colors.grey)),
+          trailing: Icon(_open ? FontAwesomeIcons.chevronDown : Icons.edit,  color: Theme.of(context).iconTheme.color,),
           contentPadding: EdgeInsets.zero,
           onTap: () =>
             setState(() {

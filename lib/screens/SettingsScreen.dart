@@ -32,7 +32,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onPageChanged: (i) => changeIndex(i),
           children: [
             GroupsScreen(),
-            AddUsersScreen(),
+            UserScreen(),
           ],
       ),
       bottomNavigationBar: BottomNavigationBar(

@@ -5,7 +5,6 @@ import 'package:StMaryFA/models/User.dart';
 import 'package:StMaryFA/providers/GroupsProvider.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/HomeScreen.dart';
-import 'package:StMaryFA/widgets/EditLoginInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,23 +15,23 @@ import 'package:provider/provider.dart';
 
 enum UserScreenMode  {add, view, edit}
 
-class AddUsersScreen extends StatefulWidget {
+class UserScreen extends StatefulWidget {
   @override
-  _AddUsersScreenState createState() => _AddUsersScreenState();
+  _UserScreenState createState() => _UserScreenState();
 
-  AddUsersScreen() { 
+  UserScreen() { 
     user = User.empty();
     mode = UserScreenMode.add;
   }
 
-  AddUsersScreen.view(this.user, {this.extra}) {mode = UserScreenMode.view;}
+  UserScreen.view(this.user, {this.extra}) {mode = UserScreenMode.view;}
 
   User user;
   UserScreenMode mode;
   Widget extra;
 }
 
-class _AddUsersScreenState extends State<AddUsersScreen> {
+class _UserScreenState extends State<UserScreen> {
 
   File _selectedImage;
 
@@ -82,6 +81,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
   @override
   Widget build(BuildContext context) {
 
+    TextStyle fieldTextStyle = _viewMode() ? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.grey): Theme.of(context).textTheme.bodyText1;
     return Column(children: [
       Expanded(
         child: Container(
@@ -134,7 +134,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
                           decoration: InputDecoration(hintText: "Name"),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: fieldTextStyle,
                           onChanged: null,
                           readOnly: _viewMode(),
                           controller: _nameController,
@@ -149,14 +149,14 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
                           decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.arrow_drop_down,size: 30, color: Theme.of(context).primaryColor,),
+                            suffixIcon: Icon(FontAwesomeIcons.chevronDown, color: Theme.of(context).primaryColor,),
                             hintText: "Group"
                           ),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: fieldTextStyle,
                           onChanged: null,
                           readOnly: true,
                           controller: _groupController,
-                          onTap: _viewMode()? null : () {
+                          onTap: _viewMode() ? null : () {
                             List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
                             _groupController.value = TextEditingValue(text:  groups[1].name);
                             
@@ -209,7 +209,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                             hintText: "Birth date",
                             suffixIcon: Icon(Icons.date_range,size: 24, color: Theme.of(context).primaryColor,)
                           ),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: fieldTextStyle,
                           readOnly: true,
                           controller: _birthdateController,
                           onTap: _viewMode() ? null : () {
@@ -255,7 +255,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
                           decoration: InputDecoration(hintText: "Mobile"),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: fieldTextStyle,
                           onChanged: null,
                           readOnly:  _viewMode(),
                           keyboardType: TextInputType.number,
@@ -273,7 +273,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
                           decoration: InputDecoration(hintText: "Code"),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: fieldTextStyle,
                           onChanged: null,
                           readOnly: _viewMode(),
                           controller: _codeController,
@@ -285,8 +285,8 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
                           maxLines: 3,
-                          decoration: InputDecoration(hintText: "\nNotes",),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          decoration: InputDecoration(hintText: "\nNotes",contentPadding: EdgeInsets.all(5)),
+                          style: fieldTextStyle,
                           onChanged: null,
                           readOnly: _viewMode(),
                           onSaved: (notes) {widget.user.notes = notes;},
@@ -310,7 +310,7 @@ class _AddUsersScreenState extends State<AddUsersScreen> {
               child: _getControlIconButton(),
             ),
             
-            if(widget.mode == UserScreenMode.edit) /*Cancel Button*/
+            if(widget.mode == UserScreenMode.edit) /*Cancel Icon*/
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(
