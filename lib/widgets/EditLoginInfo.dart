@@ -24,6 +24,7 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
       child: Column(
         children: [
           GestureDetector(
+            behavior: HitTestBehavior.opaque, // To sense tap on space area
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10,),
               child: Row(
@@ -48,6 +49,7 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
         
         if(_open)
           GestureDetector(
+            behavior: HitTestBehavior.opaque,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
               child: Row(
@@ -74,6 +76,7 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
 
         if(_open)
           GestureDetector(
+            behavior: HitTestBehavior.opaque,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
               child: Row(
