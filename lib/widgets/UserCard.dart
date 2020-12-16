@@ -29,7 +29,15 @@ class UserCard extends StatelessWidget {
             Container(
               child: CircleAvatar(
                 radius: MediaQuery.of(context).size.width / 8,
-                backgroundImage: user.imageLink.isNotEmpty ? Image.network(user.imageLink).image : null,
+                backgroundImage: user.imageLink.isNotEmpty
+                    ? Image.network(
+                        user.imageLink,
+                        width: MediaQuery.of(context).size.width / 4,
+                        height: MediaQuery.of(context).size.width / 4,
+                        cacheWidth: MediaQuery.of(context).size.width ~/ 4,
+                        cacheHeight: MediaQuery.of(context).size.width ~/ 4,
+                      ).image
+                    : null,
                 child: user.imageLink.isEmpty
                     ? FittedBox(child: Text(_getInitials(), style: TextStyle(fontSize: 36, fontFamily: "Anton", color: Colors.white)))
                     : null,
@@ -56,7 +64,11 @@ class UserCard extends StatelessWidget {
                     child: FaIcon(
                       FontAwesomeIcons.dollarSign,
                       size: 12,
-                      color: user.monthlyPayments > 0 ? Colors.green : user.isAttended ? Colors.red : Colors.grey[300],
+                      color: user.monthlyPayments > 0
+                          ? Colors.green
+                          : user.isAttended
+                              ? Colors.red
+                              : Colors.grey[300],
                     )),
                 Container(
                     margin: EdgeInsets.only(right: 1),
