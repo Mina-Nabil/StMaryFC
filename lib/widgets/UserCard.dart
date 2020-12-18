@@ -29,7 +29,11 @@ class UserCard extends StatelessWidget {
             Container(
               child: CircleAvatar(
                 radius: MediaQuery.of(context).size.width / 8,
-                backgroundImage: user.imageLink.isNotEmpty ? Image.network(user.imageLink).image : null,
+                backgroundImage: user.imageLink.isNotEmpty ? Image.network(user.imageLink,
+                        width: MediaQuery.of(context).size.width / 4,
+                        height: MediaQuery.of(context).size.width / 4,
+                        cacheWidth: MediaQuery.of(context).size.width ~/ 4,
+                        cacheHeight: MediaQuery.of(context).size.width ~/ 4,).image : null,
                 child: user.imageLink.isEmpty
                     ? FittedBox(child: Text(_getInitials(), style: TextStyle(fontSize: 36, fontFamily: "Anton", color: Colors.white)))
                     : null,
