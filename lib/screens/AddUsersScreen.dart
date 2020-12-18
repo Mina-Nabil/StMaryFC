@@ -94,8 +94,8 @@ class _UserScreenState extends State<UserScreen> {
                 //Photo
                 Center(
                   child: Container(
-                    height: MediaQuery.of(context).size.height / 5,
-                    width: MediaQuery.of(context).size.height / 5,
+                    height: MediaQuery.of(context).size.width / 3,
+                    width:  MediaQuery.of(context).size.width / 3,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
@@ -284,8 +284,9 @@ class _UserScreenState extends State<UserScreen> {
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
-                          maxLines: 3,
-                          decoration: InputDecoration(hintText: "\nNotes",contentPadding: EdgeInsets.all(5)),
+                          minLines: 2,
+                          maxLines: 4,
+                          decoration: InputDecoration(hintText: "Notes",contentPadding: EdgeInsets.all(5)),
                           style: fieldTextStyle,
                           onChanged: null,
                           readOnly: _viewMode(),

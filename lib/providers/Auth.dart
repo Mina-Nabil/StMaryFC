@@ -61,6 +61,31 @@ class Auth with ChangeNotifier {
     currentUser.clear();
   }
 
+  Future<String> changeEmail(String newEmail, String password) async {
+    String errorMsg = "";
+
+    try {
+      final response = await http.post(
+        Server.address + "api/edit/user/email",
+        headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
+        body: {"id":currentUser.id.toString(), "email":newEmail, "password":password},
+      );
+
+      dynamic responseDecoded = jsonDecode(response.body);
+
+      if (responseDecoded["status"] == null || responseDecoded["status"] == false) {
+        if (responseDecoded["message"]["error"] != null) {
+          errorMsg = responseDecoded["message"]["error"];
+        }
+      }
+    } catch (error) {
+      errorMsg = "Check internet connection";
+      print("HTTP request failed $error");
+    }
+
+    return errorMsg;
+  }
+
   Future<void> getCurrentUser() async {
     assert(await isLoggedIn());
     final response = await http.get(
