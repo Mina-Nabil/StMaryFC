@@ -47,6 +47,8 @@ class _SideMenuState extends State<SideMenu> {
                   title: Text(Utils.capitalize(Provider.of<Auth>(context).userName), style: TextStyle(fontSize: 24)),
                   subtitle: Text("View your profile",style: TextStyle(fontSize: 16)),
                   onTap: () {
+                    //better to use popUtil
+                    Navigator.pop(context); //pop side menu first
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ProfileScreen()),
@@ -61,7 +63,7 @@ class _SideMenuState extends State<SideMenu> {
                   leading: Container(child: Icon(CupertinoIcons.home, color: Theme.of(context).primaryColor)),
                   title: Text("Check-in", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: tileTextFontSize),),
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => HomeScreen()),
                     );
@@ -74,6 +76,7 @@ class _SideMenuState extends State<SideMenu> {
                   leading: Container(child: Icon(CupertinoIcons.settings, color: Theme.of(context).primaryColor)),
                   title: Text("Settings", overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: tileTextFontSize),),
                    onTap: () {
+                     Navigator.pop(context); //pop side menu first
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SettingsScreen()),
@@ -111,6 +114,7 @@ class _SideMenuState extends State<SideMenu> {
           enableJavaScript: true,
         );
       } else {
+        Navigator.pop(context); //pop side menu first
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => DashBoard()),

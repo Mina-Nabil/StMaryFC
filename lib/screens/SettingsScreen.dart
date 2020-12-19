@@ -26,7 +26,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return FAScreen(
       appBar: DefAppBar.getBar(context, "Settings", isAdd: false),
-      drawer: DefDrawer(),
       body: PageView(
           controller: _controller,
           onPageChanged: (i) => changeIndex(i),
