@@ -1,8 +1,19 @@
+import 'package:StMaryFA/providers/Auth.dart';
+import 'package:StMaryFA/screens/SplashScreen.dart';
 import 'package:StMaryFA/widgets/DefAppBar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'FAScreen.dart';
 
 class EditLoginPasswordScreen extends StatelessWidget {
+  final _formKey = GlobalKey<FormState>();
+
+  final _passowrdController = TextEditingController();
+
+  String _oldPassword = "";
+  String _newPassword = "";
+
   @override
   Widget build(BuildContext context) {
     return FAScreen(
@@ -13,7 +24,7 @@ class EditLoginPasswordScreen extends StatelessWidget {
           child: ListView(
             children: [
               Form(
-                  //key: _formKey,
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -21,39 +32,46 @@ class EditLoginPasswordScreen extends StatelessWidget {
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
+                          obscureText: true,
                           decoration: InputDecoration(hintText: "Current password"),
                           style: Theme.of(context).textTheme.bodyText1,
                           onChanged: null,
-                          validator: (nameString) {
-                            return nameString.isEmpty ? "*Required" : null;
+                          validator: (value) {
+                            return value.isEmpty ? "*Required" : null;
                           },
-                          onSaved: (nameString) {},
+                          onSaved: (value) {_oldPassword = value;},
                         ),
                       ),
 
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
+                          obscureText: true,
                           decoration: InputDecoration(hintText: "New password"),
                           style: Theme.of(context).textTheme.bodyText1,
                           onChanged: null,
-                          validator: (nameString) {
-                            return nameString.isEmpty ? "*Required" : null;
+                          controller: _passowrdController,
+                          validator: (value) {
+                            return value.isEmpty ? "*Required" : null;
                           },
-                          onSaved: (nameString) {},
+                          onSaved: (value) {_newPassword = value;},
                         ),
                       ),
 
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
+                          obscureText: true,
                           decoration: InputDecoration(hintText: "Re-type new password"),
                           style: Theme.of(context).textTheme.bodyText1,
                           onChanged: null,
-                          validator: (nameString) {
-                            return nameString.isEmpty ? "*Required" : null;
+                          validator: (value) {
+                            if(value.isEmpty)
+                              return "*Required";
+                            if(value != _passowrdController.value.text)
+                              return "*You mush enter same password";
+                            return null;
                           },
-                          onSaved: (nameString) {},
                         ),
                       ),
 
@@ -62,7 +80,7 @@ class EditLoginPasswordScreen extends StatelessWidget {
                         width: double.infinity,
                         decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
                         child: FlatButton(
-                          onPressed: () {}, 
+                          onPressed: () => _updatePassword(context), 
                           child: Text(
                             "Update Password",
                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 24,),
@@ -75,5 +93,43 @@ class EditLoginPasswordScreen extends StatelessWidget {
           ],),
       ),
     );
+  }
+
+    Future<void> _updatePassword(BuildContext context) async {
+    FormState form = _formKey.currentState;
+
+    if (!form.validate())
+      return;
+
+    form.save();
+
+    String errorMsg = await Provider.of<Auth>(context, listen: false).changePassword(_oldPassword, _newPassword);
+
+    if (errorMsg.isEmpty) {
+      showCupertinoDialog(
+          context: context,
+          builder: (BuildContext context) => new CupertinoAlertDialog(
+            title: Text("Password is updated successfully"),
+            actions: [
+              CupertinoDialogAction(child: Text("OK"), onPressed: () {
+                Provider.of<Auth>(context, listen: false).logout();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SplashScreen()),
+                    );
+              },),
+            ],
+          ),
+      );
+    } else {
+      showCupertinoDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (BuildContext context) => new CupertinoAlertDialog(
+                title: Text("Update Password Failed"),
+                content: Text("$errorMsg"),
+              ));
+    }
+
   }
 }
