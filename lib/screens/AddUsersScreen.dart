@@ -34,6 +34,7 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
 
   File _selectedImage;
+  int _selectedGroupId;
 
   final _formKey = GlobalKey<FormState>();
   bool  confirmButtonEnable = true;
@@ -70,6 +71,10 @@ class _UserScreenState extends State<UserScreen> {
   @override
   void initState() {
     super.initState();
+    fillForm();
+  }
+
+  void fillForm() {
     _nameController.value = TextEditingValue(text: widget.user.userName);
     _groupController.value = TextEditingValue(text: widget.user.groupName);
     _birthdateController.value = TextEditingValue(text: widget.user.birthDate?? "");
@@ -156,12 +161,14 @@ class _UserScreenState extends State<UserScreen> {
                           onChanged: null,
                           readOnly: true,
                           controller: _groupController,
+                          onSaved: (_) {
+                            widget.user.groupId = _selectedGroupId;
+                            widget.user.groupName = _groupController.value.text;
+                          },
                           onTap: _viewMode() ? null : () {
                             List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
                             _groupController.value = TextEditingValue(text:  groups[1].name);
-                            
-                            widget.user.groupId = groups[1].id;
-                            widget.user.groupName = groups[1].name;
+                            _selectedGroupId = groups[1].id;
 
                             showModalBottomSheet(
                               backgroundColor: Colors.transparent,
@@ -183,9 +190,7 @@ class _UserScreenState extends State<UserScreen> {
                                         setState(() {
                                           // (+1) as we removed fist element "Admins" group
                                           _groupController.value = TextEditingValue(text: groups[value+1].name);
-
-                                          widget.user.groupId = groups[value+1].id;
-                                          widget.user.groupName = groups[value+1].name;
+                                          _selectedGroupId = groups[value+1].id;
                                         });
                                     }, 
                                     children: (groups.map((group) {
@@ -321,6 +326,7 @@ class _UserScreenState extends State<UserScreen> {
                 onPressed:() {
                   setState(() {
                     widget.mode = UserScreenMode.view;
+                    fillForm();
                   });
                 },
               ),
