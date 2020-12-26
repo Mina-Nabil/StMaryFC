@@ -1,4 +1,5 @@
 import 'package:StMaryFA/models/User.dart';
+import 'package:StMaryFA/screens/UserProfileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -41,7 +42,11 @@ class UserDialog extends StatelessWidget {
                       IconButton(
                         icon: Icon(Icons.info, color: Colors.orange,),
                         onPressed: () {
-
+                          Navigator.pop(context); //pop side dialog first
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => UserProfileScreen(user.id)),
+                          );
                         }
                       ),
                       IconButton(icon: Icon(FontAwesomeIcons.dollarSign, color: Colors.orange,), onPressed: null),

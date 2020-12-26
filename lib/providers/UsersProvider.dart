@@ -13,6 +13,7 @@ class UsersProvider with ChangeNotifier {
 
   String _searchApiUrl = Server.address + "api/search/name";
   String _getAllApiUrl = Server.address + "api/get/users";
+  String _getUserByIdApiUrl = Server.address + "api/user/by/id";
   String _attendanceApiUrl = Server.address + "api/take/bulk/attendance";
   String _addUserUrl = Server.address + "api/add/user";
   String _editUserUrl = Server.address + "api/edit/user";
@@ -48,6 +49,15 @@ class UsersProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+Future<User> getUserById (int id) async {
+  // TODO add error handling
+  
+  var response = await http.get(_getUserByIdApiUrl+"/$id", headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+  dynamic body = jsonDecode(response.body);
+  User user = User.fromJson(body["message"]);
+  return user;
+}
 
   Future<String> addUser(File image, User user) async {
     
