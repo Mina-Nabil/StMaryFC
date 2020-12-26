@@ -1,8 +1,8 @@
-import 'dart:math';
-
 import 'package:StMaryFA/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../global.dart';
 
 class UserCard extends StatelessWidget {
   UserCard({@required this.user, @required this.selected});
@@ -35,7 +35,7 @@ class UserCard extends StatelessWidget {
                         cacheWidth: MediaQuery.of(context).size.width ~/ 4,
                         cacheHeight: MediaQuery.of(context).size.width ~/ 4,).image : null,
                 child: user.imageLink.isEmpty
-                    ? FittedBox(child: Text(_getInitials(), style: TextStyle(fontSize: 36, fontFamily: "Anton", color: Colors.white)))
+                    ? FittedBox(child: Text(Utils.getInitials(user.userName), style: TextStyle(fontSize: 36, fontFamily: "Anton", color: Colors.white)))
                     : null,
               ),
             ),
@@ -75,15 +75,5 @@ class UserCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getInitials() {
-    var buffer = StringBuffer();
-    var split = user.userName.split(new RegExp(r" |-|_"));
-    //limit to 2 char only
-    for (var i = 0; i < min(2, split.length); i++) {
-      buffer.write(split[i][0]);
-    }
-    return buffer.toString().toUpperCase();
   }
 }

@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Server {
@@ -27,5 +29,15 @@ class Server {
 class Utils {
   static String capitalize (String value) {
     return value == "" ? "" : '${value[0].toUpperCase()}${value.substring(1)}';
+  }
+
+  static String getInitials(String value) {
+    var buffer = StringBuffer();
+    var split = value.split(new RegExp(r" |-|_"));
+    //limit to 2 char only
+    for (var i = 0; i < min(2, split.length); i++) {
+      buffer.write(split[i][0]);
+    }
+    return buffer.toString().toUpperCase();
   }
 }

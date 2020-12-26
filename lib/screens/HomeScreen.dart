@@ -3,6 +3,7 @@ import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/widgets/DefAppBar.dart';
 import 'package:StMaryFA/widgets/DefDrawer.dart';
 import 'package:StMaryFA/widgets/UserCard.dart';
+import 'package:StMaryFA/widgets/UserDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -88,6 +89,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               else
                                 selectedIds.add(user.id);
                             });
+                        },
+                        onLongPress: () {
+                          showDialog(
+                            barrierDismissible: true,
+                              context: context,
+                              builder: (BuildContext context) => UserDialog(user)
+                          );
                         },
                       );
                     }).toList()
