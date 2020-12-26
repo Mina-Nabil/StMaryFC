@@ -4,6 +4,7 @@ class User {
   User({
    this.id,
    this.userName,
+   this.type,
    this.groupName,
    this.groupId,
    this.imageLink,
@@ -20,8 +21,10 @@ class User {
   User.fromJson(user) {
     this.id = user["id"];
     this.userName = user["USER_NAME"];
+    this.type = user["type"]["id"];
     this.groupName = user["group"]["GRUP_NAME"];
     this.groupId = user["group"]["id"];
+    this.birthDate = user["USER_BDAY"];
     this.imageLink = user["full_image_url"];
     this.mobileNum = user["USER_MOBN"];
     this.code = user["USER_CODE"];
@@ -35,6 +38,7 @@ class User {
 
   int id;
   String userName;
+  int type;
   String groupName;
   int groupId;
   String imageLink;
@@ -49,6 +53,7 @@ class AttendanceUser extends User {
   AttendanceUser({
     @required int id,
     @required String name,
+    int type,
     String groupName,
     int groupId,
     String imageLink,
@@ -58,7 +63,7 @@ class AttendanceUser extends User {
     String notes,
     int monthlyPayments,
     bool isAttended,
-  }) : super(id: id, userName: name, groupName: groupName, groupId: groupId, imageLink: imageLink, birthDate: birthDate, mobileNum: mobileNum, code: code, notes: notes);
+  }) : super(id: id, userName: name, type: type, groupName: groupName, groupId: groupId, imageLink: imageLink, birthDate: birthDate, mobileNum: mobileNum, code: code, notes: notes);
 
   AttendanceUser.fromJson(user) {
     this.id = user["id"];

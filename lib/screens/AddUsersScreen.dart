@@ -77,6 +77,7 @@ class _UserScreenState extends State<UserScreen> {
   void fillForm() {
     _nameController.value = TextEditingValue(text: widget.user.userName);
     _groupController.value = TextEditingValue(text: widget.user.groupName);
+    _selectedGroupId = widget.user.groupId;
     _birthdateController.value = TextEditingValue(text: widget.user.birthDate?? "");
     _mobileNumController.value = TextEditingValue(text: widget.user.mobileNum?? "");
     _codeController.value = TextEditingValue(text: widget.user.code?? "");
@@ -157,7 +158,7 @@ class _UserScreenState extends State<UserScreen> {
                             suffixIcon: Icon(FontAwesomeIcons.chevronDown, color: Theme.of(context).primaryColor,),
                             hintText: "Group"
                           ),
-                          style: fieldTextStyle,
+                          style: widget.user.type == 1? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54) : fieldTextStyle,
                           onChanged: null,
                           readOnly: true,
                           controller: _groupController,
@@ -165,7 +166,7 @@ class _UserScreenState extends State<UserScreen> {
                             widget.user.groupId = _selectedGroupId;
                             widget.user.groupName = _groupController.value.text;
                           },
-                          onTap: _viewMode() ? null : () {
+                          onTap: (_viewMode() || widget.user.type == 1) ? null : () {
                             List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
                             _groupController.value = TextEditingValue(text:  groups[1].name);
                             _selectedGroupId = groups[1].id;
@@ -351,39 +352,72 @@ class _UserScreenState extends State<UserScreen> {
       confirmButtonEnable = false;
     });
 
-    String errorMsg = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, widget.user);
+    String errorMsg;
+    if(_editMode())
+    {
+      errorMsg = await Provider.of<UsersProvider>(context,listen: false).editUser(_selectedImage, widget.user);
+    } else {
+      errorMsg = await Provider.of<UsersProvider>(context,listen: false).addUser(_selectedImage, widget.user);
+    }
 
     setState(() {
       confirmButtonEnable = true;
     });
 
-    showCupertinoDialog(
-        context: context,
-        builder: (BuildContext context) => new CupertinoAlertDialog(
-              title: errorMsg.isEmpty? Text("User Added") : Text("Failed"),
-              content: errorMsg.isEmpty? Text("Add another user?") : Text(errorMsg),
-              actions: errorMsg.isEmpty? [
-                CupertinoDialogAction(child: Text("Yes"), onPressed: () {
-                  setState(() {
-                    clearForm();
+    if(errorMsg.isEmpty) {
+      if(_editMode()) {
+        showCupertinoDialog(
+          context: context, 
+          barrierDismissible: true,
+          builder: (BuildContext context) => new CupertinoAlertDialog(
+          title: Text("Done"),
+          content: Icon(Icons.check_circle, size: 32,),
+        ));
+
+        //switch to view mode
+        widget.mode = UserScreenMode.view;
+
+      } else {
+        //add mode
+        showCupertinoDialog(
+            context: context,
+            builder: (BuildContext context) => new CupertinoAlertDialog(
+                  title: Text("User Added"),
+                  content: Text("Add another user?"),
+                  actions: [
+                    CupertinoDialogAction(child: Text("Yes"), onPressed: () {
+                      setState(() {
+                        clearForm();
+                        Navigator.of(context).pop();
+                      });
+                    }
+                    ),
+                    CupertinoDialogAction(child: Text("No"), onPressed: () {
+                      //TODO popUntil is better
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      );
+                    },)
+                  ]
+                )
+        );
+      }
+    }
+    else {
+      showCupertinoDialog(
+          context: context,
+          builder: (BuildContext context) => new CupertinoAlertDialog(
+                title: Text("Failed"),
+                content: Text(errorMsg),
+                actions: [
+                  CupertinoDialogAction(child: Text("OK"), onPressed: () {
                     Navigator.of(context).pop();
-                  });
-                }
-                ),
-                CupertinoDialogAction(child: Text("No"), onPressed: () {
-                  //TODO popUntil is better
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
-                  );
-                },)
-              ] : 
-              [
-                CupertinoDialogAction(child: Text("OK"), onPressed: () {
-                  Navigator.of(context).pop();
-                },)
-              ],
-            ));
+                  },)
+                ],
+              )
+      );
+    }
   }
 
   void clearForm() {
@@ -413,22 +447,15 @@ class _UserScreenState extends State<UserScreen> {
 
   Widget _getControlIconButton() {
     if(_viewMode()) {
-      //View Edit icon and convert to Edit mode onPress
+      // View Edit icon and convert to Edit mode onPress
       return IconButton(
         padding: EdgeInsets.zero,
         alignment: Alignment.topRight,
         icon: Icon(Icons.edit),
         onPressed:() => setState(() => widget.mode = UserScreenMode.edit),
       );
-    } else if (_editMode()) {
-      return IconButton(
-        padding: EdgeInsets.zero,
-        alignment: Alignment.topRight,
-        icon: FaIcon(FontAwesomeIcons.check),
-        onPressed: () {},
-      );
     } else {
-      //Add mode
+      // Edit & Add modes
       return IconButton(
         padding: EdgeInsets.zero,
         alignment: Alignment.topRight,

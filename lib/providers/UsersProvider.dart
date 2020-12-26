@@ -15,6 +15,7 @@ class UsersProvider with ChangeNotifier {
   String _getAllApiUrl = Server.address + "api/get/users";
   String _attendanceApiUrl = Server.address + "api/take/bulk/attendance";
   String _addUserUrl = Server.address + "api/add/user";
+  String _editUserUrl = Server.address + "api/edit/user";
   //Requests Vars
   FlutterSecureStorage storage = new FlutterSecureStorage();
   
@@ -79,6 +80,48 @@ class UsersProvider with ChangeNotifier {
       return "";
     else 
       return "The name has already been taken.";
+  }
+
+  Future<String> editUser(File image, User user) async {
+    
+    var request = http.MultipartRequest("POST", Uri.parse(_editUserUrl));
+    request.fields['id'] = user.id.toString();
+    request.fields['name'] = user.userName;
+    request.fields['group'] = user.groupId.toString();
+    request.fields['birthDate'] = user.birthDate;
+    request.fields['mobn'] = user.mobileNum;
+    request.fields['code'] = user.code;
+    request.fields['note'] = user.notes;
+
+    if(image != null) {
+      var pic = await http.MultipartFile.fromPath('photo', image.path,);
+      request.files.add(pic);
+    }
+
+    request.headers.addAll({'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+ 
+    var response = await request.send();
+
+    var responseData = await response.stream.toBytes();
+    var responseString = String.fromCharCodes(responseData);
+    dynamic body = jsonDecode(responseString);
+    
+    print(body);
+    
+    String errorMsg = "";
+
+    if(body['status'] != null && body['status'] == true) {
+      return errorMsg;
+    } else if(body['status'] != null && body['status'] == false) {
+      if(body['message'] != null && body['message']['errors'] != null) {
+        for (var error in  body['message']['errors'].values) {
+          errorMsg += error.toString();
+        }
+      }
+    } else {
+      errorMsg += "Please try again";
+    }
+      return errorMsg;
   }
 
   Future<bool> takeAttendance(List<int> ids, String date) async {
