@@ -12,7 +12,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FAScreen(
-      appBar: DefAppBar.getBar(context, Utils.capitalize(Provider.of<Auth>(context).userName), isAdd: false),
+      appBar: AppBar(title: Text(Utils.capitalize(Provider.of<Auth>(context).userName))),
       body: Column(
         children: [
           Expanded(child: UserScreen.view(Provider.of<Auth>(context).currentUser, extra: EditLoginInfo(),)),

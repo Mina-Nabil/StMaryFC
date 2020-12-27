@@ -1,7 +1,6 @@
 import 'package:StMaryFA/screens/AddUsersScreen.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
 import 'package:StMaryFA/screens/GroupsScreen.dart';
-import 'package:StMaryFA/widgets/DefAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -24,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return FAScreen(
-      appBar: DefAppBar.getBar(context, "Settings", isAdd: false),
+      appBar: AppBar(title: Text("Settings")),
       body: PageView(
           controller: _controller,
           onPageChanged: (i) => changeIndex(i),

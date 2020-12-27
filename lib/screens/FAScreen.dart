@@ -1,5 +1,4 @@
 
-import 'package:StMaryFA/widgets/DefAppBar.dart';
 import 'package:flutter/material.dart';
 
 class FAScreen extends StatelessWidget {
@@ -14,11 +13,13 @@ class FAScreen extends StatelessWidget {
   FAScreen.loading() 
     : appBar = null,
       drawer = null,
-      body = Center(child: CircularProgressIndicator()),
+      body =  Center(
+                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),backgroundColor: Colors.orange,)
+              ),
       bottomNavigationBar = null;
 
   FAScreen.error()
-    : appBar = DefAppBar.getBar(null, "", isAdd: false),
+    : appBar = AppBar(),
       drawer = null,
       body = Center(child: Text("Something went wrong.\nPlease check internet connection and try again.",)),
       bottomNavigationBar = null;

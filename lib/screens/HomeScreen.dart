@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:StMaryFA/providers/UsersProvider.dart';
-import 'package:StMaryFA/widgets/DefAppBar.dart';
+import 'package:StMaryFA/screens/SettingsScreen.dart';
 import 'package:StMaryFA/widgets/DefDrawer.dart';
 import 'package:StMaryFA/widgets/UserCard.dart';
 import 'package:StMaryFA/widgets/UserDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      appBar: DefAppBar.getBar(context, "Check-in"),
+      appBar: AppBar(
+        title: Text("Check-in"),
+        actions: [IconButton(icon: FaIcon(FontAwesomeIcons.cog), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsScreen())),)]
+      ),
       drawer: DefDrawer(),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),

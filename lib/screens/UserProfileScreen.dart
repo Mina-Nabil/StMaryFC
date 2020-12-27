@@ -2,7 +2,6 @@ import 'package:StMaryFA/models/User.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/AddUsersScreen.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
-import 'package:StMaryFA/widgets/DefAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +28,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           } else {
             User user = snapshot.data as User;
             return FAScreen(
-              appBar: DefAppBar.getBar(context, Utils.capitalize(user.userName), isAdd: false),
+              appBar: AppBar(title: Text(Utils.capitalize(user.userName))),
               body: UserScreen.view(user) ,
             );
           }

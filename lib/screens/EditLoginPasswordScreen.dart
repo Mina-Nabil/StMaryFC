@@ -17,7 +17,7 @@ class EditLoginPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FAScreen(
-      appBar: DefAppBar.getBar(context,"Change Password", isAdd: false),
+      appBar: AppBar(title: Text("Change Password")),
       body: Container(
           padding: EdgeInsets.only(top: 20, left: 20, right: 20),
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
