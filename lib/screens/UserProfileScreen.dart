@@ -10,7 +10,7 @@ import '../global.dart';
 
 class UserProfileScreen extends StatefulWidget {
   UserProfileScreen(this.id);
-  int id;
+  final int id;
 
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
@@ -24,20 +24,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       future: Provider.of<UsersProvider>(context).getUserById(widget.id),
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.done) {
-          User user = snapshot.data as User;
-          return FAScreen(
-            appBar: DefAppBar.getBar(context, Utils.capitalize(user.userName), isAdd: false),
-            body: Column(
-              children: [
-                Expanded(child: UserScreen.view(user)),
-              ],
-            ) ,
-          );
+          if(snapshot.hasError) {
+            return FAScreen.error();
+          } else {
+            User user = snapshot.data as User;
+            return FAScreen(
+              appBar: DefAppBar.getBar(context, Utils.capitalize(user.userName), isAdd: false),
+              body: UserScreen.view(user) ,
+            );
+          }
         } else {
-          return FAScreen(
-            appBar: DefAppBar.getBar(context, "", isAdd: false),
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return FAScreen.loading();
         }
       }
     );

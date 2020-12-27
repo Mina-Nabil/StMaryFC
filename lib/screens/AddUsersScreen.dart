@@ -91,7 +91,7 @@ class _UserScreenState extends State<UserScreen> {
     return Column(children: [
       Expanded(
         child: Container(
-          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+          padding: EdgeInsets.only(top: 15, left: 15, right: 15),
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
           child: Stack(
           children: [
