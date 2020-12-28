@@ -15,7 +15,7 @@ class UserCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: Color.fromRGBO(79, 50, 0, 0.2),
         ),

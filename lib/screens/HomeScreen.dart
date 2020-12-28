@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:StMaryFA/providers/UsersProvider.dart';
+import 'package:StMaryFA/screens/FAScreen.dart';
 import 'package:StMaryFA/screens/SettingsScreen.dart';
 import 'package:StMaryFA/widgets/DefDrawer.dart';
 import 'package:StMaryFA/widgets/UserCard.dart';
@@ -29,15 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
+    return FAScreen(
       appBar: AppBar(
         title: Text("Check-in"),
         actions: [IconButton(icon: FaIcon(FontAwesomeIcons.cog), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsScreen())),)]
       ),
       drawer: DefDrawer(),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         child: Container(
           alignment: Alignment.center,
           child: Column(
@@ -67,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               SizedBox(
-                height: 20,
+                height: 15,
               ),
 
               Expanded(
