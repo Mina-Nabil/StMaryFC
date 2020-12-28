@@ -1,7 +1,6 @@
 import 'package:StMaryFA/providers/Auth.dart';
 import 'package:StMaryFA/screens/AddUsersScreen.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
-import 'package:StMaryFA/widgets/DefAppBar.dart';
 import 'package:StMaryFA/widgets/EditLoginInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
