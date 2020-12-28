@@ -8,6 +8,7 @@ class FAScreen extends StatelessWidget {
     this.drawer,
     this.body,
     this.bottomNavigationBar,
+    this.padding = const EdgeInsets.all(15),
   });
 
   FAScreen.loading() 
@@ -16,18 +17,21 @@ class FAScreen extends StatelessWidget {
       body =  Center(
                 child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),backgroundColor: Colors.orange,)
               ),
-      bottomNavigationBar = null;
+      bottomNavigationBar = null,
+      padding = null;
 
   FAScreen.error()
     : appBar = AppBar(),
       drawer = null,
       body = Center(child: Text("Something went wrong.\nPlease check internet connection and try again.",)),
-      bottomNavigationBar = null;
+      bottomNavigationBar = null,
+      padding = null;
 
   final PreferredSizeWidget appBar;
   final Widget drawer;
   final Widget body;
   final Widget bottomNavigationBar;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +40,7 @@ class FAScreen extends StatelessWidget {
       appBar: appBar,
       drawer: drawer,
       body: Container(
-        padding: EdgeInsets.all(15),
+        padding: padding,
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: body,

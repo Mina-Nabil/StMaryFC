@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [IconButton(icon: FaIcon(FontAwesomeIcons.cog), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsScreen())),)]
       ),
       drawer: DefDrawer(),
+      padding: EdgeInsets.only(top: 15, left: 15, right: 15),
       body: Container(
         child: Container(
           alignment: Alignment.center,
@@ -105,36 +106,41 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-
-              // Selection info Bar
-              if (selectedIds.isNotEmpty)
-                Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: selectedIds.isEmpty? null : Container(
+                  decoration: BoxDecoration(
+                    color: Colors.orange[700]
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       FlatButton(
-                        padding: EdgeInsets.all(5),
+                        padding: EdgeInsets.zero,
                         onPressed: null,
                         child: Text(
                           "${selectedIds.length} Selected",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                       Row(
                         children: [
+                          /*
                           FlatButton(
-                              padding: EdgeInsets.all(5),
+                              padding: EdgeInsets.zero,
                               onPressed: null,
                               child: Text(
                                 "Review",
                                 style: TextStyle(color: Colors.white, fontSize: 20),
-                              )),
+                              )),*/
                           FlatButton(
-                              padding: EdgeInsets.all(5),
+                              padding: EdgeInsets.zero,
                               child: Text(
                                 "Confirm",
-                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                               ),
                               onPressed: () async {
                                 String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -148,10 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
