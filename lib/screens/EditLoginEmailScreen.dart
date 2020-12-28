@@ -1,6 +1,5 @@
 import 'package:StMaryFA/providers/Auth.dart';
 import 'package:StMaryFA/screens/SplashScreen.dart';
-import 'package:StMaryFA/widgets/DefAppBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
