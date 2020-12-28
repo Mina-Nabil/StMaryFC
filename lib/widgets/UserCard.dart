@@ -60,15 +60,13 @@ class UserCard extends StatelessWidget {
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(1.0),
                   child: Text("${user.groupName}",
                       style: TextStyle(color: user.isAttended || selected ? Colors.orange : Colors.black, fontSize: 14, fontWeight: user.isAttended || selected ? FontWeight.w500 : FontWeight.w300)),
                 ),
                 Container(
-                    margin: EdgeInsets.only(right: 1),
                     child: FaIcon(
                       FontAwesomeIcons.dollarSign,
                       size: 12,
@@ -79,7 +77,6 @@ class UserCard extends StatelessWidget {
                               : Colors.grey[300],
                     )),
                 Container(
-                    margin: EdgeInsets.only(right: 1),
                     child: FaIcon(
                       FontAwesomeIcons.checkCircle,
                       size: 12,
