@@ -111,10 +111,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: selectedIds.isEmpty? null : Container(
-                  decoration: BoxDecoration(
-                    color: Colors.orange[700]
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  decoration: BoxDecoration(color: Colors.orange[600]),
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
