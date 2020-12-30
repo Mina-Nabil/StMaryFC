@@ -10,44 +10,51 @@ class PaymentsHelper {
     List<Payment> payments = [];
 
     String getUserPaymentsApiUrl =  Server.address + "api/get/user/payments/";
+    try {
+      var response = await http.get(
+        getUserPaymentsApiUrl+"$id", 
+        headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"}
+      );
 
-    var response = await http.get(
-      getUserPaymentsApiUrl+"$id", 
-      headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"}
-    );
-
-    dynamic body = jsonDecode(response.body);
-
-    if (body["message"] != null && body["message"] is Iterable) {
-      for (var payment in body["message"]) {
-        payments.add(Payment.fromJson(payment));
+      dynamic body = jsonDecode(response.body);
+      if (body["message"] != null && body["message"] is Iterable) {
+        for (var payment in body["message"]) {
+          payments.add(Payment.fromJson(payment));
+        }
       }
+    } catch(error) {
+        throw(error);
     }
-
     return payments;
   }
 
   static Future<String> addPayment (int id, double amount, String date, String note) async {
 
     String getUserPaymentsApiUrl =  Server.address + "api/add/payment";
+    String errorMsg = "";
+    try {
+      var response = await http.post(
+        getUserPaymentsApiUrl,
+        headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
+        body: {
+          "userID": id.toString(),
+          "amount": amount.toString(),
+          "date": date,
+          "note":note,
+        }
+      );
 
-    var response = await http.post(
-      getUserPaymentsApiUrl,
-      headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
-      body: {
-        "userID": id.toString(),
-        "amount": amount.toString(),
-        "date": date,
-        "note":note,
+      dynamic body = jsonDecode(response.body);
+      
+      if(body["status"] != null && body["status"] == true) {
+        return "";
+      } else {
+        errorMsg = "Something went wrong.";
       }
-    );
 
-    dynamic body = jsonDecode(response.body);
-
-    if(body["status"] != null && body["status"] == true) {
-      return "";
-    } else {
-      return "Something went wrong.";
+    } catch (error) {
+      errorMsg = "Something went wrong.";
     }
+    return errorMsg;
   }
 }

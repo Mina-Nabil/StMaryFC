@@ -170,7 +170,8 @@ class _NewPaymentState extends State<NewPayment> {
       showCupertinoDialog(
           context: context,
           builder: (BuildContext context) => new CupertinoAlertDialog(
-          title: Text(errorMsg),
+          title: Text("Failed"),
+          content: Text(errorMsg),
           actions: [
             CupertinoDialogAction(
               child: Text("OK", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),),
@@ -180,9 +181,9 @@ class _NewPaymentState extends State<NewPayment> {
         ));
     } else {
 
-      String error = await PaymentsHelper.addPayment(widget.id, double.parse(amount), date, note);
+      String errorMsg = await PaymentsHelper.addPayment(widget.id, double.parse(amount), date, note);
 
-      if(error.isEmpty){
+      if(errorMsg.isEmpty){
         _amountController.clear();
         _dateController.clear();
         _noteController.clear();
@@ -191,7 +192,18 @@ class _NewPaymentState extends State<NewPayment> {
         });
         widget.onPaymentAdd();
       } else {
-
+        showCupertinoDialog(
+          context: context,
+          builder: (BuildContext context) => new CupertinoAlertDialog(
+          title: Text("Failed"),
+          content: Text(errorMsg),
+          actions: [
+            CupertinoDialogAction(
+              child: Text("OK", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          ],
+        ));
       }
 
 

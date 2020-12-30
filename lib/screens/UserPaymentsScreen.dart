@@ -15,7 +15,6 @@ class UserPaymentsScreen extends StatefulWidget {
 class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
   @override
   Widget build(BuildContext context) {
-    PaymentsHelper.getUserPayments(widget.id);
     return FAScreen(
       appBar: AppBar(title: Text("${widget.userName}'s payments"),),
       body: Column(
