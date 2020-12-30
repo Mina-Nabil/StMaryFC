@@ -26,4 +26,28 @@ class PaymentsHelper {
 
     return payments;
   }
+
+  static Future<String> addPayment (int id, double amount, String date, String note) async {
+
+    String getUserPaymentsApiUrl =  Server.address + "api/add/payment";
+
+    var response = await http.post(
+      getUserPaymentsApiUrl,
+      headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
+      body: {
+        "userID": id.toString(),
+        "amount": amount.toString(),
+        "date": date,
+        "note":note,
+      }
+    );
+
+    dynamic body = jsonDecode(response.body);
+
+    if(body["status"] != null && body["status"] == true) {
+      return "";
+    } else {
+      return "Something went wrong.";
+    }
+  }
 }

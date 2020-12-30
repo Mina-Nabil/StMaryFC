@@ -1,6 +1,7 @@
 import 'package:StMaryFA/helpers/PaymentsHelper.dart';
 import 'package:StMaryFA/models/Payment.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
+import 'package:StMaryFA/widgets/NewPayment.dart';
 import 'package:flutter/material.dart';
 
 class UserPaymentsScreen extends StatefulWidget {
@@ -19,6 +20,9 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
       appBar: AppBar(title: Text("${widget.userName}'s payments"),),
       body: Column(
         children: [
+          NewPayment(widget.id, onPaymentAdd: () {setState(() {});}),
+
+          Divider(),
 
           // Payments list
           FutureBuilder(
