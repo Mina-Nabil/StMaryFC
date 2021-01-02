@@ -283,6 +283,9 @@ class _UserScreenState extends State<UserScreen> {
                           onChanged: null,
                           readOnly: _viewMode(),
                           controller: _codeController,
+                          validator: (code) {
+                            return code.isEmpty ? "*Required" : null;
+                          },
                           onSaved: (code) {widget.user.code = code;},
                         ),
                       ),
