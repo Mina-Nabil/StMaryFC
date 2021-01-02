@@ -3,6 +3,7 @@ import 'package:StMaryFA/screens/UserPaymentsScreen.dart';
 import 'package:StMaryFA/screens/UserProfileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../global.dart';
 
@@ -57,7 +58,13 @@ class UserDialog extends StatelessWidget {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => UserPaymentsScreen(user.id, user.userName)),);
                         },
                       ),
-                      IconButton(icon: Icon(Icons.call, color: Colors.orange), onPressed: null),
+                      IconButton(
+                        icon: Icon(Icons.call, color: Colors.orange),
+                        onPressed: () {
+                          Navigator.pop(context); //pop side dialog first
+                          launch("tel://phonenumber");
+                        }
+                      ),
                     ],
                   ),
               ],
