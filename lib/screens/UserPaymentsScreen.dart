@@ -3,6 +3,7 @@ import 'package:StMaryFA/models/Payment.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
 import 'package:StMaryFA/widgets/NewPayment.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserPaymentsScreen extends StatefulWidget {
   UserPaymentsScreen(this.id, this.userName);
@@ -13,18 +14,29 @@ class UserPaymentsScreen extends StatefulWidget {
 }
 
 class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
+  int selectedpage = 0;
+  PageController _controller = new PageController(initialPage: 0);
   @override
   Widget build(BuildContext context) {
     return FAScreen(
+      padding: EdgeInsets.only(top: 15, left: 15, right: 15),
       appBar: AppBar(title: Text("${widget.userName}'s payments"),),
-      body: Column(
-        children: [
-          NewPayment(widget.id, onPaymentAdd: () {setState(() {});}),
+      body: PageView(
+        controller: _controller,
+        onPageChanged: (i) {
+          setState(() {
+            selectedpage = i;
+          });
+        },
+        children:[
+          Column(
+            children: [
+              NewPayment(widget.id, onPaymentAdd: () {setState(() {});}),
 
-          Divider(),
+              Divider(),
 
-          // Payments list
-          FutureBuilder(
+              // Payments list
+              FutureBuilder(
                 future: PaymentsHelper.getUserPayments(widget.id),
                 builder: (context, snapshot) {
                   if(snapshot.connectionState == ConnectionState.done) {
@@ -50,11 +62,33 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
                       );
                     }
                   } else {
-                    return CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),backgroundColor: Colors.orange,);
+                    return Expanded(child: Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),backgroundColor: Colors.orange,)));
                   }
                 }
               ),
-        ]
+            ]
+          ),
+
+        //Events page
+        Container(child: Center(child: Text("events")),)
+        ],
+
+      ),
+      bottomNavigationBar: Theme(
+        data: ThemeData(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          primaryColor: Colors.orange
+        ),
+        child: BottomNavigationBar(
+          currentIndex: selectedpage,
+          onTap: (i) => _controller.animateToPage(i, duration: Duration(milliseconds: 200), curve: Curves.linear),
+          items: [
+            BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.school),label: "Academy"),
+            BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.campground),label: "Events"),
+            
+          ],
+        ),
       ),
     );
   }

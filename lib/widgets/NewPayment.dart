@@ -181,7 +181,7 @@ class _NewPaymentState extends State<NewPayment> {
         ));
     } else {
 
-      String errorMsg = await PaymentsHelper.addPayment(widget.id, double.parse(amount), date, note);
+      String errorMsg = await PaymentsHelper.addPayment(widget.id, double.parse(amount), date, note, 1);
 
       if(errorMsg.isEmpty){
         _amountController.clear();

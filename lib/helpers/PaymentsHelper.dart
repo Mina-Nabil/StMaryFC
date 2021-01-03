@@ -28,7 +28,7 @@ class PaymentsHelper {
     return payments;
   }
 
-  static Future<String> addPayment (int id, double amount, String date, String note) async {
+  static Future<String> addPayment (int id, double amount, String date, String note, int type) async {
 
     String getUserPaymentsApiUrl =  Server.address + "api/add/payment";
     String errorMsg = "";
@@ -41,6 +41,7 @@ class PaymentsHelper {
           "amount": amount.toString(),
           "date": date,
           "note":note,
+          "type": type.toString(),
         }
       );
 

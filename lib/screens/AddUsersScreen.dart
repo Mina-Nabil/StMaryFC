@@ -370,11 +370,15 @@ class _UserScreenState extends State<UserScreen> {
     if(errorMsg.isEmpty) {
       if(_editMode()) {
         showCupertinoDialog(
-          context: context, 
-          barrierDismissible: true,
+          context: context,
           builder: (BuildContext context) => new CupertinoAlertDialog(
           title: Text("Done"),
-          content: Icon(Icons.check_circle, size: 32,),
+          actions: [
+            CupertinoDialogAction(
+              child: Text("OK", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          ],
         ));
 
         //switch to view mode
