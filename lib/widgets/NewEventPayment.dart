@@ -1,11 +1,13 @@
 import 'package:StMaryFA/helpers/PaymentsHelper.dart';
+import 'package:StMaryFA/models/Event.dart';
+import 'package:StMaryFA/providers/EventsProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class NewPayment extends StatefulWidget {
-  NewPayment(this.id, {this.onPaymentAdd});
+class NewEventPayment extends StatefulWidget {
+  NewEventPayment(this.id, {this.onPaymentAdd});
   
   final int id;
   final Function onPaymentAdd;
@@ -13,15 +15,16 @@ class NewPayment extends StatefulWidget {
   _NewPaymentState createState() => _NewPaymentState();
 }
 
-class _NewPaymentState extends State<NewPayment> {
+class _NewPaymentState extends State<NewEventPayment> {
   
   bool _open = false;
 
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
-  final _dateController = TextEditingController();
+  final _eventController = TextEditingController();
   final _noteController = TextEditingController();
   
+  Event selectedEvent;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -82,40 +85,63 @@ class _NewPaymentState extends State<NewPayment> {
                           textAlign: TextAlign.left,
                           style: TextStyle(color: Colors.black, fontSize: 18),
                           decoration: InputDecoration(
-                            hintText: "Date",
+                            hintText: "Event",
                             border: InputBorder.none,
                           ),
-                          controller: _dateController,
-                          onTap: () =>showModalBottomSheet(
+                          controller: _eventController,
+                          onTap: () {
+                            showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               context: context, 
                               builder: (_) {
-                                return Container(
-                                  decoration: new BoxDecoration(
-                                    color: Colors.orangeAccent[100],
-                                    borderRadius: new BorderRadius.only(
-                                    topLeft: const Radius.circular(25.0),
-                                    topRight: const Radius.circular(25.0))
-                                  ),
-
-                                  height: MediaQuery.of(context).size.height/4,
-                                  child: CupertinoDatePicker(
-
-                                    backgroundColor: Colors.transparent,
-                                    mode: CupertinoDatePickerMode.date,
-                                    initialDateTime: DateTime.now(),
-                                    minimumYear: 2015,
-                                    maximumYear: 2050,
-                                    onDateTimeChanged: (DateTime date) {
-                                      setState(() {
-                                        _dateController.value = TextEditingValue(text: DateFormat('yyyy-MM-dd').format(date));
-                                      });
-                                    },
-                                    
-                                  ),
+                                return FutureBuilder(
+                                  future: Provider.of<EventsProvider>(context, listen: false).events == null? Provider.of<EventsProvider>(context, listen: false).loadEvents() : null,
+                                  builder: (context, snapshot) {
+                                    if(snapshot.connectionState == ConnectionState.waiting) {
+                                      return Container(
+                                        decoration: new BoxDecoration(
+                                        color: Colors.orangeAccent[100],
+                                        borderRadius: new BorderRadius.only(
+                                          topLeft: const Radius.circular(25.0),
+                                          topRight: const Radius.circular(25.0))
+                                        ),
+                                        height: MediaQuery.of(context).size.height/4,
+                                        child: Center(
+                                          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),backgroundColor: Colors.orange,)),
+                                      );
+                                    } else {
+                                      List<Event> events = Provider.of<EventsProvider>(context, listen: false).events;
+                                      if(events.length == 1) {
+                                        selectedEvent = events[0];
+                                      }
+                                      return Container(
+                                        decoration: new BoxDecoration(
+                                        color: Colors.orangeAccent[100],
+                                        borderRadius: new BorderRadius.only(
+                                          topLeft: const Radius.circular(25.0),
+                                          topRight: const Radius.circular(25.0))
+                                        ),
+                                        height: MediaQuery.of(context).size.height/4,
+                                        child: CupertinoPicker(
+                                          itemExtent:  MediaQuery.of(context).size.height/16, 
+                                          onSelectedItemChanged: (i) {
+                                            selectedEvent = events[i];
+                                          },
+                                          
+                                          children: (events.map((event) {
+                                            return Center(child: Text(event.name));
+                                          }).toList()),
+                                        ),
+                                      );
+                                    }
+                                  },
                                 );
                               }
-                            ),
+                            ).then((value) => setState(() {
+                              _eventController.value = TextEditingValue(text: selectedEvent.name);
+                            }));
+                            
+                          }
                         ),
                       ),
                     ],
@@ -135,7 +161,7 @@ class _NewPaymentState extends State<NewPayment> {
 
                   Container(
                     width: double.infinity,
-                    decoration: BoxDecoration(color: Colors.orange),
+                    decoration: BoxDecoration(color: Colors.orange,),
                     child: FlatButton(
                       onPressed: addPayment,
                       child: Text("Add", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))
@@ -153,7 +179,6 @@ class _NewPaymentState extends State<NewPayment> {
 
   void addPayment() async {
     String amount = _amountController.value.text;
-    String date   = _dateController.value.text;
     String note   = _noteController.value.text;
 
     String errorMsg = "";
@@ -162,8 +187,8 @@ class _NewPaymentState extends State<NewPayment> {
       errorMsg = "Please enter payment amount.";
     else if(double.tryParse(amount) == null)
       errorMsg = "Amount should be number.";
-    else if(date.isEmpty)
-      errorMsg = "Please enter payment date.";
+    else if(_eventController.value.text.isEmpty)
+      errorMsg = "Please selected event.";
 
     if(errorMsg.isNotEmpty) {
       showCupertinoDialog(
@@ -180,14 +205,14 @@ class _NewPaymentState extends State<NewPayment> {
         ));
     } else {
 
-      String errorMsg = await PaymentsHelper.addPayment(widget.id, double.parse(amount), note, 1, date: date);
-
+      String errorMsg = await PaymentsHelper.addPayment(widget.id, double.parse(amount), note, 2, eventId: selectedEvent.id);
       if(errorMsg.isEmpty){
         _amountController.clear();
-        _dateController.clear();
+        _eventController.clear();
         _noteController.clear();
         setState(() {
           _open = !_open;
+          selectedEvent = null;
         });
         widget.onPaymentAdd();
       } else {

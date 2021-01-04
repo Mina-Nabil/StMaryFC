@@ -20,3 +20,16 @@ class Payment {
   String date;
   String note;
 }
+
+class EventPayment extends Payment {
+
+  EventPayment.fromJson(json) {
+    // jsonPayment["id"];
+    // jsonPayment["PYMT_USER_ID"];
+    this.amount = json["PYMT_AMNT"];
+    this.date = DateFormat('MMMM yyyy','en_US').format(DateTime.parse(json["PYMT_DATE"]));
+    this.note = json["PYMT_NOTE"]?? "";
+    this.eventName = json["EVNT_NAME"];
+  }
+  String eventName;
+}

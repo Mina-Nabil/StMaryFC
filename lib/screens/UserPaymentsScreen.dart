@@ -1,6 +1,7 @@
 import 'package:StMaryFA/helpers/PaymentsHelper.dart';
 import 'package:StMaryFA/models/Payment.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
+import 'package:StMaryFA/widgets/NewEventPayment.dart';
 import 'package:StMaryFA/widgets/NewPayment.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -52,7 +53,7 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
                               margin: EdgeInsets.only(bottom: 1),
                                 child: ListTile(
                                   tileColor: Color.fromRGBO(254, 250, 241, 1),
-                                  title: Text("\$ ${payments[index].amount}"),
+                                  leading: Text("\$ ${payments[index].amount}"),
                                   subtitle: Text(payments[index].note),
                                   trailing: Text(payments[index].date),
                                 )
@@ -70,7 +71,47 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
           ),
 
         //Events page
-        Container(child: Center(child: Text("events")),)
+        Column(
+          children: [
+            NewEventPayment(widget.id, onPaymentAdd: () {setState(() {});}),
+
+            Divider(),
+
+            // Payments list
+            FutureBuilder(
+              future: PaymentsHelper.getUserEventPayments(widget.id),
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.done) {
+                  if(snapshot.hasError) {
+                    return Center(child: Text("Something went wrong.\nPlease check internet connection and try again.",));
+                  } else {
+                    List<EventPayment> payments = snapshot.data as List<EventPayment>;
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: payments.length,
+                        itemBuilder: (BuildContext context,int index) {
+                          return Card(
+                            margin: EdgeInsets.only(bottom: 1),
+                            child: ListTile(
+                                tileColor: Color.fromRGBO(254, 250, 241, 1),
+                                leading: Text("\$ ${payments[index].amount}"),
+                                title: Text(payments[index].eventName),
+                                subtitle: Text(payments[index].note),
+                                trailing: Text(payments[index].date),
+                            )
+                          );
+                        }
+                      ),
+                    );
+                  }
+                } else {
+                  return Expanded(child: Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),backgroundColor: Colors.orange,)));
+                }
+              }
+            ),
+          ],
+        ),
+        
         ],
 
       ),

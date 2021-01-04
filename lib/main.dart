@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:StMaryFA/screens/SplashScreen.dart';
 import 'providers/Auth.dart';
+import 'providers/EventsProvider.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: Auth()),
         ChangeNotifierProvider.value(value: UsersProvider()),
         ChangeNotifierProvider.value(value: GroupsProvider()),
+        ChangeNotifierProvider.value(value: EventsProvider()),
       ],
       child: MaterialApp(
         title: 'StMaryFA',
