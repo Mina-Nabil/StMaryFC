@@ -1,8 +1,11 @@
 import 'package:StMaryFA/models/User.dart';
+import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/UserPaymentsScreen.dart';
 import 'package:StMaryFA/screens/UserProfileScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../global.dart';
@@ -60,9 +63,24 @@ class UserDialog extends StatelessWidget {
                       ),
                       IconButton(
                         icon: Icon(Icons.call, color: Colors.orange),
-                        onPressed: () {
-                          Navigator.pop(context); //pop side dialog first
-                          launch("tel://phonenumber");
+                        onPressed: () async {
+                          User user = await Provider.of<UsersProvider>(context, listen: false).getUserById(this.user.id);
+                          if(user.mobileNum != null && user.mobileNum.isNotEmpty) {
+                            launch("tel://${user.mobileNum}");
+                          } else {
+                            showCupertinoDialog(
+                              context: context,
+                              builder: (BuildContext context) => new CupertinoAlertDialog(
+                              title: Text("Failed"),
+                              content: Text("There is no mobile number found for ${user.userName}"),
+                              actions: [
+                                CupertinoDialogAction(
+                                  child: Text("OK", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                )
+                              ],
+                            ));
+                          }
                         }
                       ),
                     ],

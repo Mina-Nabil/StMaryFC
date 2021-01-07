@@ -53,7 +53,7 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
                               margin: EdgeInsets.only(bottom: 1),
                                 child: ListTile(
                                   tileColor: Color.fromRGBO(254, 250, 241, 1),
-                                  leading: Text("\$ ${payments[index].amount}"),
+                                  leading: Text("EGP ${payments[index].amount}"),
                                   subtitle: Text(payments[index].note),
                                   trailing: Text(payments[index].date),
                                 )
@@ -94,7 +94,7 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
                             margin: EdgeInsets.only(bottom: 1),
                             child: ListTile(
                                 tileColor: Color.fromRGBO(254, 250, 241, 1),
-                                leading: Text("\$ ${payments[index].amount}"),
+                                leading: Text("EGP ${payments[index].amount}"),
                                 title: Text(payments[index].eventName),
                                 subtitle: Text(payments[index].note),
                                 trailing: Text(payments[index].date),
