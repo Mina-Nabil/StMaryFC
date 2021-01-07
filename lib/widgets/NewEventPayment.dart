@@ -129,9 +129,8 @@ class _NewPaymentState extends State<NewEventPayment> {
                                             );
                                           } else {
                                             List<Event> events = Provider.of<EventsProvider>(context, listen: false).events;
-                                            if(events.isNotEmpty) {
-                                              selectedEvent = events[0];
-                                            }
+                                            //initial selection
+                                            selectedEvent = events[0];
                                             return Container(
                                               child: CupertinoPicker(
                                                 itemExtent:  MediaQuery.of(context).size.height/16, 

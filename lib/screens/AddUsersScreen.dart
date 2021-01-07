@@ -168,13 +168,12 @@ class _UserScreenState extends State<UserScreen> {
                           },
                           onTap: (_viewMode() || widget.user.type == 1) ? null : () {
                             List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
-                            _groupController.value = TextEditingValue(text:  groups[1].name);
-                            _selectedGroupId = groups[1].id;
-
                             showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               context: context, 
                               builder: (_) {
+                                Group selectedGroup = groups[1];
+
                                 return Container(
                                   decoration: new BoxDecoration(
                                     color: Colors.orangeAccent[100],
@@ -183,20 +182,36 @@ class _UserScreenState extends State<UserScreen> {
                                     topRight: const Radius.circular(25.0))
                                   ),
 
-                                  height: MediaQuery.of(context).size.height/4,
-                                  child: CupertinoPicker(
-                                    
-                                    itemExtent:  MediaQuery.of(context).size.height/16, 
-                                    onSelectedItemChanged: (value){
-                                        setState(() {
-                                          // (+1) as we removed fist element "Admins" group
-                                          _groupController.value = TextEditingValue(text: groups[value+1].name);
-                                          _selectedGroupId = groups[value+1].id;
-                                        });
-                                    }, 
-                                    children: (groups.map((group) {
-                                      return Center(child: Text(group.name));
-                                    }).toList()).sublist(1),
+                                  height: MediaQuery.of(context).size.height/3,
+                                  child: Column(
+                                    children:[
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: FlatButton(
+                                          onPressed: (){
+                                            setState(() {
+                                              _groupController.value = TextEditingValue(text: selectedGroup.name);
+                                              _selectedGroupId = selectedGroup.id;
+                                               Navigator.pop(context);
+                                            });
+                                          }, 
+                                          child: Text("Done", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold ),),
+                                        ),
+                                      ),
+
+                                      Expanded(
+                                        child: CupertinoPicker(
+                                          itemExtent:  MediaQuery.of(context).size.height/16, 
+                                          onSelectedItemChanged: (value) {
+                                            // (+1) as we removed fist element "Admins" group
+                                            selectedGroup =  groups[value+1];
+                                          }, 
+                                          children: (groups.map((group) {
+                                            return Center(child: Text(group.name));
+                                          }).toList()).sublist(1),
+                                        ),
+                                      ),
+                                    ]
                                   ),
                                 );
                               }
