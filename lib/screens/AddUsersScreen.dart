@@ -168,8 +168,13 @@ class _UserScreenState extends State<UserScreen> {
                             widget.user.groupId = _selectedGroupId;
                             widget.user.groupName = _groupController.value.text;
                           },
-                          onTap: (_viewMode() || widget.user.type == 1) ? null : () {
+                          onTap: (_viewMode() || widget.user.type == 1) ? null : () async {
+
+                            if(Provider.of<GroupsProvider>(context, listen: false).groups.isEmpty) {
+                              await Provider.of<GroupsProvider>(context, listen: false).loadGroups();
+                            }
                             List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
+                            
                             showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               context: context, 
