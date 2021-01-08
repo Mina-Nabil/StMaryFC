@@ -173,14 +173,22 @@ class _UserScreenState extends State<UserScreen> {
                             if(Provider.of<GroupsProvider>(context, listen: false).groups.isEmpty) {
                               await Provider.of<GroupsProvider>(context, listen: false).loadGroups();
                             }
-                            List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups;
+                            //sublist(1) to remove first group (Admins)
+                            List<Group> groups = Provider.of<GroupsProvider>(context, listen: false).groups.sublist(1);
+
+                            int selectedGroupIndex;
+                            if(widget.user.groupId != 0) {
+                              selectedGroupIndex = groups.indexWhere((group) => group.id == widget.user.groupId);
+                            } else {
+                              selectedGroupIndex = 0;
+                            }
+
+                            Group selectedGroup = groups[selectedGroupIndex];
                             
                             showModalBottomSheet(
                               backgroundColor: Colors.transparent,
                               context: context, 
                               builder: (_) {
-                                Group selectedGroup = groups[1];
-
                                 return Container(
                                   decoration: new BoxDecoration(
                                     color: Colors.orangeAccent[100],
@@ -208,14 +216,14 @@ class _UserScreenState extends State<UserScreen> {
 
                                       Expanded(
                                         child: CupertinoPicker(
+                                          scrollController: FixedExtentScrollController(initialItem: selectedGroupIndex),
                                           itemExtent:  MediaQuery.of(context).size.height/16, 
                                           onSelectedItemChanged: (value) {
-                                            // (+1) as we removed fist element "Admins" group
-                                            selectedGroup =  groups[value+1];
+                                            selectedGroup =  groups[value];
                                           }, 
                                           children: (groups.map((group) {
                                             return Center(child: Text(group.name));
-                                          }).toList()).sublist(1),
+                                          }).toList()),
                                         ),
                                       ),
                                     ]
