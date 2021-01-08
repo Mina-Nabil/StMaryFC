@@ -101,7 +101,6 @@ class _UserScreenState extends State<UserScreen> {
                 Center(
                   child: Container(
                     height: MediaQuery.of(context).size.width / 3,
-                    width:  MediaQuery.of(context).size.width / 3,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
@@ -112,7 +111,10 @@ class _UserScreenState extends State<UserScreen> {
                       children: [
                         Center(
                           child: ClipOval(
-                            child: _getProfilePictureWidget(),
+                            child: AspectRatio( 
+                              aspectRatio: 1.0,
+                              child: _getProfilePictureWidget(),
+                            )
                           ),
                         ),
                         if(!_viewMode())
@@ -459,11 +461,11 @@ class _UserScreenState extends State<UserScreen> {
 
     if(_viewMode())
     {
-      return widget.user.imageLink != "" ? Image.network(widget.user.imageLink) : Icon(Icons.person, size: 100,);
+      return widget.user.imageLink != "" ? Image.network(widget.user.imageLink, fit: BoxFit.fill,) : Icon(Icons.person, size: 100,);
     } else if (_editMode()) {
-      return _selectedImage != null ? Image.file(_selectedImage) : widget.user.imageLink != "" ? Image.network(widget.user.imageLink) : Icon(Icons.person, size: 100,);
+      return _selectedImage != null ? Image.file(_selectedImage, fit: BoxFit.fill,) : widget.user.imageLink != "" ? Image.network(widget.user.imageLink, fit: BoxFit.fill,) : Icon(Icons.person, size: 100,);
     } else { // addMode
-      return _selectedImage != null ? Image.file(_selectedImage) : Icon(Icons.person, size: 80,);
+      return _selectedImage != null ? Image.file(_selectedImage, fit: BoxFit.fill,) : Icon(Icons.person, size: 80,);
     }
   }
 
