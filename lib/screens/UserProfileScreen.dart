@@ -2,40 +2,70 @@ import 'package:StMaryFA/models/User.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/AddUsersScreen.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
+import 'package:StMaryFA/screens/GroupsScreen.dart';
+import 'package:StMaryFA/screens/UserProfileScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../global.dart';
-
 class UserProfileScreen extends StatefulWidget {
-  UserProfileScreen(this.id);
-  final int id;
+  final int userID;
 
+  UserProfileScreen(this.userID);
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  int selectedIndex = 0;
+  bool userLoaded = false;
+  User user;
+
+  PageController _controller = new PageController(initialPage: 0);
+
+  void changeIndex(index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
+  void setUserLoaded() {
+    setState(() {
+      userLoaded = true;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero).then((value) async {
+      user = await Provider.of<UsersProvider>(context, listen:false).getUserById(widget.userID);
+      setUserLoaded();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Provider.of<UsersProvider>(context).getUserById(widget.id),
-      builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.done) {
-          if(snapshot.hasError) {
-            return FAScreen.error();
-          } else {
-            User user = snapshot.data as User;
-            return FAScreen(
-              appBar: AppBar(title: Text(Utils.capitalize(user.userName))),
-              body: UserScreen.view(user) ,
-            );
-          }
-        } else {
-          return FAScreen.loading();
-        }
-      }
-    );
+    return (userLoaded)
+        ? FAScreen(
+            appBar: AppBar(title: Text(user.userName)),
+            body: PageView(
+              controller: _controller,
+              onPageChanged: (i) => changeIndex(i),
+              children: [
+                UserScreen.view(user),
+                UserScreen(), //overview screen
+              ],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: selectedIndex,
+              onTap: (i) => _controller.animateToPage(i, duration: Duration(milliseconds: 200), curve: Curves.linear),
+              items: [
+                BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.solidFutbol), label: "Groups"),
+                BottomNavigationBarItem(icon: Icon(Icons.person_add_alt_1), label: "User"),
+              ],
+            ),
+          )
+        : FAScreen.loading();
   }
 }
