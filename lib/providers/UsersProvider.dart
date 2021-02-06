@@ -9,8 +9,6 @@ import "package:http/http.dart" as http;
 import '../global.dart';
 
 class UsersProvider with ChangeNotifier {
-
-
   String _searchApiUrl = Server.address + "api/search/name";
   String _getAllApiUrl = Server.address + "api/get/users";
   String _getUserByIdApiUrl = Server.address + "api/user/by/id";
@@ -19,7 +17,6 @@ class UsersProvider with ChangeNotifier {
   String _editUserUrl = Server.address + "api/edit/user";
   //Requests Vars
   FlutterSecureStorage storage = new FlutterSecureStorage();
-  
 
   // search results
   List<AttendanceUser> _users = [];
@@ -30,13 +27,13 @@ class UsersProvider with ChangeNotifier {
     if (searchString.isNotEmpty) {
       response = await http.post(
         _searchApiUrl,
-        headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
+        headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
         body: {
           'name': searchString,
         },
       );
     } else {
-      response = await http.get(_getAllApiUrl, headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+      response = await http.get(_getAllApiUrl, headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
     }
 
     dynamic body = jsonDecode(response.body);
@@ -50,17 +47,16 @@ class UsersProvider with ChangeNotifier {
     notifyListeners();
   }
 
-Future<User> getUserById (int id) async {
-  // TODO add error handling
-  
-  var response = await http.get(_getUserByIdApiUrl+"/$id", headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
-  dynamic body = jsonDecode(response.body);
-  User user = User.fromJson(body["message"]);
-  return user;
-}
+  Future<User> getUserById(int id) async {
+    // TODO add error handling
+
+    var response = await http.get(_getUserByIdApiUrl + "/$id", headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+    dynamic body = jsonDecode(response.body);
+    User user = User.fromJson(body["message"]);
+    return user;
+  }
 
   Future<String> addUser(File image, User user) async {
-    
     var request = http.MultipartRequest("POST", Uri.parse(_addUserUrl));
     request.fields['name'] = user.userName;
     request.fields['type'] = "2";
@@ -70,30 +66,32 @@ Future<User> getUserById (int id) async {
     request.fields['code'] = user.code;
     request.fields['note'] = user.notes;
 
-    if(image != null) {
-      var pic = await http.MultipartFile.fromPath('photo', image.path,);
+    if (image != null) {
+      var pic = await http.MultipartFile.fromPath(
+        'photo',
+        image.path,
+      );
       request.files.add(pic);
     }
 
     request.headers.addAll({'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
- 
+
     var response = await request.send();
 
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
     dynamic body = jsonDecode(responseString);
-    
+
     print(body);
 
     // Now name error message in only supported.
-    if(body['status'] != null && body['status'] == true)
+    if (body['status'] != null && body['status'] == true)
       return "";
-    else 
+    else
       return "The name has already been taken.";
   }
 
   Future<String> editUser(File image, User user) async {
-    
     var request = http.MultipartRequest("POST", Uri.parse(_editUserUrl));
     request.fields['id'] = user.id.toString();
     request.fields['name'] = user.userName;
@@ -103,41 +101,44 @@ Future<User> getUserById (int id) async {
     request.fields['code'] = user.code;
     request.fields['note'] = user.notes;
 
-    if(image != null) {
-      var pic = await http.MultipartFile.fromPath('photo', image.path,);
+    if (image != null) {
+      var pic = await http.MultipartFile.fromPath(
+        'photo',
+        image.path,
+      );
       request.files.add(pic);
     }
 
     request.headers.addAll({'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
- 
+
     var response = await request.send();
 
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
     dynamic body = jsonDecode(responseString);
-    
+
     print(body);
-    
+
     String errorMsg = "";
 
-    if(body['status'] != null && body['status'] == true) {
+    if (body['status'] != null && body['status'] == true) {
       return errorMsg;
-    } else if(body['status'] != null && body['status'] == false) {
-      if(body['message'] != null && body['message']['errors'] != null) {
-        for (var error in  body['message']['errors'].values) {
+    } else if (body['status'] != null && body['status'] == false) {
+      if (body['message'] != null && body['message']['errors'] != null) {
+        for (var error in body['message']['errors'].values) {
           errorMsg += error.toString();
         }
       }
     } else {
       errorMsg += "Please try again";
     }
-      return errorMsg;
+    return errorMsg;
   }
 
   Future<bool> takeAttendance(List<int> ids, String date) async {
     final response = await http.post(
       _attendanceApiUrl,
-      headers:  {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
+      headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
       body: {
         'userIDs': ids.toList().toString(),
         'date': date,
@@ -147,7 +148,7 @@ Future<User> getUserById (int id) async {
     dynamic body = jsonDecode(response.body);
 
     if (body["status"] != null && body["status"] == true) {
-      _users.where((element) => ids.contains(element.id)).forEach((element) { 
+      _users.where((element) => ids.contains(element.id)).forEach((element) {
         element.isAttended = true;
       });
       notifyListeners();

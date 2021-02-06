@@ -131,7 +131,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                     direction: DismissDirection.endToStart,
                                     child: ListTile(
                                         tileColor: Color.fromRGBO(254, 250, 241, 1),
-                                        trailing: Text("Kids: ${e.count}"),
+                                        trailing: Text("Players: ${e.count}"),
                                         leading: ButtonTheme(
                                           minWidth: 0,
                                           height: 0,
