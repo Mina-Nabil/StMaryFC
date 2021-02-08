@@ -1,3 +1,4 @@
+import 'package:StMaryFA/models/HistoryRow.dart';
 import 'package:StMaryFA/models/User.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/GroupsScreen.dart';
@@ -14,6 +15,21 @@ class OverviewScreen extends StatefulWidget {
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
+  bool loaded = false;
+  List<HistoryRow> history;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero).then((_) async {
+      history = await Provider.of<UsersProvider>(context, listen: false).getPlayerHistory(widget.user.id);
+
+      setState(() {
+        loaded = true;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,31 +37,15 @@ class _OverviewScreenState extends State<OverviewScreen> {
       decoration:
           BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
       child: ListView(
-          children: []
-            ..addAll([
+          children: []..addAll([
               GroupLabel("History"),
-              ...Provider.of<UsersProvider>(context, listen: true).getPlayerHistory(user).map((e) => Container(
+              if(loaded)
+              ...history.map((e) => Container(
                     child: Card(
-                      child: (e.count > 0)
-                          ? ListTile(
-                              tileColor: Color.fromRGBO(254, 250, 241, 1),
-                              trailing: Text("Players: ${e.count}"),
-                              leading: ButtonTheme(
-                                minWidth: 0,
-                                height: 0,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                padding: EdgeInsets.all(0),
-                                child: RaisedButton(
-                                    color: Color.fromRGBO(254, 250, 241, 1),
-                                    onPressed: () => toggle(e.id),
-                                    child: FittedBox(child: Icon(FontAwesomeIcons.solidFutbol, color: (e.isActive) ? Colors.green : Colors.red))),
-                              ),
-                              title: Text(e.name, style: TextStyle(fontSize: 18)))
-                          : ListTile(
-                                  tileColor: Color.fromRGBO(254, 250, 241, 1),
-                                  trailing: Text("Players: ${e.count}"),
-                                  title: Text(e.name, style: TextStyle(fontSize: 18))),
-                    ),
+                        child: ListTile(
+                            tileColor: Color.fromRGBO(254, 250, 241, 1),
+                            trailing: Text("${e.month} - ${e.year}"),
+                            title: Text("A " + e.attended.toString() + " - Paid " + e.paid.toString(), style: TextStyle(fontSize: 18)))),
                   ))
             ])),
     );

@@ -3,6 +3,7 @@ import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/AddUsersScreen.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
 import 'package:StMaryFA/screens/GroupsScreen.dart';
+import 'package:StMaryFA/screens/OverviewScreen.dart';
 import 'package:StMaryFA/screens/UserProfileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -54,7 +55,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               onPageChanged: (i) => changeIndex(i),
               children: [
                 UserScreen.view(user),
-                UserScreen(), //overview screen
+                OverviewScreen(user), //overview screen
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(

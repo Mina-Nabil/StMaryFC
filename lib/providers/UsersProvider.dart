@@ -1,6 +1,9 @@
+import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:StMaryFA/models/HistoryRow.dart';
 import 'package:StMaryFA/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -13,8 +16,10 @@ class UsersProvider with ChangeNotifier {
   String _getAllApiUrl = Server.address + "api/get/users";
   String _getUserByIdApiUrl = Server.address + "api/user/by/id";
   String _attendanceApiUrl = Server.address + "api/take/bulk/attendance";
+  String _overviewApiUrl = Server.address + "api/get/overview";
   String _addUserUrl = Server.address + "api/add/user";
   String _editUserUrl = Server.address + "api/edit/user";
+
   //Requests Vars
   FlutterSecureStorage storage = new FlutterSecureStorage();
 
@@ -155,6 +160,27 @@ class UsersProvider with ChangeNotifier {
       return true;
     } else
       return false;
+  }
+
+  Future<List<HistoryRow>> getPlayerHistory(int id) async {
+    final response = await http.post(
+      _overviewApiUrl,
+      headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
+      body: {'userID': id.toString(), 'months': "24"},
+    );
+
+    dynamic body = jsonDecode(response.body);
+
+    List<HistoryRow> ret = [];
+    
+    if (body["status"] != null && body["status"] == true) {
+
+      body["message"].forEach((key, row){
+        ret.add(HistoryRow.fromJson(row));
+      });
+      return ret;
+    } else
+      return [];
   }
 
   List<AttendanceUser> get users {

@@ -1,6 +1,7 @@
 import 'package:StMaryFA/helpers/PaymentsHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -99,16 +100,17 @@ class _NewPaymentState extends State<NewPayment> {
                                   ),
 
                                   height: MediaQuery.of(context).size.height/4,
-                                  child: CupertinoDatePicker(
+                                  child: DatePickerWidget(
 
-                                    backgroundColor: Colors.transparent,
-                                    mode: CupertinoDatePickerMode.date,
+                                    pickerTheme: DateTimePickerTheme(backgroundColor: Colors.transparent ) ,
+                                    dateFormat: "yyyy MM",
                                     initialDateTime: DateTime.now(),
-                                    minimumYear: 2015,
-                                    maximumYear: 2050,
-                                    onDateTimeChanged: (DateTime date) {
+                                
+                                    minDateTime:  new DateTime(2015),
+                                    maxDateTime: new DateTime(2050) ,
+                                    onChange: (DateTime date, i) {
                                       setState(() {
-                                        _dateController.value = TextEditingValue(text: DateFormat('yyyy-MM-dd').format(date));
+                                        _dateController.value = TextEditingValue(text: DateFormat('yyyy-MM').format(date));
                                       });
                                     },
                                     
