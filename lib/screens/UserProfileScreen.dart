@@ -62,8 +62,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               currentIndex: selectedIndex,
               onTap: (i) => _controller.animateToPage(i, duration: Duration(milliseconds: 200), curve: Curves.linear),
               items: [
-                BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.solidFutbol), label: "Groups"),
-                BottomNavigationBarItem(icon: Icon(Icons.person_add_alt_1), label: "User"),
+                BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.info), label: "Info"),
+                BottomNavigationBarItem(icon: Icon(Icons.notes), label: "History"),
               ],
             ),
           )

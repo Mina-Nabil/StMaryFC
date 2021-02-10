@@ -19,6 +19,7 @@ class UsersProvider with ChangeNotifier {
   String _overviewApiUrl = Server.address + "api/get/overview";
   String _addUserUrl = Server.address + "api/add/user";
   String _editUserUrl = Server.address + "api/edit/user";
+  String _getNewIDUrl = Server.address + "api/get/next/code";
 
   //Requests Vars
   FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -172,15 +173,24 @@ class UsersProvider with ChangeNotifier {
     dynamic body = jsonDecode(response.body);
 
     List<HistoryRow> ret = [];
-    
-    if (body["status"] != null && body["status"] == true) {
 
-      body["message"].forEach((key, row){
+    if (body["status"] != null && body["status"] == true) {
+      body["message"].forEach((key, row) {
         ret.add(HistoryRow.fromJson(row));
       });
       return ret;
     } else
       return [];
+  }
+
+  Future<int> getNewCode() async {
+    var response = await http.get(_getNewIDUrl, headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+    dynamic body = jsonDecode(response.body);
+    int maxCode = body["message"];
+    if (maxCode != null)
+      return maxCode;
+    else
+      return 0;
   }
 
   List<AttendanceUser> get users {

@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class NewEventPayment extends StatefulWidget {
   NewEventPayment(this.id, {this.onPaymentAdd});
-  
+
   final int id;
   final Function onPaymentAdd;
   @override
@@ -16,49 +16,55 @@ class NewEventPayment extends StatefulWidget {
 }
 
 class _NewPaymentState extends State<NewEventPayment> {
-  
   bool _open = false;
+  bool addEnabled = true;
+  int _selectedState = 0;
 
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _eventController = TextEditingController();
   final _noteController = TextEditingController();
-  
+
   Event _event;
+
+  selectRadioState(int val) {
+    setState(() {
+      _selectedState = val;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-            GestureDetector(
-              child: Container(
-                height: 50,
-                color: _open ? Color.fromRGBO(254, 250, 241, 1) : Colors.orange,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Text("New Payment",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _open ? Colors.orange : Colors.white),
-                      )
-                    ),
-                    Align(
+          GestureDetector(
+            child: Container(
+              height: 50,
+              color: _open ? Color.fromRGBO(254, 250, 241, 1) : Colors.orange,
+              child: Stack(
+                children: [
+                  Center(
+                      child: Text(
+                    "New Payment",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _open ? Colors.orange : Colors.white),
+                  )),
+                  Align(
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 5),
-                        child: _open ? Icon(FontAwesomeIcons.chevronUp, color: Colors.orange) :
-                                       Icon(FontAwesomeIcons.chevronDown, color: Colors.white) ,
-                      )
-                    )
-                  ],
-                ),
+                        child: _open ? Icon(FontAwesomeIcons.chevronUp, color: Colors.orange) : Icon(FontAwesomeIcons.chevronDown, color: Colors.white),
+                      ))
+                ],
               ),
-              onTap: () {
-                setState(() {
-                  _open = !_open;
-                });
-              },
             ),
-            if(_open)
+            onTap: () {
+              setState(() {
+                _open = !_open;
+              });
+            },
+          ),
+          if (_open)
             Form(
               key: _formKey,
               child: Column(
@@ -81,88 +87,86 @@ class _NewPaymentState extends State<NewEventPayment> {
                       Flexible(
                         flex: 1,
                         child: TextField(
-                          readOnly: true,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: Colors.black, fontSize: 18),
-                          decoration: InputDecoration(
-                            hintText: "Event",
-                            border: InputBorder.none,
-                          ),
-                          controller: _eventController,
-                          onTap: () {
-                            showModalBottomSheet(
-                              backgroundColor: Colors.transparent,
-                              context: context, 
-                              builder: (_) {
-                                Event selectedEvent;
-                                return Container(
-                                  decoration: new BoxDecoration(
-                                    color: Colors.orangeAccent[100],
-                                    borderRadius: new BorderRadius.only(
-                                      topLeft: const Radius.circular(15.0),
-                                      topRight: const Radius.circular(15.0))
-                                  ),
-                                  height: MediaQuery.of(context).size.height/3,
-                                  child: Column(
-                                    children:[
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: FlatButton(
-                                          onPressed: (){
-                                            setState(() {
-                                              _eventController.value = TextEditingValue(text: selectedEvent.name);
-                                              _event = selectedEvent;
-                                               Navigator.pop(context);
-                                            });
-                                          }, 
-                                          child: Text("Done", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold ),),
+                            readOnly: true,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                            decoration: InputDecoration(
+                              hintText: "Event",
+                              border: InputBorder.none,
+                            ),
+                            controller: _eventController,
+                            onTap: () {
+                              showModalBottomSheet(
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (_) {
+                                    Event selectedEvent;
+                                    return Container(
+                                      decoration: new BoxDecoration(
+                                          color: Colors.orangeAccent[100],
+                                          borderRadius: new BorderRadius.only(topLeft: const Radius.circular(15.0), topRight: const Radius.circular(15.0))),
+                                      height: MediaQuery.of(context).size.height / 3,
+                                      child: Column(children: [
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: FlatButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _eventController.value = TextEditingValue(text: selectedEvent.name);
+                                                _event = selectedEvent;
+                                                Navigator.pop(context);
+                                              });
+                                            },
+                                            child: Text(
+                                              "Done",
+                                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: FutureBuilder(
-                                        future: Provider.of<EventsProvider>(context, listen: false).events == null? Provider.of<EventsProvider>(context, listen: false).loadEvents() : null,
-                                        builder: (context, snapshot) {
-                                          if(snapshot.connectionState == ConnectionState.waiting) {
-                                            return Container(
-                                              child: Center(
-                                                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),backgroundColor: Colors.orange,)),
-                                            );
-                                          } else {
-                                            List<Event> events = Provider.of<EventsProvider>(context, listen: false).events;
-                                            //initial selection
-                                            selectedEvent = events[0];
-                                            return Container(
-                                              child: CupertinoPicker(
-                                                itemExtent:  MediaQuery.of(context).size.height/16, 
-                                                onSelectedItemChanged: (i) {
-                                                  selectedEvent = events[i];
-                                                },
-                                                
-                                                children: (events.map((event) {
-                                                  return Center(child: Text(event.name));
-                                                }).toList()),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                    ),
-                                      ),
-                                  ]
-                                  ),
-                                );
-                              }
-                            );
-                            
-                          }
-                        ),
+                                        Expanded(
+                                          child: FutureBuilder(
+                                            future: Provider.of<EventsProvider>(context, listen: false).events == null
+                                                ? Provider.of<EventsProvider>(context, listen: false).loadEvents()
+                                                : null,
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                                return Container(
+                                                  child: Center(
+                                                      child: CircularProgressIndicator(
+                                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                    backgroundColor: Colors.orange,
+                                                  )),
+                                                );
+                                              } else {
+                                                List<Event> events = Provider.of<EventsProvider>(context, listen: false).events;
+                                                //initial selection
+                                                selectedEvent = events[0];
+                                                return Container(
+                                                  child: CupertinoPicker(
+                                                    itemExtent: MediaQuery.of(context).size.height / 16,
+                                                    onSelectedItemChanged: (i) {
+                                                      selectedEvent = events[i];
+                                                    },
+                                                    children: (events.map((event) {
+                                                      return Center(child: Text(event.name));
+                                                    }).toList()),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ]),
+                                    );
+                                  });
+                            }),
                       ),
                     ],
                   ),
-
                   Container(
                     child: TextField(
                       textAlign: TextAlign.left,
-                      style:  TextStyle(color: Colors.black, fontSize: 18),
+                      style: TextStyle(color: Colors.black, fontSize: 18),
                       decoration: InputDecoration(
                         hintText: "Note",
                         border: InputBorder.none,
@@ -170,58 +174,97 @@ class _NewPaymentState extends State<NewEventPayment> {
                       controller: _noteController,
                     ),
                   ),
-
+                  Container(
+                    color: Color.fromRGBO(254, 250, 241, 1),
+                    child: Row(
+                      children: [
+                        ButtonBar(
+                          children: [
+                            Radio(
+                              value: 3,
+                              groupValue: _selectedState,
+                              onChanged: (val) => selectRadioState(val),
+                              activeColor: Colors.orange,
+                              toggleable: true,
+                            ),
+                            FittedBox(child: Text("OK")),
+                            Radio(
+                              value: 1,
+                              groupValue: _selectedState,
+                              onChanged: (val) => selectRadioState(val),
+                              activeColor: Colors.orange,
+                              toggleable: true,
+                            ),
+                            FittedBox(child: Text("Paid")),
+                            Radio(
+                              value: 2,
+                              groupValue: _selectedState,
+                              onChanged: (val) => selectRadioState(val),
+                              activeColor: Colors.orange,
+                              toggleable: true,
+                            ),
+                            FittedBox(child: Text("Received")),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   Container(
                     width: double.infinity,
-                    decoration: BoxDecoration(color: Colors.orange,),
-                    child: FlatButton(
-                      onPressed: addPayment,
-                      child: Text("Add", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
                     ),
+                    child: FlatButton(
+                        onPressed: (addEnabled) ? addPayment : null,
+                        child: Text("Add", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                   ),
                 ],
               ),
             ),
-
-
         ],
       ),
     );
   }
 
   void addPayment() async {
+    setState(() {
+      addEnabled = false;
+    });
+
     String amount = _amountController.value.text;
-    String note   = _noteController.value.text;
+    String note = _noteController.value.text;
 
     String errorMsg = "";
 
-    if(amount.isEmpty)
+    if (amount.isEmpty)
       errorMsg = "Please enter payment amount.";
-    else if(double.tryParse(amount) == null)
+    else if (double.tryParse(amount) == null)
       errorMsg = "Amount should be number.";
-    else if(_eventController.value.text.isEmpty)
-      errorMsg = "Please selected event.";
+    else if (_eventController.value.text.isEmpty) errorMsg = "Please selected event.";
 
-    if(errorMsg.isNotEmpty) {
+    if (errorMsg.isNotEmpty) {
       showCupertinoDialog(
           context: context,
           builder: (BuildContext context) => new CupertinoAlertDialog(
-          title: Text("Failed"),
-          content: Text(errorMsg),
-          actions: [
-            CupertinoDialogAction(
-              child: Text("OK", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),),
-              onPressed: () => Navigator.of(context).pop(),
-            )
-          ],
-        ));
+                title: Text("Failed"),
+                content: Text(errorMsg),
+                actions: [
+                  CupertinoDialogAction(
+                    child: Text(
+                      "OK",
+                      style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                ],
+              ));
     } else {
-
-      String errorMsg = await PaymentsHelper.addPayment(widget.id, double.parse(amount), note, 2, eventId: _event.id);
-      if(errorMsg.isEmpty){
+      String errorMsg = await PaymentsHelper.addPayment(widget.id, double.parse(amount), note, 2, eventId: _event.id, eventState: _selectedState);
+      if (errorMsg.isEmpty) {
         _amountController.clear();
         _eventController.clear();
         _noteController.clear();
+        _selectedState = 0;
         setState(() {
           _open = !_open;
           _event = null;
@@ -229,21 +272,25 @@ class _NewPaymentState extends State<NewEventPayment> {
         widget.onPaymentAdd();
       } else {
         showCupertinoDialog(
-          context: context,
-          builder: (BuildContext context) => new CupertinoAlertDialog(
-          title: Text("Failed"),
-          content: Text(errorMsg),
-          actions: [
-            CupertinoDialogAction(
-              child: Text("OK", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),),
-              onPressed: () => Navigator.of(context).pop(),
-            )
-          ],
-        ));
+            context: context,
+            builder: (BuildContext context) => new CupertinoAlertDialog(
+                  title: Text("Failed"),
+                  content: Text(errorMsg),
+                  actions: [
+                    CupertinoDialogAction(
+                      child: Text(
+                        "OK",
+                        style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                    )
+                  ],
+                ));
       }
 
-
-
+      setState(() {
+        addEnabled = true;
+      });
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:StMaryFA/providers/Auth.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
 import 'package:StMaryFA/screens/SettingsScreen.dart';
@@ -31,10 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return FAScreen(
-      appBar: AppBar(
-        title: Text("Check-in"),
-        actions: [IconButton(icon: FaIcon(FontAwesomeIcons.cog), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsScreen())),)]
-      ),
+      appBar: AppBar(title: Text("Check-in"), actions: [
+        IconButton(
+          icon: FaIcon(FontAwesomeIcons.cog),
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsScreen())),
+        )
+      ]),
       drawer: DefDrawer(),
       padding: EdgeInsets.only(top: 15, left: 15, right: 15),
       body: Container(
@@ -94,13 +97,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 selectedIds.add(user.id);
                             });
                         },
-                        onLongPress: () {
-                          showDialog(
-                            barrierDismissible: true,
-                              context: context,
-                              builder: (BuildContext context) => UserDialog(user)
-                          );
-                        },
+                        onLongPress: (Provider.of<Auth>(context, listen: false).currentUser.type == 1)
+                            ? () {
+                                showDialog(barrierDismissible: true, context: context, builder: (BuildContext context) => UserDialog(user));
+                              }
+                            : null,
                       );
                     }).toList()
                   ],
@@ -110,24 +111,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: selectedIds.isEmpty? null : Container(
-                  decoration: BoxDecoration(color: Colors.orange[600]),
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      bottomNavigationBar: selectedIds.isEmpty
+          ? null
+          : Container(
+              decoration: BoxDecoration(color: Colors.orange[600]),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  FlatButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: null,
+                    child: Text(
+                      "${selectedIds.length} Selected",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                  Row(
                     children: [
-                      FlatButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: null,
-                        child: Text(
-                          "${selectedIds.length} Selected",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          /*
+                      /*
                           FlatButton(
                               padding: EdgeInsets.zero,
                               onPressed: null,
@@ -135,29 +137,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                 "Review",
                                 style: TextStyle(color: Colors.white, fontSize: 20),
                               )),*/
-                          FlatButton(
-                              padding: EdgeInsets.zero,
-                              child: Text(
-                                "Confirm",
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-                              ),
-                              onPressed: () async {
-                                String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                                await Provider.of<UsersProvider>(context, listen: false).takeAttendance(selectedIds, date);
-                                setState(() {
-                                  selectedIds.clear();
-                                });
-                              }),
-                        ],
-                      )
+                      FlatButton(
+                          padding: EdgeInsets.zero,
+                          child: Text(
+                            "Confirm",
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                            await Provider.of<UsersProvider>(context, listen: false).takeAttendance(selectedIds, date);
+                            setState(() {
+                              selectedIds.clear();
+                            });
+                          }),
                     ],
-                  ),
-                ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 
   void _search(String searchString) {
-    print(searchString);
     Provider.of<UsersProvider>(context, listen: false).search(searchString);
   }
 }

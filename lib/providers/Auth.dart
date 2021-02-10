@@ -40,6 +40,7 @@ class Auth with ChangeNotifier {
       if (body["status"] != null && body["status"] == true) {
 
         await Server.setToken(body["message"]["token"]);
+        this.getCurrentUser();
 
         print("Sign in Done");
       } else {
@@ -131,6 +132,10 @@ class Auth with ChangeNotifier {
 
   String get userName {
     return currentUser.userName;
+  }
+
+  int get userType {
+    return currentUser.type;
   }
 
   String get userImageUrl {

@@ -39,11 +39,13 @@ class FAScreen extends StatelessWidget {
       backgroundColor: Colors.orangeAccent[100],
       appBar: appBar,
       drawer: drawer,
-      body: Container(
-        padding: padding,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: body,
+      body: SafeArea(
+              child: Container(
+          padding: padding,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: body,
+        ),
       ),
       bottomNavigationBar: bottomNavigationBar,
     );
