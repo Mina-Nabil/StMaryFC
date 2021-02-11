@@ -126,6 +126,7 @@ class Auth with ChangeNotifier {
     }
 
     currentUser = User.fromJson(body["message"]);
+    Server.setUsertype(currentUser.type);
 
     notifyListeners();
   }

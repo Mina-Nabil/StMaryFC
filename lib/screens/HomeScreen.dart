@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:StMaryFA/global.dart';
 import 'package:StMaryFA/providers/Auth.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
@@ -22,11 +23,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Timer searchTimer;
   List<int> selectedIds = [];
   final Duration searchDelay = Duration(milliseconds: 500);
+  bool enableMenu = false;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero).then((_) => Provider.of<UsersProvider>(context, listen: false).search(""));
+    Future.delayed(Duration.zero).then((_)async{
+      Provider.of<UsersProvider>(context, listen: false).search("");
+      enableMenu = (await Server.userType == 1);
+    });
   }
 
   @override
@@ -97,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 selectedIds.add(user.id);
                             });
                         },
-                        onLongPress: (Provider.of<Auth>(context, listen: false).currentUser.type == 1)
+                        onLongPress: (enableMenu)
                             ? () {
                                 showDialog(barrierDismissible: true, context: context, builder: (BuildContext context) => UserDialog(user));
                               }
