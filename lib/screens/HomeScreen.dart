@@ -28,8 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero).then((_)async{
+    Future.delayed(Duration.zero).then((_) async {
       Provider.of<UsersProvider>(context, listen: false).search("");
+      await Provider.of<Auth>(context, listen: false).getCurrentUser();
       enableMenu = (await Server.userType == 1);
     });
   }

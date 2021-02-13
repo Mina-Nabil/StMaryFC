@@ -40,7 +40,6 @@ class Auth with ChangeNotifier {
       if (body["status"] != null && body["status"] == true) {
 
         await Server.setToken(body["message"]["token"]);
-        this.getCurrentUser();
 
         print("Sign in Done");
       } else {

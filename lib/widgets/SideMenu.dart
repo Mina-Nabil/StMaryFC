@@ -23,14 +23,6 @@ class _SideMenuState extends State<SideMenu> {
   final double tileTextFontSize = 17;
   final double tilesRightMarginRation = 0.1;
 
-@override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero).then((_) async {
-      Provider.of<Auth>(context, listen: false).getCurrentUser();
-    });
-  }
-  
   @override
   Widget build(BuildContext context) {
     return Container(

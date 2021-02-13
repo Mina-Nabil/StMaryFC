@@ -174,7 +174,7 @@ class UsersProvider with ChangeNotifier {
 
     List<HistoryRow> ret = [];
 
-    if (body["status"] != null && body["status"] == true) {
+    if (body["status"] != null && body["status"] == true && body["message"] is Map<dynamic,dynamic> ) {
       body["message"].forEach((key, row) {
         ret.add(HistoryRow.fromJson(row));
       });
