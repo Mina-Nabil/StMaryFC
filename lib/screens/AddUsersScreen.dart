@@ -98,13 +98,17 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle fieldTextStyle = _viewMode() ? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54) : Theme.of(context).textTheme.bodyText1;
+    TextStyle fieldTextStyle = _viewMode()
+        ? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54)
+        : Theme.of(context).textTheme.bodyText1;
     return Column(children: [
       Expanded(
           child: Container(
         padding: EdgeInsets.only(top: 15, left: 15, right: 15),
-        decoration:
-            BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
         child: Stack(children: [
           ListView(
             children: [
@@ -176,7 +180,9 @@ class _UserScreenState extends State<UserScreen> {
                               color: Theme.of(context).primaryColor,
                             ),
                             hintText: "Group"),
-                        style: widget.user.type == 1 ? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54) : fieldTextStyle,
+                        style: widget.user.type == 1
+                            ? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54)
+                            : fieldTextStyle,
                         onChanged: null,
                         readOnly: true,
                         controller: _groupController,
@@ -209,7 +215,8 @@ class _UserScreenState extends State<UserScreen> {
                                       return Container(
                                         decoration: new BoxDecoration(
                                             color: Colors.orangeAccent[100],
-                                            borderRadius: new BorderRadius.only(topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
+                                            borderRadius: new BorderRadius.only(
+                                                topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
                                         height: MediaQuery.of(context).size.height / 3,
                                         child: Column(children: [
                                           Align(
@@ -273,7 +280,8 @@ class _UserScreenState extends State<UserScreen> {
                                       return Container(
                                         decoration: new BoxDecoration(
                                             color: Colors.orangeAccent[100],
-                                            borderRadius: new BorderRadius.only(topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
+                                            borderRadius: new BorderRadius.only(
+                                                topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
                                         height: MediaQuery.of(context).size.height / 4,
                                         child: CupertinoDatePicker(
                                           backgroundColor: Colors.transparent,
@@ -283,7 +291,8 @@ class _UserScreenState extends State<UserScreen> {
                                           onDateTimeChanged: (DateTime date) {
                                             print(date.toString());
                                             setState(() {
-                                              _birthdateController.value = TextEditingValue(text: DateFormat('yyyy-MM-dd').format(date));
+                                              _birthdateController.value =
+                                                  TextEditingValue(text: DateFormat('yyyy-MM-dd').format(date));
                                             });
                                           },
                                         ),
@@ -428,13 +437,15 @@ class _UserScreenState extends State<UserScreen> {
         //add mode
         showCupertinoDialog(
             context: context,
-            builder: (BuildContext context) => new CupertinoAlertDialog(title: Text("User Added"), content: Text("Add another user?"), actions: [
+            builder: (BuildContext context) =>
+                new CupertinoAlertDialog(title: Text("User Added"), content: Text("Add another user?"), actions: [
                   CupertinoDialogAction(
                       child: Text("Yes"),
                       onPressed: () {
                         setState(() {
                           clearForm();
                           Navigator.of(context).pop();
+                          loadMaxID();
                         });
                       }),
                   CupertinoDialogAction(
@@ -546,7 +557,8 @@ class _UserScreenState extends State<UserScreen> {
           return Container(
               decoration: new BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: new BorderRadius.only(topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
+                  borderRadius:
+                      new BorderRadius.only(topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.min,
