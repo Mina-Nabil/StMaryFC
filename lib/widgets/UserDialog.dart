@@ -55,10 +55,20 @@ class UserDialog extends StatelessWidget {
                         }
                       ),
                       IconButton(
+                        icon: Icon(Icons.list, color: Colors.orange,),
+                        onPressed: () {
+                          Navigator.pop(context); //pop side dialog first
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>UserPaymentsScreen(user.id, user.userName, goToHistory: true )),
+                          );
+                        }
+                      ),
+                      IconButton(
                         icon: Icon(FontAwesomeIcons.dollarSign, color: Colors.orange,), 
                         onPressed: () {
                           Navigator.pop(context); //pop side dialog first
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => UserPaymentsScreen(user.id, user.userName)),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => UserPaymentsScreen(user.id, user.userName,)),);
                         },
                       ),
                       IconButton(

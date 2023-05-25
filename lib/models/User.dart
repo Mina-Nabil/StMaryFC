@@ -23,7 +23,9 @@ class User {
     this.userName = user["USER_NAME"];
     this.type = user["type"]["id"];
     this.groupName = user["group"]["GRUP_NAME"];
+    this.categoryName = user["player_category"]["title"];
     this.groupId = user["group"]["id"];
+    this.categoryId = user["player_category"]["id"];
     this.birthDate = user["USER_BDAY"];
     this.imageLink = user["full_image_url"];
     this.mobileNum = user["USER_MOBN"];
@@ -40,7 +42,9 @@ class User {
   String userName;
   int type;
   String groupName;
+  String categoryName;
   int groupId;
+  int categoryId;
   String imageLink;
   String birthDate;
   String mobileNum;

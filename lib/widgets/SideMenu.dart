@@ -102,7 +102,7 @@ class _SideMenuState extends State<SideMenu> {
     void _openDashBoard() {
       if (Platform.isAndroid) {
         launch(
-          'https://stmaryfa.msquare.app/home',
+          Server.address + 'home',
           enableJavaScript: true,
         );
       } else {

@@ -2,9 +2,7 @@ import 'package:StMaryFA/models/User.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/AddUsersScreen.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
-import 'package:StMaryFA/screens/GroupsScreen.dart';
 import 'package:StMaryFA/screens/OverviewScreen.dart';
-import 'package:StMaryFA/screens/UserProfileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +28,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     });
   }
 
+  void goTo(index) {
+    _controller.animateToPage(index, duration: new Duration(milliseconds: 300), curve: Curves.linear);
+  }
+
   void setUserLoaded() {
     setState(() {
       userLoaded = true;
@@ -40,7 +42,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero).then((value) async {
-      user = await Provider.of<UsersProvider>(context, listen:false).getUserById(widget.userID);
+      user = await Provider.of<UsersProvider>(context, listen: false).getUserById(widget.userID);
       setUserLoaded();
     });
   }

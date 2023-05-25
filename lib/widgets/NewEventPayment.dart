@@ -109,7 +109,7 @@ class _NewPaymentState extends State<NewEventPayment> {
                                       child: Column(children: [
                                         Align(
                                           alignment: Alignment.centerRight,
-                                          child: FlatButton(
+                                          child: TextButton(
                                             onPressed: () {
                                               setState(() {
                                                 _eventController.value = TextEditingValue(text: selectedEvent.name);
@@ -214,7 +214,7 @@ class _NewPaymentState extends State<NewEventPayment> {
                     decoration: BoxDecoration(
                       color: Colors.orange,
                     ),
-                    child: FlatButton(
+                    child: TextButton(
                         onPressed: (addEnabled) ? addPayment : null,
                         child: Text("Add", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                   ),

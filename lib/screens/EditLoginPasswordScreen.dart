@@ -33,7 +33,7 @@ class EditLoginPasswordScreen extends StatelessWidget {
                         child: TextFormField(
                           obscureText: true,
                           decoration: InputDecoration(hintText: "Current password"),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyMedium,
                           onChanged: null,
                           validator: (value) {
                             return value.isEmpty ? "*Required" : null;
@@ -47,7 +47,7 @@ class EditLoginPasswordScreen extends StatelessWidget {
                         child: TextFormField(
                           obscureText: true,
                           decoration: InputDecoration(hintText: "New password"),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyMedium,
                           onChanged: null,
                           controller: _passowrdController,
                           validator: (value) {
@@ -62,7 +62,7 @@ class EditLoginPasswordScreen extends StatelessWidget {
                         child: TextFormField(
                           obscureText: true,
                           decoration: InputDecoration(hintText: "Re-type new password"),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyMedium,
                           onChanged: null,
                           validator: (value) {
                             if(value.isEmpty)
@@ -78,7 +78,7 @@ class EditLoginPasswordScreen extends StatelessWidget {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         width: double.infinity,
                         decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: () => _updatePassword(context), 
                           child: Text(
                             "Update Password",

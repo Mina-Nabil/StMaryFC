@@ -33,7 +33,7 @@ class EditLoginEmailScreen extends StatelessWidget {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
                           decoration: InputDecoration(hintText: "New email"),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyMedium,
                           onChanged: null,
                           controller: _emailController,
                           validator: (value) {
@@ -47,7 +47,7 @@ class EditLoginEmailScreen extends StatelessWidget {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         child: TextFormField(
                           decoration: InputDecoration(hintText: "Re-type new email"),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyMedium,
                           onChanged: null,
                           validator: (value) {
                             if(value.isEmpty)
@@ -63,7 +63,7 @@ class EditLoginEmailScreen extends StatelessWidget {
                         child: TextFormField(
                           obscureText: true,
                           decoration: InputDecoration(hintText: "Password"),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyMedium,
                           onChanged: null,
                           validator: (value) {
                             return value.isEmpty ? "*Required" : null;
@@ -76,7 +76,7 @@ class EditLoginEmailScreen extends StatelessWidget {
                         margin: EdgeInsets.symmetric(vertical: 5),
                         width: double.infinity,
                         decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: () =>_updateEmail(context), 
                           child: Text(
                             "Update Email",

@@ -7,9 +7,7 @@ import 'package:StMaryFA/screens/SettingsScreen.dart';
 import 'package:StMaryFA/widgets/DefDrawer.dart';
 import 'package:StMaryFA/widgets/UserCard.dart';
 import 'package:StMaryFA/widgets/UserDialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return FAScreen(
       appBar: AppBar(title: Text("Check-in"), actions: [
         IconButton(
-          icon: FaIcon(FontAwesomeIcons.cog),
+          icon: FaIcon(FontAwesomeIcons.gear),
           onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsScreen())),
         )
       ]),
@@ -105,7 +103,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         onLongPress: (enableMenu)
                             ? () {
-                                showDialog(barrierDismissible: true, context: context, builder: (BuildContext context) => UserDialog(user));
+                                showDialog(
+                                    barrierDismissible: true,
+                                    context: context,
+                                    builder: (BuildContext context) => UserDialog(user));
                               }
                             : null,
                       );
@@ -125,8 +126,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FlatButton(
-                    padding: EdgeInsets.zero,
+                  TextButton(
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
+                    ),
                     onPressed: null,
                     child: Text(
                       "${selectedIds.length} Selected",
@@ -136,15 +139,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       /*
-                          FlatButton(
+                          TextButton(
                               padding: EdgeInsets.zero,
                               onPressed: null,
                               child: Text(
                                 "Review",
                                 style: TextStyle(color: Colors.white, fontSize: 20),
                               )),*/
-                      FlatButton(
-                          padding: EdgeInsets.zero,
+                      TextButton(
+                          style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero)),
                           child: Text(
                             "Confirm",
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),

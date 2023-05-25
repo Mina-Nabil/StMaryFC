@@ -1,6 +1,4 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:StMaryFA/models/HistoryRow.dart';
@@ -20,15 +18,20 @@ class UsersProvider with ChangeNotifier {
   String _addUserUrl = Server.address + "api/add/user";
   String _editUserUrl = Server.address + "api/edit/user";
   String _getNewIDUrl = Server.address + "api/get/next/code";
+  String _getAttendanceDetailsUrl = Server.address + "api/attendance/details/";
 
   //Requests Vars
   FlutterSecureStorage storage = new FlutterSecureStorage();
 
   // search results
   List<AttendanceUser> _users = [];
+  double _historyTotal;
+  List<String> _attendanceDetails = [];
 
   Future<void> search(String searchString) async {
     _users.clear();
+    print(await Server.token);
+
     var response;
     if (searchString.isNotEmpty) {
       response = await http.post(
@@ -39,11 +42,12 @@ class UsersProvider with ChangeNotifier {
         },
       );
     } else {
-      response = await http.get(_getAllApiUrl, headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+      response =
+          await http.get(_getAllApiUrl, headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
     }
 
     dynamic body = jsonDecode(response.body);
-
+    print(body);
     if (body["message"] != null && body["message"] is Iterable) {
       for (var user in body["message"]) {
         _users.add(AttendanceUser.fromJson(user));
@@ -54,9 +58,8 @@ class UsersProvider with ChangeNotifier {
   }
 
   Future<User> getUserById(int id) async {
-    // TODO add error handling
-
-    var response = await http.get(_getUserByIdApiUrl + "/$id", headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+    var response = await http.get(_getUserByIdApiUrl + "/$id",
+        headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
     dynamic body = jsonDecode(response.body);
     User user = User.fromJson(body["message"]);
     return user;
@@ -102,6 +105,7 @@ class UsersProvider with ChangeNotifier {
     request.fields['id'] = user.id.toString();
     request.fields['name'] = user.userName;
     request.fields['group'] = user.groupId.toString();
+    request.fields['player_category'] = user.categoryId.toString();
     request.fields['birthDate'] = user.birthDate;
     request.fields['mobn'] = user.mobileNum;
     request.fields['code'] = user.code;
@@ -164,19 +168,22 @@ class UsersProvider with ChangeNotifier {
   }
 
   Future<List<HistoryRow>> getPlayerHistory(int id) async {
+    _historyTotal = 0;
     final response = await http.post(
       _overviewApiUrl,
       headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
       body: {'userID': id.toString(), 'months': "24"},
     );
-
+    print(response.body);
     dynamic body = jsonDecode(response.body);
 
     List<HistoryRow> ret = [];
 
-    if (body["status"] != null && body["status"] == true && body["message"] is Map<dynamic,dynamic> ) {
+    if (body["status"] != null && body["status"] == true && body["message"] is Map<dynamic, dynamic>) {
       body["message"].forEach((key, row) {
-        ret.add(HistoryRow.fromJson(row));
+        HistoryRow tmpHistory = HistoryRow.fromJson(row);
+        ret.add(tmpHistory);
+        _historyTotal += (double.parse(tmpHistory.due) - double.parse(tmpHistory.paid));
       });
       return ret;
     } else
@@ -184,7 +191,8 @@ class UsersProvider with ChangeNotifier {
   }
 
   Future<int> getNewCode() async {
-    var response = await http.get(_getNewIDUrl, headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+    var response =
+        await http.get(_getNewIDUrl, headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
     dynamic body = jsonDecode(response.body);
     int maxCode = body["message"];
     if (maxCode != null)
@@ -193,7 +201,26 @@ class UsersProvider with ChangeNotifier {
       return 0;
   }
 
+  Future loadAttendanceDetails(String id, year, month) async {
+    _attendanceDetails = [];
+    var response = await http.get(_getAttendanceDetailsUrl + id + '/' + year + '/' + month,
+        headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+    dynamic body = jsonDecode(response.body);
+    print("Attendance details response:");
+    print(body);
+    body["message"].forEach((e) => _attendanceDetails.add(e["ATND_DATE"]));
+    notifyListeners();
+  }
+
   List<AttendanceUser> get users {
     return _users;
+  }
+
+  double get historyTotal {
+    return _historyTotal;
+  }
+
+  List<String> get attendanceDetails {
+    return _attendanceDetails;
   }
 }

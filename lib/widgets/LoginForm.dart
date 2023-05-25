@@ -29,9 +29,10 @@ class _LoginFormState extends State<LoginForm> {
               //Email Field
               Container(
                 margin: EdgeInsets.symmetric(vertical: 5),
+            
                 child: TextFormField(
                   decoration: InputDecoration(hintText: "Email"),
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   onChanged: (email) {
                     _signInEmail = email;
                   },
@@ -46,7 +47,7 @@ class _LoginFormState extends State<LoginForm> {
                 child: TextFormField(
                   obscureText: true, //password type
                   decoration: InputDecoration(hintText: "Password"),
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   onChanged: (password) {
                     _signInPassword = password;
                   },
@@ -60,7 +61,7 @@ class _LoginFormState extends State<LoginForm> {
                 margin: EdgeInsets.symmetric(vertical: 5),
                 width: double.infinity,
                 decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(10)),
-                child: FlatButton(
+                child: TextButton(
                   onPressed: () => _logIn(context), 
                   child: Text(
                     "Login",
@@ -83,7 +84,7 @@ class _LoginFormState extends State<LoginForm> {
       _isTryingToLogIn = true;
     });
 
-    String errorMsg = await Provider.of<Auth>(context, listen: false).logIn(_signInEmail, _signInPassword, "iphone11");
+    String errorMsg = await Provider.of<Auth>(context, listen: false).logIn(_signInEmail, _signInPassword, "iphone12");
 
     setState(() {
       _isTryingToLogIn = false;

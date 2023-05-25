@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:StMaryFA/models/Category.dart';
 import 'package:StMaryFA/models/Group.dart';
 import 'package:StMaryFA/models/User.dart';
+import 'package:StMaryFA/providers/CategoriesProvider.dart';
 import 'package:StMaryFA/providers/GroupsProvider.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/HomeScreen.dart';
@@ -36,11 +38,13 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   File _selectedImage;
   int _selectedGroupId;
+  int _selectedCategoryId;
 
   final _formKey = GlobalKey<FormState>();
   bool confirmButtonEnable = true;
   final _nameController = TextEditingController();
   final _groupController = TextEditingController();
+  final _categoryController = TextEditingController();
   final _birthdateController = TextEditingController();
   final _mobileNumController = TextEditingController();
   final _codeController = TextEditingController();
@@ -50,7 +54,8 @@ class _UserScreenState extends State<UserScreen> {
     final _picker = ImagePicker();
     PickedFile image = await _picker.getImage(source: source);
     if (image != null) {
-      File croppedImage = await ImageCropper.cropImage(
+      ImageCropper ic = new ImageCropper();
+      File croppedImage = await ic.cropImage(
           sourcePath: image.path,
           aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
           maxWidth: 700,
@@ -81,7 +86,9 @@ class _UserScreenState extends State<UserScreen> {
   void fillForm() {
     _nameController.value = TextEditingValue(text: widget.user.userName);
     _groupController.value = TextEditingValue(text: widget.user.groupName);
+    _categoryController.value = TextEditingValue(text: widget.user.categoryName);
     _selectedGroupId = widget.user.groupId;
+    _selectedCategoryId = widget.user.categoryId;
     _birthdateController.value = TextEditingValue(text: widget.user.birthDate ?? "");
     _mobileNumController.value = TextEditingValue(text: widget.user.mobileNum ?? "");
     _codeController.value = TextEditingValue(text: widget.user.code ?? "");
@@ -99,8 +106,8 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     TextStyle fieldTextStyle = _viewMode()
-        ? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54)
-        : Theme.of(context).textTheme.bodyText1;
+        ? Theme.of(context).textTheme.bodyMedium.copyWith(color: Colors.black54)
+        : Theme.of(context).textTheme.bodyMedium;
     return Column(children: [
       Expanded(
           child: Container(
@@ -181,7 +188,7 @@ class _UserScreenState extends State<UserScreen> {
                             ),
                             hintText: "Group"),
                         style: widget.user.type == 1
-                            ? Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54)
+                            ? Theme.of(context).textTheme.bodyMedium.copyWith(color: Colors.black54)
                             : fieldTextStyle,
                         onChanged: null,
                         readOnly: true,
@@ -221,7 +228,7 @@ class _UserScreenState extends State<UserScreen> {
                                         child: Column(children: [
                                           Align(
                                             alignment: Alignment.centerRight,
-                                            child: FlatButton(
+                                            child: TextButton(
                                               onPressed: () {
                                                 setState(() {
                                                   _groupController.value = TextEditingValue(text: selectedGroup.name);
@@ -244,6 +251,97 @@ class _UserScreenState extends State<UserScreen> {
                                               },
                                               children: (groups.map((group) {
                                                 return Center(child: Text(group.name));
+                                              }).toList()),
+                                            ),
+                                          ),
+                                        ]),
+                                      );
+                                    });
+                              },
+                        validator: (nameString) {
+                          return nameString.isEmpty ? "*Required" : null;
+                        },
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            suffixIcon: Icon(
+                              FontAwesomeIcons.chevronDown,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            hintText: "Category"),
+                        style: widget.user.type == 1
+                            ? Theme.of(context).textTheme.bodyMedium.copyWith(color: Colors.black54)
+                            : fieldTextStyle,
+                        onChanged: null,
+                        readOnly: true,
+                        controller: _categoryController,
+                        onSaved: (_) {
+                          widget.user.categoryId = _selectedCategoryId;
+                          widget.user.categoryName = _categoryController.value.text;
+                        },
+                        onTap: (_viewMode() || widget.user.type == 1)
+                            ? null
+                            : () async {
+                                if (Provider.of<CategoriesProvider>(context, listen: false).categories.isEmpty) {
+                                  await Provider.of<CategoriesProvider>(context, listen: false).loadCategories();
+                                }
+                                //sublist(1) to remove first group (Admins)
+                                List<Category> categories = Provider.of<CategoriesProvider>(context, listen: false).categories;
+
+                                int selectedCategoryIndex;
+                                if (widget.user.categoryId != 0) {
+                                  selectedCategoryIndex = categories.indexWhere((catg) => catg.id == widget.user.categoryId);
+                                } else {
+                                  selectedCategoryIndex = 0;
+                                }
+
+                                print(widget.user.categoryId);
+                                categories.forEach((element) {
+                                  print(element.id.toString() + ' - ' + element.title);
+                                });
+
+                                Category selectedCatg = categories[selectedCategoryIndex];
+
+                                showModalBottomSheet(
+                                    backgroundColor: Colors.transparent,
+                                    context: context,
+                                    builder: (_) {
+                                      return Container(
+                                        decoration: new BoxDecoration(
+                                            color: Colors.orangeAccent[100],
+                                            borderRadius: new BorderRadius.only(
+                                                topLeft: const Radius.circular(25.0), topRight: const Radius.circular(25.0))),
+                                        height: MediaQuery.of(context).size.height / 3,
+                                        child: Column(children: [
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  _categoryController.value = TextEditingValue(text: selectedCatg.title);
+                                                  _selectedCategoryId = selectedCatg.id;
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              child: Text(
+                                                "Done",
+                                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: CupertinoPicker(
+                                              scrollController: FixedExtentScrollController(initialItem: selectedCategoryIndex),
+                                              itemExtent: MediaQuery.of(context).size.height / 16,
+                                              onSelectedItemChanged: (value) {
+                                                selectedCatg = categories[value];
+                                              },
+                                              children: (categories.map((catg) {
+                                                return Center(child: Text(catg.title));
                                               }).toList()),
                                             ),
                                           ),
@@ -377,7 +475,7 @@ class _UserScreenState extends State<UserScreen> {
                 padding: EdgeInsets.zero,
                 alignment: Alignment.topLeft,
                 icon: FaIcon(
-                  FontAwesomeIcons.times,
+                  FontAwesomeIcons.xmark,
                 ),
                 onPressed: () {
                   setState(() {
@@ -451,7 +549,6 @@ class _UserScreenState extends State<UserScreen> {
                   CupertinoDialogAction(
                     child: Text("No"),
                     onPressed: () {
-                      //TODO popUntil is better
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -483,6 +580,7 @@ class _UserScreenState extends State<UserScreen> {
 
     _nameController.clear();
     _groupController.clear();
+    _categoryController.clear();
     _birthdateController.clear();
     _mobileNumController.clear();
     _codeController.clear();

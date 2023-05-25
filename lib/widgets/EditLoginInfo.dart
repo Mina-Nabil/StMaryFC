@@ -34,7 +34,7 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
                     children: [
                       Icon(Icons.security, color: Theme.of(context).iconTheme.color,),
                       SizedBox(width: 10,),
-                      Text("Email/Password", style: Theme.of(context).textTheme.bodyText1.copyWith(color: _open ? Colors.black: Colors.black54)),
+                      Text("Email/Password", style: Theme.of(context).textTheme.bodyMedium.copyWith(color: _open ? Colors.black: Colors.black54)),
                     ],
                   ),
                   Icon(_open ? FontAwesomeIcons.chevronDown : Icons.edit,  color: Theme.of(context).iconTheme.color,),
@@ -59,7 +59,7 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
                     children: [
                       Icon(Icons.email, color: Theme.of(context).iconTheme.color,),
                       SizedBox(width: 10,),
-                      Text("Email", style: Theme.of(context).textTheme.bodyText1.copyWith(color: _open ? Colors.black: Colors.black54)),
+                      Text("Email", style: Theme.of(context).textTheme.bodyMedium.copyWith(color: _open ? Colors.black: Colors.black54)),
                     ],
                   ),
                   Icon( FontAwesomeIcons.chevronRight,  color: Theme.of(context).iconTheme.color,),
@@ -86,7 +86,7 @@ class _EditLoginInfoState extends State<EditLoginInfo> {
                     children: [
                       Icon(Icons.lock, color: Theme.of(context).iconTheme.color,),
                       SizedBox(width: 10,),
-                      Text("Password", style: Theme.of(context).textTheme.bodyText1.copyWith(color: _open ? Colors.black: Colors.black54)),
+                      Text("Password", style: Theme.of(context).textTheme.bodyMedium.copyWith(color: _open ? Colors.black: Colors.black54)),
                     ],
                   ),
                   Icon( FontAwesomeIcons.chevronRight,  color: Theme.of(context).iconTheme.color,),

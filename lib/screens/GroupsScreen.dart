@@ -19,7 +19,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
               title: new Text(title),
               content: new Text(msg),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Ok'),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -62,7 +62,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> formWidgets = [
-
       Form(
         key: _formKey,
         child: Container(
@@ -73,7 +72,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
               return (v.length < 2) ? "Very Short Name" : null;
             },
             textAlign: TextAlign.left,
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyMedium,
             decoration: InputDecoration(
               hintText: "Add New Group",
               prefixIcon: Icon(Icons.add),
@@ -84,10 +83,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
       Container(
         width: double.infinity,
         decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(radius)),
-        child: FlatButton(
-          onPressed: submitForm,
-          child: Text("Add", style: TextStyle(fontFamily: "Anton", color: Colors.white, fontSize: 24))
-        ),
+        child: TextButton(
+            onPressed: submitForm, child: Text("Add", style: TextStyle(fontFamily: "Anton", color: Colors.white, fontSize: 24))),
       ),
     ];
     return Column(
@@ -96,7 +93,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 15),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15)), border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+                border: Border.all(color: Color.fromRGBO(79, 50, 0, 1))),
             child: ListView(
                 children: []
                   ..addAll(formWidgets)
@@ -113,10 +112,14 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                       height: 0,
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                       padding: EdgeInsets.all(0),
-                                      child: RaisedButton(
-                                          color: Color.fromRGBO(254, 250, 241, 1),
+                                      child: ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(254, 250, 241, 1)),
+                                          ),
                                           onPressed: () => toggle(e.id),
-                                          child: FittedBox(child: Icon(FontAwesomeIcons.solidFutbol, color: (e.isActive) ? Colors.green : Colors.red))),
+                                          child: FittedBox(
+                                              child: Icon(FontAwesomeIcons.solidFutbol,
+                                                  color: (e.isActive) ? Colors.green : Colors.red))),
                                     ),
                                     title: Text(e.name, style: TextStyle(fontSize: 18)))
                                 : Dismissible(
@@ -124,7 +127,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                         color: Colors.red,
                                         padding: EdgeInsets.only(right: 20.0),
                                         alignment: Alignment.centerRight,
-                                        child: FaIcon(FontAwesomeIcons.trashAlt, color: Colors.white)),
+                                        child: FaIcon(FontAwesomeIcons.trashCan, color: Colors.white)),
                                     dismissThresholds: {DismissDirection.endToStart: 0.6},
                                     key: UniqueKey(),
                                     onDismissed: (direction) => delGroup(e.id),
@@ -137,10 +140,14 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                           height: 0,
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                           padding: EdgeInsets.all(0),
-                                          child: RaisedButton(
-                                              color: Color.fromRGBO(254, 250, 241, 1),
+                                          child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all<Color>(Color.fromRGBO(254, 250, 241, 1))),
                                               onPressed: () => toggle(e.id),
-                                              child: FittedBox(child: Icon(FontAwesomeIcons.solidFutbol, color: (e.isActive) ? Colors.green : Colors.red))),
+                                              child: FittedBox(
+                                                  child: Icon(FontAwesomeIcons.solidFutbol,
+                                                      color: (e.isActive) ? Colors.green : Colors.red))),
                                         ),
                                         title: Text(e.name, style: TextStyle(fontSize: 18)))),
                           ),

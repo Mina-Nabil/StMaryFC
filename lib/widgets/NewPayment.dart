@@ -118,7 +118,7 @@ class _NewPaymentState extends State<NewPayment> {
                     width: double.infinity,
                     decoration: BoxDecoration(color: Colors.orange),
                     child:
-                        FlatButton(onPressed: (addEnabled) ?  addPayment : null, child: Text("Add", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
+                        TextButton(onPressed: (addEnabled) ?  addPayment : null, child: Text("Add", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                   ),
                 ],
               ),

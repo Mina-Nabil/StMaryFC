@@ -82,6 +82,7 @@ class CustomPicker extends CommonPickerModel {
         return "December";
    
       default:
+        return "January";
     }
   }
 

@@ -7,7 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import "package:http/http.dart" as http;
 
 class Auth with ChangeNotifier {
-
   User currentUser = User.empty();
   FlutterSecureStorage storage;
 
@@ -18,7 +17,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<String> logIn(String email, String password, String deviceName) async {
-    const String url = "https://stmaryfa.msquare.app/api/login";
+    const String url = Server.address + "api/login";
     String errorMsg = "";
 
     var bodyEncoded = {
@@ -27,6 +26,7 @@ class Auth with ChangeNotifier {
       "deviceName": deviceName,
     };
     print(bodyEncoded);
+    print(url);
 
     try {
       final response = await http.post(
@@ -36,9 +36,8 @@ class Auth with ChangeNotifier {
       );
 
       dynamic body = jsonDecode(response.body);
-
+      print(body);
       if (body["status"] != null && body["status"] == true) {
-
         await Server.setToken(body["message"]["token"]);
 
         print("Sign in Done");
@@ -68,7 +67,7 @@ class Auth with ChangeNotifier {
       final response = await http.post(
         Server.address + "api/edit/user/email",
         headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
-        body: {"id":currentUser.id.toString(), "email":newEmail, "password":password},
+        body: {"id": currentUser.id.toString(), "email": newEmail, "password": password},
       );
 
       dynamic responseDecoded = jsonDecode(response.body);
@@ -93,7 +92,7 @@ class Auth with ChangeNotifier {
       final response = await http.post(
         Server.address + "api/edit/user/password",
         headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
-        body: {"id":currentUser.id.toString(), "oldPassword":oldPassword, "newPassword":newPassword},
+        body: {"id": currentUser.id.toString(), "oldPassword": oldPassword, "newPassword": newPassword},
       );
 
       dynamic responseDecoded = jsonDecode(response.body);
@@ -113,21 +112,25 @@ class Auth with ChangeNotifier {
 
   Future<void> getCurrentUser() async {
     assert(await isLoggedIn());
-    final response = await http.get(
-      "https://stmaryfa.msquare.app/api/current/user",
-      headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
-    );
+    try {
+      final response = await http.get(
+        Server.address + "api/current/user",
+        headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
+      );
 
-    dynamic body = jsonDecode(response.body);
+      dynamic body = jsonDecode(response.body);
 
-    if (body["status"] == null || body["status"] == false) {
-      print("getCurrentUserName Failed.");
+      if (body["status"] == null || body["status"] == false) {
+        print("getCurrentUserName Failed.");
+      }
+
+      currentUser = User.fromJson(body["message"]);
+      Server.setUsertype(currentUser.type);
+
+      notifyListeners();
+    } catch (e) {
+      this.logout();
     }
-
-    currentUser = User.fromJson(body["message"]);
-    Server.setUsertype(currentUser.type);
-
-    notifyListeners();
   }
 
   String get userName {
@@ -141,5 +144,4 @@ class Auth with ChangeNotifier {
   String get userImageUrl {
     return currentUser.imageLink;
   }
-
 }

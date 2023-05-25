@@ -78,7 +78,7 @@ class UserCard extends StatelessWidget {
                     )),
                 Container(
                     child: FaIcon(
-                      FontAwesomeIcons.checkCircle,
+                      FontAwesomeIcons.circleCheck,
                       size: 12,
                       color: user.isAttended ? Colors.green : Colors.grey[300],
                     ))

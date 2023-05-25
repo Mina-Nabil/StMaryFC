@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:StMaryFA/global.dart';
 import 'package:StMaryFA/screens/HomeScreen.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class DashBoard extends StatefulWidget {
@@ -68,13 +70,13 @@ class _DashBoardState extends State<DashBoard> {
           child: AppBar(
             elevation: 0,
             backgroundColor: Colors.transparent, // status bar color,
-            brightness: Brightness.light,
+            systemOverlayStyle: SystemUiOverlayStyle.dark,
           )),
       body: Stack(
         children: [
           WebView(
             key: _key,
-            initialUrl: 'https://stmaryfa.msquare.app/home',
+            initialUrl: Server.address + 'home',
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (c) {
               loadingTimer = new Timer(Duration(seconds: timeoutDuration), showFailedConnectivity);
