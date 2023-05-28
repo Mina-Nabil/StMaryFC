@@ -97,7 +97,11 @@ class _OverviewScreenState extends State<OverviewScreen> {
                                       child: Column(
                                         children: [
                                           Text("L", style: TextStyle(fontSize: 12)),
-                                          Text((double.parse(e.due) - double.parse(e.paid)).toStringAsFixed(0),
+                                          Text(
+                                              e.due == "N/A"
+                                                  ? e.due
+                                                  : (double.tryParse(e.due) ?? 0 - double.tryParse(e.paid) ?? 0)
+                                                      .toStringAsFixed(0),
                                               style: TextStyle(fontSize: 14))
                                         ],
                                       ))

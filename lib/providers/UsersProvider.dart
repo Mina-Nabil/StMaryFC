@@ -174,7 +174,6 @@ class UsersProvider with ChangeNotifier {
       headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
       body: {'userID': id.toString(), 'months': "24"},
     );
-    print(response.body);
     dynamic body = jsonDecode(response.body);
 
     List<HistoryRow> ret = [];
@@ -183,7 +182,8 @@ class UsersProvider with ChangeNotifier {
       body["message"].forEach((key, row) {
         HistoryRow tmpHistory = HistoryRow.fromJson(row);
         ret.add(tmpHistory);
-        _historyTotal += (double.parse(tmpHistory.due) - double.parse(tmpHistory.paid));
+        _historyTotal +=
+            tmpHistory.due == 'N/A' ? 0 : (double.tryParse(tmpHistory.due) ?? 0 - double.parse(tmpHistory.paid ?? 0));
       });
       return ret;
     } else

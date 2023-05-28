@@ -12,4 +12,9 @@ class HistoryRow {
     paid = json["P"] != null ? json["P"].toString() : "0";
     due = json["D"] != null ? json["D"].toString() : "N/A";
   }
+
+  @override
+  String toString() {
+    return "Month: " + this.month + " Year: " + this.year + " A: " + this.attended + " P: " + this.paid + " D: " + this.due;
+  }
 }
