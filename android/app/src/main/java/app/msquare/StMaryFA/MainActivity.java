@@ -1,4 +1,4 @@
-package app.msquare.StMaryFA;
+package app.minabil.StMaryFA;
 
 import io.flutter.embedding.android.FlutterActivity;
 
