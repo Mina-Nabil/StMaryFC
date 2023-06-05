@@ -100,7 +100,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                                           Text(
                                               e.due == "N/A"
                                                   ? e.due
-                                                  : (double.tryParse(e.due) ?? 0 - double.tryParse(e.paid) ?? 0)
+                                                  : ((double.tryParse(e.due) ?? 0) - (double.tryParse(e.paid) ?? 0))
                                                       .toStringAsFixed(0),
                                               style: TextStyle(fontSize: 14))
                                         ],

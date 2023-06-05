@@ -183,7 +183,7 @@ class UsersProvider with ChangeNotifier {
         HistoryRow tmpHistory = HistoryRow.fromJson(row);
         ret.add(tmpHistory);
         _historyTotal +=
-            tmpHistory.due == 'N/A' ? 0 : (double.tryParse(tmpHistory.due) ?? 0 - double.parse(tmpHistory.paid ?? 0));
+            tmpHistory.due == 'N/A' ? 0 : ((double.tryParse(tmpHistory.due) ?? 0) - (double.parse(tmpHistory.paid ?? 0)));
       });
       return ret;
     } else

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
 class User {
-  User({
-   this.id,
-   this.userName,
-   this.type,
-   this.groupName,
-   this.groupId,
-   this.imageLink,
-   this.birthDate,
-   this.mobileNum,
-   this.code,
-   this.notes 
-  });
+  User(
+      {this.id,
+      this.userName,
+      this.type,
+      this.groupName,
+      this.groupId,
+      this.imageLink,
+      this.birthDate,
+      this.mobileNum,
+      this.code,
+      this.notes});
 
   User.empty() {
     clear();
@@ -23,9 +22,9 @@ class User {
     this.userName = user["USER_NAME"];
     this.type = user["type"]["id"];
     this.groupName = user["group"]["GRUP_NAME"];
-    this.categoryName = user["player_category"]["title"];
+    this.categoryId = user["players_category_id"];
+    this.categoryName = (user["players_category_id"] != null) ? user["player_category"]["title"] : null;
     this.groupId = user["group"]["id"];
-    this.categoryId = user["player_category"]["id"];
     this.birthDate = user["USER_BDAY"];
     this.imageLink = user["full_image_url"];
     this.mobileNum = user["USER_MOBN"];
@@ -44,7 +43,7 @@ class User {
   String groupName;
   String categoryName;
   int groupId;
-  int categoryId;
+  dynamic categoryId;
   String imageLink;
   String birthDate;
   String mobileNum;
@@ -53,7 +52,6 @@ class User {
 }
 
 class AttendanceUser extends User {
-
   AttendanceUser({
     @required int id,
     @required String name,
@@ -67,7 +65,17 @@ class AttendanceUser extends User {
     String notes,
     int monthlyPayments,
     bool isAttended,
-  }) : super(id: id, userName: name, type: type, groupName: groupName, groupId: groupId, imageLink: imageLink, birthDate: birthDate, mobileNum: mobileNum, code: code, notes: notes);
+  }) : super(
+            id: id,
+            userName: name,
+            type: type,
+            groupName: groupName,
+            groupId: groupId,
+            imageLink: imageLink,
+            birthDate: birthDate,
+            mobileNum: mobileNum,
+            code: code,
+            notes: notes);
 
   AttendanceUser.fromJson(user) {
     this.id = user["id"];
@@ -78,6 +86,6 @@ class AttendanceUser extends User {
     this.isAttended = user['isAttended'] == 1;
   }
 
-  int monthlyPayments=0;
-  bool isAttended=false;
+  int monthlyPayments = 0;
+  bool isAttended = false;
 }

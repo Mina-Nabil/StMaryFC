@@ -86,7 +86,7 @@ class _UserScreenState extends State<UserScreen> {
   void fillForm() {
     _nameController.value = TextEditingValue(text: widget.user.userName);
     _groupController.value = TextEditingValue(text: widget.user.groupName);
-    _categoryController.value = TextEditingValue(text: widget.user.categoryName);
+    _categoryController.value = TextEditingValue(text: widget.user.categoryName ?? "");
     _selectedGroupId = widget.user.groupId;
     _selectedCategoryId = widget.user.categoryId;
     _birthdateController.value = TextEditingValue(text: widget.user.birthDate ?? "");
@@ -289,20 +289,15 @@ class _UserScreenState extends State<UserScreen> {
                                 if (Provider.of<CategoriesProvider>(context, listen: false).categories.isEmpty) {
                                   await Provider.of<CategoriesProvider>(context, listen: false).loadCategories();
                                 }
-                                //sublist(1) to remove first group (Admins)
+                                
                                 List<Category> categories = Provider.of<CategoriesProvider>(context, listen: false).categories;
 
-                                int selectedCategoryIndex;
-                                if (widget.user.categoryId != 0) {
+                                int selectedCategoryIndex = 0;
+                                if (widget.user.categoryId != null && widget.user.categoryId > 0) {
                                   selectedCategoryIndex = categories.indexWhere((catg) => catg.id == widget.user.categoryId);
                                 } else {
                                   selectedCategoryIndex = 0;
                                 }
-
-                                print(widget.user.categoryId);
-                                categories.forEach((element) {
-                                  print(element.id.toString() + ' - ' + element.title);
-                                });
 
                                 Category selectedCatg = categories[selectedCategoryIndex];
 
@@ -322,7 +317,8 @@ class _UserScreenState extends State<UserScreen> {
                                             child: TextButton(
                                               onPressed: () {
                                                 setState(() {
-                                                  _categoryController.value = TextEditingValue(text: selectedCatg.title);
+                                                  _categoryController.value = TextEditingValue(
+                                                      text: selectedCatg.title == null ? "N/A" : selectedCatg.title);
                                                   _selectedCategoryId = selectedCatg.id;
                                                   Navigator.pop(context);
                                                 });

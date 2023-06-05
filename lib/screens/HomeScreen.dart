@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<UsersProvider>(context, listen: false).search("");
       await Provider.of<Auth>(context, listen: false).getCurrentUser();
       enableMenu = (await Server.userType == 1);
+      print("Menu enabled is " + enableMenu.toString());
     });
   }
 

@@ -125,10 +125,13 @@ class Auth with ChangeNotifier {
       }
 
       currentUser = User.fromJson(body["message"]);
+      print("TYPE IS " + currentUser.toString());
       Server.setUsertype(currentUser.type);
 
       notifyListeners();
     } catch (e) {
+      print("GETTING USER FAILED");
+      print(e);
       this.logout();
     }
   }
