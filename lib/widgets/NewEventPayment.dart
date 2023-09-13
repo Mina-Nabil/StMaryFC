@@ -46,7 +46,7 @@ class _NewPaymentState extends State<NewEventPayment> {
                 children: [
                   Center(
                       child: Text(
-                    "New Payment",
+                    "Register Event",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _open ? Colors.orange : Colors.white),
                   )),
                   Align(

@@ -32,6 +32,21 @@ class User {
     this.notes = user["USER_NOTE"];
   }
 
+  User.system() {
+    this.id = 0;
+    this.userName = "System";
+    this.type = 0;
+    this.groupName = "System";
+    this.categoryId = 0;
+    this.categoryName = null;
+    this.groupId = 0;
+    this.birthDate = "System";
+    this.imageLink = "System";
+    this.mobileNum = "System";
+    this.code = "System";
+    this.notes = "System";
+  }
+
   void clear() {
     userName = groupName = imageLink = birthDate = mobileNum = code = notes = "";
     id = groupId = 0;
@@ -63,7 +78,7 @@ class AttendanceUser extends User {
     String mobileNum,
     String code,
     String notes,
-    int monthlyPayments,
+    int userBalance,
     bool isAttended,
   }) : super(
             id: id,
@@ -82,10 +97,10 @@ class AttendanceUser extends User {
     this.userName = user["USER_NAME"];
     this.groupName = user["GRUP_NAME"];
     this.imageLink = user["USIM_URL"] ?? '';
-    this.monthlyPayments = user['monthlyPayments'];
+    this.userBalance = user['userBalance'] ?? 0;
     this.isAttended = user['isAttended'] == 1;
   }
 
-  int monthlyPayments = 0;
+  int userBalance = 0;
   bool isAttended = false;
 }

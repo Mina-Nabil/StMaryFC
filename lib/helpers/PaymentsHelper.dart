@@ -10,7 +10,8 @@ class PaymentsHelper {
 
     String getUserPaymentsApiUrl = Server.address + "api/get/user/payments/";
     try {
-      var response = await http.get(getUserPaymentsApiUrl + "$id", headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+      var response = await http.get(getUserPaymentsApiUrl + "$id",
+          headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
 
       dynamic body = jsonDecode(response.body);
       if (body["message"] != null && body["message"] is Iterable) {
@@ -29,7 +30,8 @@ class PaymentsHelper {
 
     String getUserPaymentsApiUrl = Server.address + "api/get/user/event/payments/";
     try {
-      var response = await http.get(getUserPaymentsApiUrl + "$id", headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
+      var response = await http.get(getUserPaymentsApiUrl + "$id",
+          headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"});
 
       dynamic body = jsonDecode(response.body);
 
@@ -46,10 +48,9 @@ class PaymentsHelper {
     return payments;
   }
 
-  static Future<String> addPayment(int id, double amount, String note, int type, {String date, int eventId, int eventState}) async {
-    if (type == 1) {
-      assert(date != null);
-    }
+  static Future<String> addPayment(int id, double amount, String note, int type,
+      {int eventId, int eventState, bool isSettlment}) async {
+    print(isSettlment);
     if (type == 2) {
       assert(eventId != null);
     }
@@ -63,8 +64,8 @@ class PaymentsHelper {
                   "userID": id.toString(),
                   "amount": amount.toString(),
                   "note": note,
-                  "date": date,
                   "type": type.toString(),
+                  "isSettlment": isSettlment ? 1.toString() : 0.toString(),
                 }
               : {
                   "userID": id.toString(),
@@ -76,13 +77,41 @@ class PaymentsHelper {
                 });
 
       dynamic body = jsonDecode(response.body);
-
+      print(body);
       if (body["status"] != null && body["status"] == true) {
         return "";
       } else {
         errorMsg = "Something went wrong.";
       }
     } catch (error) {
+      print(error);
+      errorMsg = "Something went wrong.";
+    }
+    return errorMsg;
+  }
+
+  static Future<String> sendBalanceReminder(int id) async {
+    String getUserPaymentsApiUrl = Server.address + "api/send/reminder";
+    String errorMsg = "";
+    try {
+      var response = await http.post(getUserPaymentsApiUrl, headers: {
+        'Authorization': "Bearer ${await Server.token}",
+        "Accept": "application/json"
+      }, body: {
+        "userID": id.toString(),
+      });
+
+      dynamic body = jsonDecode(response.body);
+      print(body);
+      if (body["status"] != null && body["status"] == true) {
+        return "";
+      } else if (body["message"]) {
+        errorMsg = body["message"];
+      } else {
+        errorMsg = "Server issue.";
+      }
+    } catch (error) {
+      print(error);
       errorMsg = "Something went wrong.";
     }
     return errorMsg;

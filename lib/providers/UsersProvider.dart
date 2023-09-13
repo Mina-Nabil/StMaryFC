@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:StMaryFA/models/BalanceRow.dart';
 import 'package:StMaryFA/models/HistoryRow.dart';
 import 'package:StMaryFA/models/User.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class UsersProvider with ChangeNotifier {
   String _getUserByIdApiUrl = Server.address + "api/user/by/id";
   String _attendanceApiUrl = Server.address + "api/take/bulk/attendance";
   String _overviewApiUrl = Server.address + "api/get/overview";
+  String _balanceApiUrl = Server.address + "api/user/balance";
   String _addUserUrl = Server.address + "api/add/user";
   String _editUserUrl = Server.address + "api/edit/user";
   String _getNewIDUrl = Server.address + "api/get/next/code";
@@ -74,6 +76,7 @@ class UsersProvider with ChangeNotifier {
     request.fields['mobn'] = user.mobileNum;
     request.fields['code'] = user.code;
     request.fields['note'] = user.notes;
+    request.fields['player_category'] = user.categoryId.toString();
 
     if (image != null) {
       var pic = await http.MultipartFile.fromPath(
@@ -158,9 +161,7 @@ class UsersProvider with ChangeNotifier {
     dynamic body = jsonDecode(response.body);
 
     if (body["status"] != null && body["status"] == true) {
-      _users.where((element) => ids.contains(element.id)).forEach((element) {
-        element.isAttended = true;
-      });
+    
       notifyListeners();
       return true;
     } else
@@ -177,14 +178,37 @@ class UsersProvider with ChangeNotifier {
     dynamic body = jsonDecode(response.body);
 
     List<HistoryRow> ret = [];
+    bool _startCounting = false;
 
     if (body["status"] != null && body["status"] == true && body["message"] is Map<dynamic, dynamic>) {
       body["message"].forEach((key, row) {
         HistoryRow tmpHistory = HistoryRow.fromJson(row);
         ret.add(tmpHistory);
+        // if (!_startCounting && tmpHistory.paid != "0") _startCounting = true;
+        // if (_startCounting)
         _historyTotal +=
             tmpHistory.due == 'N/A' ? 0 : ((double.tryParse(tmpHistory.due) ?? 0) - (double.parse(tmpHistory.paid ?? 0)));
       });
+      return ret;
+    } else
+      return [];
+  }
+
+  Future<List<BalanceRow>> getPlayerBalanceHistory(int id) async {
+    final response = await http.get(
+      _balanceApiUrl + '/' + id.toString(),
+      headers: {'Authorization': "Bearer ${await Server.token}", "Accept": "application/json"},
+    );
+    print(response.body);
+    dynamic body = jsonDecode(response.body);
+
+    List<BalanceRow> ret = [];
+
+    if (body["status"] != null && body["status"] == true && body["message"] is List<dynamic>) {
+      body["message"].forEach((row) {
+        ret.add(BalanceRow.fromJson(row));
+      });
+    
       return ret;
     } else
       return [];

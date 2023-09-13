@@ -2,6 +2,7 @@ import 'package:StMaryFA/helpers/PaymentsHelper.dart';
 import 'package:StMaryFA/models/Payment.dart';
 import 'package:StMaryFA/models/User.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
+import 'package:StMaryFA/screens/BalanceScreen.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
 import 'package:StMaryFA/screens/OverviewScreen.dart';
 import 'package:StMaryFA/widgets/NewEventPayment.dart';
@@ -82,7 +83,7 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
     Future.delayed(Duration.zero).then((value) async {
       user = await Provider.of<UsersProvider>(context, listen: false).getUserById(widget.id);
       setUserLoaded();
-      WidgetsBinding.instance.addPostFrameCallback((_) => widget.goToHistory ? goTo(1) : '');
+      WidgetsBinding.instance.addPostFrameCallback((_) => widget != null && widget.goToHistory ? goTo(1) : '');
     });
   }
 
@@ -95,72 +96,20 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
       ),
       body: PageView(
         controller: _controller,
+
         onPageChanged: (i) {
           setState(() {
             selectedpage = i;
           });
         },
         children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: widget.bottomScreenPadding),
-            child: Column(children: [
-              NewPayment(widget.id, onPaymentAdd: () {
-                setState(() {});
-              }),
-
-              Divider(),
-
-              // Payments list
-              FutureBuilder(
-                  future: PaymentsHelper.getUserPayments(widget.id),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasError) {
-                        return Center(
-                            child: Text(
-                          "Something went wrong.\nPlease check internet connection and try again.",
-                        ));
-                      } else {
-                        List<Payment> payments = snapshot.data as List<Payment>;
-                        return Expanded(
-                          child: ListView.builder(
-                              itemCount: payments.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Dismissible(
-                                    background: Container(
-                                        color: Colors.red,
-                                        padding: EdgeInsets.only(right: 20.0),
-                                        alignment: Alignment.centerRight,
-                                        child: FaIcon(FontAwesomeIcons.trashCan, color: Colors.white)),
-                                    dismissThresholds: {DismissDirection.endToStart: 0.6},
-                                    key: UniqueKey(),
-                                    direction: DismissDirection.endToStart,
-                                    confirmDismiss: (direction) => showConfirmDeletePaymentDialog(context, payments[index].id, 1),
-                                    child: Card(
-                                        margin: EdgeInsets.only(bottom: 1),
-                                        child: ListTile(
-                                          tileColor: Color.fromRGBO(254, 250, 241, 1),
-                                          leading: Text("EGP ${payments[index].amount}"),
-                                          subtitle: Text(payments[index].note),
-                                          trailing: Text(payments[index].date),
-                                        )));
-                              }),
-                        );
-                      }
-                    } else {
-                      return Expanded(
-                          child: Center(
-                              child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        backgroundColor: Colors.orange,
-                      )));
-                    }
-                  }),
-            ]),
-          ),
-
+          NewPayment(widget.id, onPaymentAdd: () => {
+            _controller.animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.linear)
+          },),
+          //Balance Screen
+          if (userLoaded)Padding(child:  BalanceScreen(user), padding: EdgeInsets.symmetric(horizontal: 5),),
           //History Screen
-          if (userLoaded) OverviewScreen(user),
+          if (userLoaded) Padding(child: OverviewScreen(user), padding: EdgeInsets.symmetric(horizontal: 5),),
           //Events page
 
           Padding(
@@ -230,10 +179,12 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
         data: ThemeData(splashColor: Colors.transparent, highlightColor: Colors.transparent, primaryColor: Colors.orange),
         child: BottomNavigationBar(
           currentIndex: selectedpage,
+          type: BottomNavigationBarType.fixed,
           onTap: (i) => _controller.animateToPage(i, duration: Duration(milliseconds: 200), curve: Curves.linear),
           items: [
-            BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.school), label: "Academy"),
-            if (userLoaded) BottomNavigationBarItem(icon: Icon(Icons.notes), label: "History"),
+            BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.dollarSign), label: "Pay"),
+            if (userLoaded) BottomNavigationBarItem(icon: Icon(Icons.notes), label: "Balance"),
+            if (userLoaded) BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.folder), label: "History"),
             BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.campground), label: "Events"),
           ],
         ),

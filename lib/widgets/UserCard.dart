@@ -31,10 +31,11 @@ class UserCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              decoration: BoxDecoration(color: user.isAttended || selected ? Colors.orange : Colors.transparent, shape: BoxShape.circle),     
+              decoration:
+                  BoxDecoration(color: user.isAttended || selected ? Colors.orange : Colors.transparent, shape: BoxShape.circle),
               padding: EdgeInsets.all(selectedHighlightWidth),
               child: CircleAvatar(
-                backgroundColor: Color.fromRGBO(96,160,250, 1.0),
+                backgroundColor: Color.fromRGBO(96, 160, 250, 1.0),
                 radius: MediaQuery.of(context).size.width / 8,
                 backgroundImage: user.imageLink.isNotEmpty
                     ? Image.network(
@@ -46,7 +47,9 @@ class UserCard extends StatelessWidget {
                       ).image
                     : null,
                 child: user.imageLink.isEmpty
-                    ? FittedBox(child: Text(Utils.getInitials(user.userName), style: TextStyle(fontSize: 36, fontFamily: "Anton", color: Colors.white)))
+                    ? FittedBox(
+                        child: Text(Utils.getInitials(user.userName),
+                            style: TextStyle(fontSize: 36, fontFamily: "Anton", color: Colors.white)))
                     : null,
               ),
             ),
@@ -55,7 +58,10 @@ class UserCard extends StatelessWidget {
               child: FittedBox(
                 child: Text(
                   user.userName,
-                  style: TextStyle(color: user.isAttended || selected ? Colors.orange : Colors.black, fontSize: 18, fontWeight: user.isAttended || selected ? FontWeight.bold : FontWeight.normal),
+                  style: TextStyle(
+                      color: user.isAttended || selected ? Colors.orange : Colors.black,
+                      fontSize: 18,
+                      fontWeight: user.isAttended || selected ? FontWeight.bold : FontWeight.normal),
                 ),
               ),
             ),
@@ -64,24 +70,24 @@ class UserCard extends StatelessWidget {
               children: [
                 Container(
                   child: Text("${user.groupName}",
-                      style: TextStyle(color: user.isAttended || selected ? Colors.orange : Colors.black, fontSize: 14, fontWeight: user.isAttended || selected ? FontWeight.w500 : FontWeight.w300)),
+                      style: TextStyle(
+                          color: user.isAttended || selected ? Colors.orange : Colors.black,
+                          fontSize: 14,
+                          fontWeight: user.isAttended || selected ? FontWeight.w500 : FontWeight.w300)),
                 ),
                 Container(
-                    child: FaIcon(
-                      FontAwesomeIcons.dollarSign,
-                      size: 12,
-                      color: user.monthlyPayments > 0
-                          ? Colors.green
-                          : user.isAttended
-                              ? Colors.red
-                              : Colors.grey[300],
-                    )),
+                    child: Text(
+                  user.userBalance.toString(),
+                  style: TextStyle(  
+                    fontSize: 12,
+                    color: user.userBalance >= 0 ? Colors.green : Colors.red),
+                )),
                 Container(
                     child: FaIcon(
-                      FontAwesomeIcons.circleCheck,
-                      size: 12,
-                      color: user.isAttended ? Colors.green : Colors.grey[300],
-                    ))
+                  FontAwesomeIcons.circleCheck,
+                  size: 12,
+                  color: user.isAttended ? Colors.green : Colors.grey[300],
+                ))
               ],
             ),
           ],
