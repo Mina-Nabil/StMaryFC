@@ -3,6 +3,7 @@ import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/AddUsersScreen.dart';
 import 'package:StMaryFA/screens/FAScreen.dart';
 import 'package:StMaryFA/screens/OverviewScreen.dart';
+import 'package:StMaryFA/widgets/SendSMS.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +59,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               children: [
                 UserScreen.view(user),
                 OverviewScreen(user), //overview screen
+                SendSMS(user.id)
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(
@@ -66,6 +68,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               items: [
                 BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.info), label: "Info"),
                 BottomNavigationBarItem(icon: Icon(Icons.notes), label: "History"),
+                BottomNavigationBarItem(icon: Icon(Icons.email), label: "SMS"),
               ],
             ),
           )
