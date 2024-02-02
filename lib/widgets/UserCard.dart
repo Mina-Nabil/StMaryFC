@@ -20,7 +20,7 @@ class UserCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: user.isAttended || selected ? Colors.orange : Color.fromRGBO(79, 50, 0, 0.2),
+          color: user.isAttended ? Colors.green : (selected ? Colors.orange : Color.fromRGBO(79, 50, 0, 0.2)),
           width: user.isAttended || selected ? selectedHighlightWidth : 1,
         ),
         color: Colors.white,
@@ -32,7 +32,7 @@ class UserCard extends StatelessWidget {
           children: [
             Container(
               decoration:
-                  BoxDecoration(color: user.isAttended || selected ? Colors.orange : Colors.transparent, shape: BoxShape.circle),
+                  BoxDecoration(color: user.isAttended ? Colors.green : (selected ? Colors.orange : Colors.transparent), shape: BoxShape.circle),
               padding: EdgeInsets.all(selectedHighlightWidth),
               child: CircleAvatar(
                 backgroundColor: Color.fromRGBO(96, 160, 250, 1.0),
@@ -59,7 +59,7 @@ class UserCard extends StatelessWidget {
                 child: Text(
                   user.userName,
                   style: TextStyle(
-                      color: user.isAttended || selected ? Colors.orange : Colors.black,
+                      color: user.isAttended ? Colors.green : (selected ? Colors.orange : Colors.black),
                       fontSize: 18,
                       fontWeight: user.isAttended || selected ? FontWeight.bold : FontWeight.normal),
                 ),
@@ -71,7 +71,7 @@ class UserCard extends StatelessWidget {
                 Container(
                   child: Text("${user.groupName}",
                       style: TextStyle(
-                          color: user.isAttended || selected ? Colors.orange : Colors.black,
+                          color: user.isAttended ? Colors.green : (selected ? Colors.orange : Colors.black),
                           fontSize: 14,
                           fontWeight: user.isAttended || selected ? FontWeight.w500 : FontWeight.w300)),
                 ),

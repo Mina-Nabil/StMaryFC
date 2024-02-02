@@ -117,8 +117,23 @@ class _NewPaymentState extends State<NewPayment> {
                   width: double.infinity,
                   decoration: BoxDecoration(color: Colors.deepOrange),
                   child: TextButton(
-                      onPressed: (addEnabled) ? sendReminder : null,
+                      onPressed:
+                          (addEnabled) ? () => confirmThen("Send SMS", "Are you sure you want to send SMS?", sendReminder) : null,
                       child: Text("Send Reminder",
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
+                ),
+                Container(
+                  color: Color.fromRGBO(254, 250, 241, 1),
+                  padding: EdgeInsets.all(2),
+                ),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: Colors.deepOrange),
+                  child: TextButton(
+                      onPressed: (addEnabled)
+                          ? () => confirmThen("Send SMS", "Are you sure you want to send SMS?", sendLastUpdate)
+                          : null,
+                      child: Text("Send Last Balance Update",
                           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                 ),
               ],
@@ -133,6 +148,34 @@ class _NewPaymentState extends State<NewPayment> {
     setState(() {
       _isSettlment = val;
     });
+  }
+
+  void confirmThen(title, message, Function callback) async {
+    showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) => new CupertinoAlertDialog(
+              title: Text(title),
+              content: Text(message),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text(
+                    "Yes",
+                    style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    callback();
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                )
+              ],
+            ));
   }
 
   void addPayment() async {
@@ -205,21 +248,51 @@ class _NewPaymentState extends State<NewPayment> {
 
     String errorMsg = await PaymentsHelper.sendBalanceReminder(widget.id);
 
-      showCupertinoDialog(
-          context: context,
-          builder: (BuildContext context) => new CupertinoAlertDialog(
-                title: Text(errorMsg.isEmpty ? "Done" : "Failed" ),
-                content: Text(errorMsg.isEmpty ? "Message Sent" : errorMsg),
-                actions: [
-                  CupertinoDialogAction(
-                    child: Text(
-                      "OK",
-                      style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
-                  )
-                ],
-              ));
+    showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) => new CupertinoAlertDialog(
+              title: Text(errorMsg.isEmpty ? "Done" : "Failed"),
+              content: Text(errorMsg.isEmpty ? "Message Sent" : errorMsg),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text(
+                    "OK",
+                    style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                )
+              ],
+            ));
+
+    setState(() {
+      //enable add
+      addEnabled = true;
+    });
+  }
+
+  void sendLastUpdate() async {
+    setState(() {
+      //disable add button
+      addEnabled = false;
+    });
+
+    String errorMsg = await PaymentsHelper.sendLastUpdate(widget.id);
+
+    showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) => new CupertinoAlertDialog(
+              title: Text(errorMsg.isEmpty ? "Done" : "Failed"),
+              content: Text(errorMsg.isEmpty ? "Message Sent" : errorMsg),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text(
+                    "OK",
+                    style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                )
+              ],
+            ));
 
     setState(() {
       //enable add

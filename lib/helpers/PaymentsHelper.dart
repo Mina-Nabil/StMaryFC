@@ -117,6 +117,34 @@ class PaymentsHelper {
     return errorMsg;
   }
 
+ static Future<String> sendLastUpdate(int id) async {
+    String getUserPaymentsApiUrl = Server.address + "api/send/last/update";
+    String errorMsg = "";
+    try {
+      var response = await http.post(getUserPaymentsApiUrl, headers: {
+        'Authorization': "Bearer ${await Server.token}",
+        "Accept": "application/json"
+      }, body: {
+        "userID": id.toString(),
+      });
+
+      dynamic body = jsonDecode(response.body);
+      print(body);
+      if (body["status"] != null && body["status"] == true) {
+        return "";
+      } else if (body["message"]) {
+        errorMsg = body["message"];
+      } else {
+        errorMsg = "Server issue.";
+      }
+    } catch (error) {
+      print(error);
+      errorMsg = "Something went wrong.";
+    }
+    return errorMsg;
+  }
+
+
   static Future<bool> deleteUserPayment(paymentID) async {
     String url = Server.address + "api/delete/payment";
     try {

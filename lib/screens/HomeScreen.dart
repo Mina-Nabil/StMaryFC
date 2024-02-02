@@ -22,6 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<int> selectedIds = [];
   final Duration searchDelay = Duration(milliseconds: 500);
   bool enableMenu = false;
+  TextEditingController searchController = new TextEditingController();
+  ScrollController _scrollController = new ScrollController();
+  bool searching = false;
 
   @override
   void initState() {
@@ -57,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: TextField(
                   textAlign: TextAlign.left,
                   style: TextStyle(color: Colors.black, fontSize: 20),
+                  controller: searchController,
                   onChanged: (searchString) {
                     if (searchTimer != null) {
                       setState(() => searchTimer.cancel()); // clear timer
@@ -80,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Expanded(
                 child: GridView.count(
+                  controller: _scrollController,
                   primary: false,
                   padding: const EdgeInsets.all(0),
                   childAspectRatio: 0.6,
@@ -87,31 +92,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSpacing: 8,
                   crossAxisCount: 3,
                   children: [
-                    ...Provider.of<UsersProvider>(context, listen: true).users.map((user) {
-                      return GestureDetector(
-                        child: UserCard(
-                          user: user,
-                          selected: selectedIds.contains(user.id),
-                        ),
-                        onTap: () {
-                          if (!user.isAttended)
-                            setState(() {
-                              if (selectedIds.contains(user.id))
-                                selectedIds.remove(user.id);
-                              else
-                                selectedIds.add(user.id);
-                            });
-                        },
-                        onLongPress: (enableMenu)
-                            ? () {
-                                showDialog(
-                                    barrierDismissible: true,
-                                    context: context,
-                                    builder: (BuildContext context) => UserDialog(user));
-                              }
-                            : null,
-                      );
-                    }).toList()
+                    if (!searching)
+                      ...Provider.of<UsersProvider>(context, listen: true).users.map((user) {
+                        return GestureDetector(
+                          child: UserCard(
+                            user: user,
+                            selected: selectedIds.contains(user.id),
+                          ),
+                          onTap: () {
+                            if (!user.isAttended)
+                              setState(() {
+                                if (selectedIds.contains(user.id))
+                                  selectedIds.remove(user.id);
+                                else
+                                  selectedIds.add(user.id);
+                              });
+                          },
+                          onLongPress: (enableMenu)
+                              ? () {
+                                  showDialog(
+                                      barrierDismissible: true,
+                                      context: context,
+                                      builder: (BuildContext context) => UserDialog(user));
+                                }
+                              : null,
+                        );
+                      }).toList()
                   ],
                 ),
               ),
@@ -155,7 +161,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           onPressed: () async {
                             String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                            await Provider.of<UsersProvider>(context, listen: false).takeAttendance(selectedIds, date);
+                            bool res = await Provider.of<UsersProvider>(context, listen: false).takeAttendance(selectedIds, date);
+                            if (res) {
+                              this._search(searchController.text, keepOffset: true);
+                            }
                             setState(() {
                               selectedIds.clear();
                             });
@@ -168,7 +177,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _search(String searchString) {
-    Provider.of<UsersProvider>(context, listen: false).search(searchString);
+  void _search(String searchString, {bool keepOffset = false}) async {
+    setState(() {
+      searching = true;
+    });
+    double tmp = _scrollController.offset;
+    await Provider.of<UsersProvider>(context, listen: false).search(searchString);
+    if (keepOffset) await _scrollController.animateTo(tmp, duration: Duration(milliseconds: 300), curve: Curves.linear);
+    setState(() {
+      searching = false;
+    });
   }
 }

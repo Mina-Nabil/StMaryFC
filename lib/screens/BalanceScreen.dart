@@ -1,9 +1,7 @@
 import 'package:StMaryFA/models/BalanceRow.dart';
-import 'package:StMaryFA/models/HistoryRow.dart';
 import 'package:StMaryFA/models/User.dart';
 import 'package:StMaryFA/providers/UsersProvider.dart';
 import 'package:StMaryFA/screens/GroupsScreen.dart';
-import 'package:StMaryFA/widgets/AttendanceList.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -103,7 +101,6 @@ class _BalanceScreenState extends State<BalanceScreen> {
                                   padding: EdgeInsets.symmetric(horizontal: 2),
                                   child: Column(
                                     children: [
-                                      Text("Title", style: TextStyle(fontSize: 12)),
                                       Text(
                                        ((b.isSettlment) ? "(S) " : "") + b.title,
                                         overflow: TextOverflow.clip,
