@@ -156,6 +156,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       TextButton(
                           style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero)),
                           child: Text(
+                            "Cancel",
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            setState(() {
+                              selectedIds.clear();
+                            });
+                          }),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                          ),
+                      TextButton(
+                          style: ButtonStyle(padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero)),
+                          child: Text(
                             "Confirm",
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                           ),

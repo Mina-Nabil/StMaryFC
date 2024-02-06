@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Server {
-  static const String address = "http://localhost:8000/";
+  static const String address = "https://stmaryfa.msquare.app/";
   static String _apiToken;
   static String _loggedInUserType;
   static FlutterSecureStorage _storage = FlutterSecureStorage();
