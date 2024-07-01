@@ -18,7 +18,7 @@ class NewEventPayment extends StatefulWidget {
 class _NewPaymentState extends State<NewEventPayment> {
   bool _open = false;
   bool addEnabled = true;
-  int _selectedState = 0;
+  // int _selectedState = 0;
 
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
@@ -27,11 +27,11 @@ class _NewPaymentState extends State<NewEventPayment> {
 
   Event _event;
 
-  selectRadioState(int val) {
-    setState(() {
-      _selectedState = val;
-    });
-  }
+  // selectRadioState(int val) {
+  //   setState(() {
+  //     _selectedState = val;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -174,41 +174,41 @@ class _NewPaymentState extends State<NewEventPayment> {
                       controller: _noteController,
                     ),
                   ),
-                  Container(
-                    color: Color.fromRGBO(254, 250, 241, 1),
-                    child: Row(
-                      children: [
-                        ButtonBar(
-                          children: [
-                            Radio(
-                              value: 3,
-                              groupValue: _selectedState,
-                              onChanged: (val) => selectRadioState(val),
-                              activeColor: Colors.orange,
-                              toggleable: true,
-                            ),
-                            FittedBox(child: Text("OK")),
-                            Radio(
-                              value: 1,
-                              groupValue: _selectedState,
-                              onChanged: (val) => selectRadioState(val),
-                              activeColor: Colors.orange,
-                              toggleable: true,
-                            ),
-                            FittedBox(child: Text("Paid")),
-                            Radio(
-                              value: 2,
-                              groupValue: _selectedState,
-                              onChanged: (val) => selectRadioState(val),
-                              activeColor: Colors.orange,
-                              toggleable: true,
-                            ),
-                            FittedBox(child: Text("Received")),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   color: Color.fromRGBO(254, 250, 241, 1),
+                  //   child: Row(
+                  //     children: [
+                  //       ButtonBar(
+                  //         children: [
+                  //           Radio(
+                  //             value: 3,
+                  //             groupValue: _selectedState,
+                  //             onChanged: (val) => selectRadioState(val),
+                  //             activeColor: Colors.orange,
+                  //             toggleable: true,
+                  //           ),
+                  //           FittedBox(child: Text("OK")),
+                  //           Radio(
+                  //             value: 1,
+                  //             groupValue: _selectedState,
+                  //             onChanged: (val) => selectRadioState(val),
+                  //             activeColor: Colors.orange,
+                  //             toggleable: true,
+                  //           ),
+                  //           FittedBox(child: Text("Paid")),
+                  //           Radio(
+                  //             value: 2,
+                  //             groupValue: _selectedState,
+                  //             onChanged: (val) => selectRadioState(val),
+                  //             activeColor: Colors.orange,
+                  //             toggleable: true,
+                  //           ),
+                  //           FittedBox(child: Text("Received")),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -259,12 +259,12 @@ class _NewPaymentState extends State<NewEventPayment> {
                 ],
               ));
     } else {
-      String errorMsg = await PaymentsHelper.addPayment(widget.id, double.parse(amount), note, 2, eventId: _event.id, eventState: _selectedState);
+      String errorMsg = await PaymentsHelper.addPayment(widget.id, double.parse(amount), note, 2, eventId: _event.id);
       if (errorMsg.isEmpty) {
         _amountController.clear();
         _eventController.clear();
         _noteController.clear();
-        _selectedState = 0;
+        // _selectedState = 0;
         setState(() {
           _open = !_open;
           _event = null;

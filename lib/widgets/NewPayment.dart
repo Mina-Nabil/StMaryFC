@@ -2,9 +2,7 @@ import 'package:StMaryFA/helpers/PaymentsHelper.dart';
 import 'package:StMaryFA/widgets/CustomDatePicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewPayment extends StatefulWidget {
   NewPayment(this.id, {this.onPaymentAdd});
@@ -22,7 +20,7 @@ class _NewPaymentState extends State<NewPayment> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
-
+  String debugText = "test";
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -118,22 +116,36 @@ class _NewPaymentState extends State<NewPayment> {
                   decoration: BoxDecoration(color: Colors.deepOrange),
                   child: TextButton(
                       onPressed:
-                          (addEnabled) ? () => confirmThen("Send SMS", "Are you sure you want to send SMS?", sendReminder) : null,
+                          (addEnabled) ? () => confirmThen("Send SMS", "Are you sure you want to send a Whatsapp reminder?", sendReminder) : null,
                       child: Text("Send Reminder",
                           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                 ),
+                // Container(
+                //   color: Color.fromRGBO(254, 250, 241, 1),
+                //   padding: EdgeInsets.all(2),
+                // ),
+                // Container(
+                //   width: double.infinity,
+                //   decoration: BoxDecoration(color: Colors.deepOrange),
+                //   child: TextButton(
+                //       onPressed: (addEnabled)
+                //           ? () => confirmThen("Send SMS", "Are you sure you want to send SMS?", sendLastUpdate)
+                //           : null,
+                //       child: Text("Send Last Balance Update",
+                //           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
+                // ),
                 Container(
                   color: Color.fromRGBO(254, 250, 241, 1),
                   padding: EdgeInsets.all(2),
                 ),
                 Container(
                   width: double.infinity,
-                  decoration: BoxDecoration(color: Colors.deepOrange),
+                  decoration: BoxDecoration(color: Colors.green),
                   child: TextButton(
                       onPressed: (addEnabled)
-                          ? () => confirmThen("Send SMS", "Are you sure you want to send SMS?", sendLastUpdate)
+                          ? () => confirmThen("Send Whatsapp", "Are you sure you send the update from Whatsapp?", sendWhatsappMessage)
                           : null,
-                      child: Text("Send Last Balance Update",
+                      child: Text("Send Whatsapp Update",
                           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                 ),
               ],
@@ -298,5 +310,33 @@ class _NewPaymentState extends State<NewPayment> {
       //enable add
       addEnabled = true;
     });
+  }
+
+  void sendWhatsappMessage() async {
+    try {
+      Map<String, String> lastUpdateMsg = await PaymentsHelper.getLastUpdateMessage(widget.id);
+      String number = lastUpdateMsg["number"];
+      String msg = lastUpdateMsg["update_message"];
+      final url = "whatsapp://send?phone=+2$number&text=$msg";
+      final uri = Uri.parse(Uri.encodeFull(url));
+      _launchURL(uri);
+      setState(() {
+        debugText = uri.toString();
+      });
+    } catch (e) {
+      setState(() {
+        debugText = e.toString();
+      });
+      debugPrint(e.toString());
+    }
+  }
+
+  _launchURL(Uri url) async {
+    print(url);
+    if (await canLaunch(url.toString())) {
+      await launch(url.toString());
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

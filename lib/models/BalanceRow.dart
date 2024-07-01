@@ -1,6 +1,7 @@
 import 'package:StMaryFA/models/User.dart';
 
 class BalanceRow {
+  int id; 
   DateTime date;
   int amount;
   int newBalance;
@@ -10,6 +11,7 @@ class BalanceRow {
   User collectedBy;
 
   BalanceRow.fromJson(dynamic json) {
+    id = json["id"];
     date =  DateTime.tryParse(json["created_at"]) ?? DateTime.now();
     title = json["title"];
     isSettlment = json["is_settlment"] == 1 ? true : false;
