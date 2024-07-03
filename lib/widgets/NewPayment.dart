@@ -20,7 +20,7 @@ class _NewPaymentState extends State<NewPayment> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
-  String debugText = "test";
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -107,6 +107,22 @@ class _NewPaymentState extends State<NewPayment> {
                       onPressed: (addEnabled) ? addPayment : null,
                       child: Text("Add", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                 ),
+
+                Container(
+                  color: Color.fromRGBO(254, 250, 241, 1),
+                  padding: EdgeInsets.all(2),
+                ),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: Colors.green),
+                  child: TextButton(
+                      onPressed: (addEnabled)
+                          ? () =>
+                              confirmThen("Send Whatsapp", "Are you sure you send the update from Whatsapp?", sendWhatsappMessage)
+                          : null,
+                      child: Text("Receipt", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
+                ),
+
                 Container(
                   color: Color.fromRGBO(254, 250, 241, 1),
                   padding: EdgeInsets.all(2),
@@ -115,8 +131,9 @@ class _NewPaymentState extends State<NewPayment> {
                   width: double.infinity,
                   decoration: BoxDecoration(color: Colors.deepOrange),
                   child: TextButton(
-                      onPressed:
-                          (addEnabled) ? () => confirmThen("Send SMS", "Are you sure you want to send a Whatsapp reminder?", sendReminder) : null,
+                      onPressed: (addEnabled)
+                          ? () => confirmThen("Send Reminder", "Are you sure you want to send a Whatsapp reminder?", sendReminder)
+                          : null,
                       child: Text("Send Reminder",
                           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                 ),
@@ -134,20 +151,6 @@ class _NewPaymentState extends State<NewPayment> {
                 //       child: Text("Send Last Balance Update",
                 //           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                 // ),
-                Container(
-                  color: Color.fromRGBO(254, 250, 241, 1),
-                  padding: EdgeInsets.all(2),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(color: Colors.green),
-                  child: TextButton(
-                      onPressed: (addEnabled)
-                          ? () => confirmThen("Send Whatsapp", "Are you sure you send the update from Whatsapp?", sendWhatsappMessage)
-                          : null,
-                      child: Text("Send Whatsapp Update",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
-                ),
               ],
             ),
           ),
@@ -253,33 +256,16 @@ class _NewPaymentState extends State<NewPayment> {
   }
 
   void sendReminder() async {
-    setState(() {
-      //disable add button
-      addEnabled = false;
-    });
-
-    String errorMsg = await PaymentsHelper.sendBalanceReminder(widget.id);
-
-    showCupertinoDialog(
-        context: context,
-        builder: (BuildContext context) => new CupertinoAlertDialog(
-              title: Text(errorMsg.isEmpty ? "Done" : "Failed"),
-              content: Text(errorMsg.isEmpty ? "Message Sent" : errorMsg),
-              actions: [
-                CupertinoDialogAction(
-                  child: Text(
-                    "OK",
-                    style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                )
-              ],
-            ));
-
-    setState(() {
-      //enable add
-      addEnabled = true;
-    });
+    try {
+      Map<String, String> lastUpdateMsg = await PaymentsHelper.getReminderMessage(widget.id);
+      String number = lastUpdateMsg["number"];
+      String msg = lastUpdateMsg["reminder_message"];
+      final url = "https://wa.me/+2$number?text=$msg";
+      final uri = Uri.parse(Uri.encodeFull(url));
+      await launch(uri.toString());
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void sendLastUpdate() async {
@@ -317,26 +303,11 @@ class _NewPaymentState extends State<NewPayment> {
       Map<String, String> lastUpdateMsg = await PaymentsHelper.getLastUpdateMessage(widget.id);
       String number = lastUpdateMsg["number"];
       String msg = lastUpdateMsg["update_message"];
-      final url = "whatsapp://send?phone=+2$number&text=$msg";
+      final url = "https://wa.me/+2$number?text=$msg";
       final uri = Uri.parse(Uri.encodeFull(url));
-      _launchURL(uri);
-      setState(() {
-        debugText = uri.toString();
-      });
+      await launch(uri.toString());
     } catch (e) {
-      setState(() {
-        debugText = e.toString();
-      });
       debugPrint(e.toString());
-    }
-  }
-
-  _launchURL(Uri url) async {
-    print(url);
-    if (await canLaunch(url.toString())) {
-      await launch(url.toString());
-    } else {
-      throw 'Could not launch $url';
     }
   }
 }

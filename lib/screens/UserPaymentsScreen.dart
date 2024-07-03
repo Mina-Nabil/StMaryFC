@@ -7,6 +7,7 @@ import 'package:StMaryFA/screens/FAScreen.dart';
 import 'package:StMaryFA/screens/OverviewScreen.dart';
 import 'package:StMaryFA/widgets/NewEventPayment.dart';
 import 'package:StMaryFA/widgets/NewPayment.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -96,20 +97,42 @@ class _UserPaymentsScreenState extends State<UserPaymentsScreen> {
       ),
       body: PageView(
         controller: _controller,
-
         onPageChanged: (i) {
           setState(() {
             selectedpage = i;
           });
         },
         children: [
-          NewPayment(widget.id, onPaymentAdd: () => {
-            _controller.animateToPage(1, duration: Duration(milliseconds: 200), curve: Curves.linear)
-          },),
+          NewPayment(widget.id, onPaymentAdd: () {
+            setState(() {
+              showCupertinoDialog(
+                  context: context,
+                  builder: (BuildContext context) => new CupertinoAlertDialog(
+                        title: Text("Done"),
+                        actions: [
+                          CupertinoDialogAction(
+                            child: Text(
+                              "OK",
+                              style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () => Navigator.of(context).pop(),
+                          )
+                        ],
+                      ));
+            });
+          }),
           //Balance Screen
-          if (userLoaded)Padding(child:  BalanceScreen(user), padding: EdgeInsets.symmetric(horizontal: 5),),
+          if (userLoaded)
+            Padding(
+              child: BalanceScreen(user),
+              padding: EdgeInsets.symmetric(horizontal: 5),
+            ),
           //History Screen
-          if (userLoaded) Padding(child: OverviewScreen(user), padding: EdgeInsets.symmetric(horizontal: 5),),
+          if (userLoaded)
+            Padding(
+              child: OverviewScreen(user),
+              padding: EdgeInsets.symmetric(horizontal: 5),
+            ),
           //Events page
 
           Padding(

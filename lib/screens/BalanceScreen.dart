@@ -150,9 +150,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
       Map<String, String> lastUpdateMsg = await PaymentsHelper.getUpdateMessage(id, widget.user.id);
       String number = lastUpdateMsg["number"];
       String msg = lastUpdateMsg["update_message"];
-      final url = "whatsapp://send?phone=+2$number&text=$msg";
+      final url = "https://wa.me/+2$number?text=$msg";
       final uri = Uri.parse(Uri.encodeFull(url));
-      _launchURL(uri);
+       await launch(uri.toString());
 
     } catch (e) {
 
@@ -160,12 +160,4 @@ class _BalanceScreenState extends State<BalanceScreen> {
     }
   }
 
- void _launchURL(Uri url) async {
-    print(url);
-    if (await canLaunch(url.toString())) {
-      await launch(url.toString());
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 }
