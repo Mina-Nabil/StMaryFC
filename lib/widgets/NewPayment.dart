@@ -117,8 +117,7 @@ class _NewPaymentState extends State<NewPayment> {
                   decoration: BoxDecoration(color: Colors.green),
                   child: TextButton(
                       onPressed: (addEnabled)
-                          ? () =>
-                              confirmThen("Send Whatsapp", "Are you sure you send the update from Whatsapp?", sendWhatsappMessage)
+                          ? sendWhatsappMessage
                           : null,
                       child: Text("Receipt", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),
                 ),
@@ -132,7 +131,7 @@ class _NewPaymentState extends State<NewPayment> {
                   decoration: BoxDecoration(color: Colors.deepOrange),
                   child: TextButton(
                       onPressed: (addEnabled)
-                          ? () => confirmThen("Send Reminder", "Are you sure you want to send a Whatsapp reminder?", sendReminder)
+                          ? sendReminder
                           : null,
                       child: Text("Send Reminder",
                           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20))),

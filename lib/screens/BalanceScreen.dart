@@ -50,9 +50,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                 ...history.map(
                   (b) => Card(
                       child: GestureDetector(
-                        onLongPress: () =>
-                          confirmThen("Send Whatsapp", "Are you sure you want to send the update from Whatsapp?", () => sendWhatsappMessage(b.id))
-                        ,
+                          onLongPress: () => sendWhatsappMessage(b.id),
                           child: ListTile(
                               tileColor: Color.fromRGBO(254, 250, 241, 1),
                               trailing: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -152,12 +150,9 @@ class _BalanceScreenState extends State<BalanceScreen> {
       String msg = lastUpdateMsg["update_message"];
       final url = "https://wa.me/+2$number?text=$msg";
       final uri = Uri.parse(Uri.encodeFull(url));
-       await launch(uri.toString());
-
+      await launch(uri.toString());
     } catch (e) {
-
       debugPrint(e.toString());
     }
   }
-
 }
